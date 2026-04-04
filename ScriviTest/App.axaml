@@ -15,7 +15,10 @@
         <SolidColorBrush x:Key="AppBackground">#F5F5F5</SolidColorBrush>
         <SolidColorBrush x:Key="AppForeground">#1A1A1A</SolidColorBrush>
 
-        <SolidColorBrush x:Key="PrimaryActionBrush">#1e88e5</SolidColorBrush>   <SolidColorBrush x:Key="SecondaryActionBrush">#43a047</SolidColorBrush> <SolidColorBrush x:Key="ActionTextBrush">#FFFFFF</SolidColorBrush>      <SolidColorBrush x:Key="StandardButtonBrush">#E0E0E0</SolidColorBrush>
+        <SolidColorBrush x:Key="PrimaryActionBrush">#1e88e5</SolidColorBrush>   
+        <SolidColorBrush x:Key="SecondaryActionBrush">#43a047</SolidColorBrush> 
+        <SolidColorBrush x:Key="ActionTextBrush">#FFFFFF</SolidColorBrush>      
+        <SolidColorBrush x:Key="StandardButtonBrush">#E0E0E0</SolidColorBrush>
         <SolidColorBrush x:Key="ActivateButtonBrush">#2b2b2b</SolidColorBrush>
     </Application.Resources>
 

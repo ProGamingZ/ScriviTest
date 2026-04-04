@@ -10,7 +10,17 @@ public partial class Question : ObservableObject
     private string _prompt = string.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsMultipleChoice))]
+    [NotifyPropertyChangedFor(nameof(IsTrueFalse))]
+    [NotifyPropertyChangedFor(nameof(IsMultipleAnswer))]
+    [NotifyPropertyChangedFor(nameof(IsEssay))]
     private QuestionType _type = QuestionType.MultipleChoice;
+
+    // These booleans dynamically evaluate based on the current Type
+    public bool IsMultipleChoice => Type == QuestionType.MultipleChoice;
+    public bool IsTrueFalse => Type == QuestionType.TrueFalse;
+    public bool IsMultipleAnswer => Type == QuestionType.MultipleAnswer;
+    public bool IsEssay => Type == QuestionType.Essay;
 
     [ObservableProperty]
     private int _points = 1;
