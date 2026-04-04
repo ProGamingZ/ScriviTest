@@ -25,10 +25,11 @@ public partial class Question : ObservableObject
     [ObservableProperty]
     private int _points = 1;
 
+    public string? AttachedImageFullPath { get; set; }
     // Media Integration (The Zip Method)
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasImage))]
-    private string? _attachedImageFileName; 
+    private string? _attachedImageFileName;
 
     public bool HasImage => !string.IsNullOrEmpty(AttachedImageFileName); 
 

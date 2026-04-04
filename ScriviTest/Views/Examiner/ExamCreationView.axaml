@@ -135,13 +135,20 @@
                                                 
                                                 <Grid ColumnDefinitions="*, Auto" Margin="0,15,0,0">
                                                     <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
-                                                        <Button Content="Attach Image" Background="Transparent" Foreground="{DynamicResource PrimaryActionBrush}" BorderThickness="1" BorderBrush="{DynamicResource PrimaryActionBrush}"/>
+                                                        <Button Content="Attach Image" 
+                                                                Command="{Binding $parent[ItemsControl].DataContext.AttachImageCommand}"
+                                                                CommandParameter="{Binding}"
+                                                                Background="Transparent" Foreground="{DynamicResource PrimaryActionBrush}" BorderThickness="1" BorderBrush="{DynamicResource PrimaryActionBrush}"/>
                                                         
                                                         <Border IsVisible="{Binding HasImage}" Background="#E3F2FD" CornerRadius="4" Padding="10,5">
                                                             <StackPanel Orientation="Horizontal" Spacing="5">
                                                                 <TextBlock Text="🖼️" VerticalAlignment="Center"/>
                                                                 <TextBlock Text="{Binding AttachedImageFileName}" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource AppForeground}"/>
-                                                                <Button Content="✕" Background="Transparent" Foreground="Red" Padding="5,0"/>
+                                                                
+                                                                <Button Content="✕" 
+                                                                        Command="{Binding $parent[ItemsControl].DataContext.RemoveImageCommand}"
+                                                                        CommandParameter="{Binding}"
+                                                                        Background="Transparent" Foreground="Red" Padding="5,0"/>
                                                             </StackPanel>
                                                         </Border>
                                                     </StackPanel>
