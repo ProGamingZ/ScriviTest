@@ -11,11 +11,13 @@
         <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
             <Button Content="Create New Examination" Command="{Binding NavigateToCreationCommand}"
                     Width="300" Height="60" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                    Background="#1e88e5" Foreground="White"/>
+                    Background="{DynamicResource PrimaryActionBrush}" 
+                    Foreground="{DynamicResource ActionTextBrush}"/>
             
             <Button Content="Grade Submitted Tests (.xans)" Command="{Binding NavigateToGradingCommand}"
                     Width="300" Height="60" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                    Background="#43a047" Foreground="White"/>
+                    Background="{DynamicResource SecondaryActionBrush}" 
+                    Foreground="{DynamicResource ActionTextBrush}"/>
         </StackPanel>
 
         <Button Grid.Row="2" Content="← Back to Home" Command="{Binding GoBackCommand}" 

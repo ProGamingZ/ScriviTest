@@ -16,7 +16,8 @@
 
         <Button Grid.Row="3" Content="Activate App" Command="{Binding ActivateAppCommand}" 
                 Width="200" Height="40" Margin="0,30,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                Background="#2b2b2b" Foreground="White"/>
+                Background="{DynamicResource ActivateButtonBrush}" 
+                Foreground="{DynamicResource ActionTextBrush}"/>
                 
         <TextBlock Grid.Row="4" Text="{Binding IsActivated, StringFormat='Activation Status: {0}'}" 
                    HorizontalAlignment="Center" Margin="0,20,0,0" Opacity="0.5"/>
