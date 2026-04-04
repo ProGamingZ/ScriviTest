@@ -27,7 +27,10 @@ public partial class Question : ObservableObject
 
     // Media Integration (The Zip Method)
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasImage))]
     private string? _attachedImageFileName; 
+
+    public bool HasImage => !string.IsNullOrEmpty(AttachedImageFileName); 
 
     // Settings for Multiple Choice / True-False / Multiple Answer
     [ObservableProperty]
@@ -53,5 +56,27 @@ public partial class Question : ObservableObject
     private void ToggleExpand()
     {
         IsExpanded = !IsExpanded;
+    }
+
+    public Question()
+    {
+        Choices.Add(new Choice { Text = "Option 1" });
+        Choices.Add(new Choice { Text = "Option 2" });
+    }
+
+    [RelayCommand]
+    private void AddChoice()
+    {
+        Choices.Add(new Choice { Text = $"Option {Choices.Count + 1}" });
+    }
+
+    [RelayCommand]
+    private void RemoveChoice(Choice choiceToRemove)
+    {
+        // Prevent the examiner from deleting all choices (keep at least 2)
+        if (Choices.Count > 2)
+        {
+            Choices.Remove(choiceToRemove);
+        }
     }
 }

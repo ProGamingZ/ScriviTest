@@ -51,4 +51,13 @@ public partial class ExamCreationViewModel : ViewModelBase
     {
         Questions.Add(new Question { Type = QuestionType.Essay });
     }
+
+    [RelayCommand]
+    private void RemoveQuestion(Question questionToRemove)
+    {
+        if (Questions.Contains(questionToRemove))
+        {
+            Questions.Remove(questionToRemove);
+        }
+    }
 }
