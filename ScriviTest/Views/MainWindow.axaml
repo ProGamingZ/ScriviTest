@@ -8,8 +8,13 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="ScriviTest"
-        Width="800" Height="450"
-        CanResize="False"
+        
+        Width="{Binding WindowWidth}" 
+        Height="{Binding WindowHeight}"
+        CanResize="{Binding CanResize}"
+        WindowState="{Binding CurrentWindowState}"
+        Topmost="{Binding IsTopmost}"
+        
         WindowStartupLocation="CenterScreen">
 
     <TransitioningContentControl Content="{Binding CurrentPage}" />

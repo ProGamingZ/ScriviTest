@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 
 namespace ScriviTest.Models;
@@ -31,4 +32,16 @@ public partial class Question : ObservableObject
     // Specific to Essay
     [ObservableProperty]
     private int _maxWordCount = 500;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ExpandCollapseIcon))]
+    private bool _isExpanded = true; // Defaults to true so new questions open instantly
+
+    public string ExpandCollapseIcon => IsExpanded ? "-" : "+";
+
+    [RelayCommand]
+    private void ToggleExpand()
+    {
+        IsExpanded = !IsExpanded;
+    }
 }
