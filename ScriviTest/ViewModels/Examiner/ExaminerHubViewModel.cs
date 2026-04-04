@@ -18,7 +18,7 @@ public partial class ExaminerHubViewModel : ViewModelBase
     private void NavigateToCreation()
     {
         // TODO: _navigateAction(new ExamCreationViewModel());
-        Console.WriteLine("Routing to Exam Creation...");
+        _navigateAction(new ExamCreationViewModel(_navigateAction));
     }
 
     [RelayCommand]
