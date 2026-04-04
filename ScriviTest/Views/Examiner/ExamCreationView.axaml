@@ -3,6 +3,7 @@
              xmlns:vm="using:ScriviTest.ViewModels.Examiner"
              xmlns:models="using:ScriviTest.Models" 
              x:Class="ScriviTest.Views.Examiner.ExamCreationView"
+             x:Name="RootView"
              x:DataType="vm:ExamCreationViewModel"
              Background="{DynamicResource AppBackground}">
 
@@ -21,9 +22,13 @@
                 
                 <Border Background="White" CornerRadius="8" Padding="25" BoxShadow="0 4 10 0 LightGray" BorderBrush="{DynamicResource PrimaryActionBrush}" BorderThickness="0,8,0,0">
                     <StackPanel Spacing="15">
-                        <TextBox FontSize="28" FontWeight="Bold" Watermark="Untitled Exam" BorderThickness="0,0,0,1" Background="Transparent" Padding="0,5" Foreground="{DynamicResource AppForeground}"/>
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBox Grid.Column="0" FontSize="28" FontWeight="Bold" Watermark="Untitled Exam" BorderThickness="0,0,0,1" Background="Transparent" Padding="0,5" Foreground="{DynamicResource AppForeground}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding TotalExamPoints, StringFormat='Total Points: {0}'}" 
+                                       FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryActionBrush}" VerticalAlignment="Center"/>
+                        </Grid>
                         <TextBox TextWrapping="Wrap" MinHeight="60" Watermark="Exam Instructions or Description" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
-                        
+
                         <Grid ColumnDefinitions="*, *" Margin="0,15,0,0">
                             <StackPanel Grid.Column="0" Spacing="10" Margin="0,0,10,0">
                                 <TextBox Watermark="Teacher Name" Foreground="{DynamicResource AppForeground}"/>
@@ -37,150 +42,170 @@
                     </StackPanel>
                 </Border>
 
-                <Border Background="White" CornerRadius="8" Padding="25" BoxShadow="0 4 10 0 LightGray">
-                    <StackPanel Spacing="15">
-                        
-                        <Grid ColumnDefinitions="*, Auto">
-                            <TextBox Grid.Column="0" FontSize="20" FontWeight="SemiBold" Watermark="Section Title (e.g., Test A: Multiple Choice)" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
-                            <ToggleSwitch Grid.Column="1" OnContent="Shuffle Questions" OffContent="Do Not Shuffle" IsChecked="True"/>
-                        </Grid>
-                        
-                        <ItemsControl ItemsSource="{Binding Questions}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate x:DataType="models:Question">
-                                    <Border Background="{DynamicResource AppBackground}" CornerRadius="6" Padding="15" BorderBrush="{DynamicResource StandardButtonBrush}" BorderThickness="1" Margin="0,0,0,15">
-                                        <Grid RowDefinitions="Auto, Auto">
-                                            
-                                            <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto, Auto">
-                                                <TextBlock Grid.Column="0" Text="{Binding Type}" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}" Opacity="0.5"/>
-                                                
-                                                <TextBox Grid.Column="1" Text="{Binding Prompt}" Watermark="Type your question here..." Background="Transparent" BorderThickness="0,0,0,1" Foreground="{DynamicResource AppForeground}"/>
-                                                
-                                                <Button Grid.Column="2" Content="{Binding ExpandCollapseIcon}" Command="{Binding ToggleExpandCommand}" 
-                                                        Width="30" Height="30" CornerRadius="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                        Background="Transparent" BorderBrush="{DynamicResource AppForeground}" BorderThickness="1" Margin="10,0,0,0"
-                                                        Foreground="{DynamicResource AppForeground}" FontWeight="Bold"/>
-                                                
-                                                <Button Grid.Column="3" Content="🗑️" 
-                                                        Command="{Binding $parent[ItemsControl].DataContext.RemoveQuestionCommand}" 
-                                                        CommandParameter="{Binding}"
-                                                        Background="Transparent" Foreground="Red" FontSize="18" Margin="10,0,0,0" ToolTip.Tip="Delete Question"/>
-                                            </Grid>
+                <ItemsControl ItemsSource="{Binding Sections}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:TestSection">
+                            
+                            <Border Background="White" CornerRadius="8" Padding="25" BoxShadow="0 4 10 0 LightGray" Margin="0,0,0,80">
+                                <StackPanel Spacing="15">
+                                    
+                                    <Grid ColumnDefinitions="*, Auto, Auto, Auto">
+                                        <TextBox Grid.Column="0" Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" Watermark="Section Title" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
+                                        
+                                        <TextBlock Grid.Column="1" Text="{Binding SectionTotalPoints, StringFormat='Section Points: {0}'}" 
+                                                   VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource AppForeground}" Opacity="0.6" Margin="20,0,0,0"/>
 
-                                            <StackPanel Grid.Row="1" IsVisible="{Binding IsExpanded}" Margin="0,15,0,0" Spacing="10">
-                                                
-                                                <StackPanel IsVisible="{Binding IsMultipleChoice}" Spacing="10">
-                                                    <ItemsControl ItemsSource="{Binding Choices}">
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate x:DataType="models:Choice">
-                                                                <Grid ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,10">
-                                                                    <RadioButton Grid.Column="0" IsChecked="{Binding IsCorrect}" GroupName="{Binding $parent[ItemsControl].DataContext.GetHashCode}" Margin="0,0,10,0"/>
-                                                                    
-                                                                    <TextBox Grid.Column="1" Text="{Binding Text}" Watermark="Option text..." Foreground="{DynamicResource AppForeground}"/>
-                                                                    
-                                                                    <Button Grid.Column="2" Content="✕" 
-                                                                            Command="{Binding $parent[ItemsControl].DataContext.RemoveChoiceCommand}" 
-                                                                            CommandParameter="{Binding}" 
-                                                                            Background="Transparent" Foreground="Red" FontSize="16" Margin="10,0,0,0"/>
-                                                                </Grid>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
-                                                    
-                                                    <Button Content="+ Add Option" Command="{Binding AddChoiceCommand}" Background="Transparent" Foreground="{DynamicResource PrimaryActionBrush}" HorizontalAlignment="Left"/>
-                                                </StackPanel>
-
-                                                <StackPanel IsVisible="{Binding IsTrueFalse}" Spacing="10">
-                                                    <RadioButton Content="True" GroupName="{Binding GetHashCode}" Foreground="{DynamicResource AppForeground}"/>
-                                                    <RadioButton Content="False" GroupName="{Binding GetHashCode}" Foreground="{DynamicResource AppForeground}"/>
-                                                </StackPanel>
-
-                                                <StackPanel IsVisible="{Binding IsMultipleAnswer}" Spacing="10">
-                                                    <ItemsControl ItemsSource="{Binding Choices}">
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate x:DataType="models:Choice">
-                                                                <Grid ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,10">
-                                                                    <CheckBox Grid.Column="0" IsChecked="{Binding IsCorrect}" Margin="0,0,10,0"/>
-                                                                    
-                                                                    <TextBox Grid.Column="1" Text="{Binding Text}" Watermark="Option text..." Foreground="{DynamicResource AppForeground}"/>
-                                                                    
-                                                                    <Button Grid.Column="2" Content="✕" 
-                                                                            Command="{Binding $parent[ItemsControl].DataContext.RemoveChoiceCommand}" 
-                                                                            CommandParameter="{Binding}" 
-                                                                            Background="Transparent" Foreground="Red" FontSize="16" Margin="10,0,0,0"/>
-                                                                </Grid>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
-                                                    
-                                                    <Grid ColumnDefinitions="Auto, *, Auto, Auto" Margin="0,10,0,0">
-                                                        <Button Grid.Column="0" Content="+ Add Checkbox" Command="{Binding AddChoiceCommand}" Background="Transparent" Foreground="{DynamicResource PrimaryActionBrush}"/>
+                                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding ShuffleQuestions}" OnContent="Shuffle Questions" OffContent="Do Not Shuffle" Margin="20,0"/>
+                                        
+                                        <Button Grid.Column="3" Content="🗑️" 
+                                                Command="{Binding #RootView.DataContext.RemoveSectionCommand}" 
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" Foreground="Red" FontSize="18" ToolTip.Tip="Delete Entire Section"/>
+                                    </Grid>
+                                    
+                                    <ItemsControl ItemsSource="{Binding Questions}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:Question">
+                                                <Border Background="{DynamicResource AppBackground}" CornerRadius="6" Padding="15" BorderBrush="{DynamicResource StandardButtonBrush}" BorderThickness="1" Margin="0,0,0,15">
+                                                    <Grid RowDefinitions="Auto, Auto">
                                                         
-                                                        <TextBlock Grid.Column="2" Text="Scoring Rubric:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="{DynamicResource AppForeground}"/>
-                                                        <ComboBox Grid.Column="3" SelectedIndex="{Binding MultipleAnswerRubric}" Width="200">
-                                                            <ComboBoxItem>All-or-Nothing</ComboBoxItem>
-                                                            <ComboBoxItem>Partial Credit (-1 penalty)</ComboBoxItem>
-                                                        </ComboBox>
-                                                    </Grid>
-                                                </StackPanel>
+                                                        <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto, Auto">
+                                                            <TextBlock Grid.Column="0" Text="{Binding Type}" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}" Opacity="0.5"/>
+                                                            <TextBox Grid.Column="1" Text="{Binding Prompt}" Watermark="Type your question here..." Background="Transparent" BorderThickness="0,0,0,1" Foreground="{DynamicResource AppForeground}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="40"/>
+                                                            <Button Grid.Column="2" Content="{Binding ExpandCollapseIcon}" Command="{Binding ToggleExpandCommand}" Width="30" Height="30" CornerRadius="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderBrush="{DynamicResource AppForeground}" BorderThickness="1" Margin="10,0,0,0" Foreground="{DynamicResource AppForeground}" FontWeight="Bold"/>
+                                                            <Button Grid.Column="3" Content="🗑️" Command="{Binding #RootView.DataContext.RemoveQuestionCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="Red" FontSize="18" Margin="10,0,0,0" ToolTip.Tip="Delete Question"/>
+                                                        </Grid>
 
-                                                <StackPanel IsVisible="{Binding IsEssay}" Spacing="10">
-                                                    <TextBox MinHeight="100" Watermark="The examinee will type their essay response here..." IsEnabled="False" TextWrapping="Wrap" Background="#EEEEEE"/>
-                                                    
-                                                    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
-                                                        <TextBlock Text="Max Word Count:" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
-                                                        <NumericUpDown Value="{Binding MaxWordCount}" Minimum="50" Width="120" Foreground="{DynamicResource AppForeground}"/>
-                                                    </StackPanel>
-                                                </StackPanel>
-                                                
-                                                <Grid ColumnDefinitions="*, Auto" Margin="0,15,0,0">
-                                                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
-                                                        <Button Content="Attach Image" 
-                                                                Command="{Binding $parent[ItemsControl].DataContext.AttachImageCommand}"
-                                                                CommandParameter="{Binding}"
-                                                                Background="Transparent" Foreground="{DynamicResource PrimaryActionBrush}" BorderThickness="1" BorderBrush="{DynamicResource PrimaryActionBrush}"/>
-                                                        
-                                                        <Border IsVisible="{Binding HasImage}" Background="#E3F2FD" CornerRadius="4" Padding="10,5">
-                                                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                                                <TextBlock Text="🖼️" VerticalAlignment="Center"/>
-                                                                <TextBlock Text="{Binding AttachedImageFileName}" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource AppForeground}"/>
-                                                                
-                                                                <Button Content="✕" 
-                                                                        Command="{Binding $parent[ItemsControl].DataContext.RemoveImageCommand}"
-                                                                        CommandParameter="{Binding}"
-                                                                        Background="Transparent" Foreground="Red" Padding="5,0"/>
+                                                        <StackPanel Grid.Row="1" IsVisible="{Binding IsExpanded}" Margin="0,15,0,0" Spacing="10">
+                                                            
+                                                            <StackPanel IsVisible="{Binding IsMultipleChoice}" Spacing="10">
+                                                                <ItemsControl ItemsSource="{Binding Choices}">
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate x:DataType="models:Choice">
+                                                                            <Grid ColumnDefinitions="Auto, *, Auto, Auto" Margin="0,0,0,10">
+                                                                                <RadioButton Grid.Column="0" IsChecked="{Binding IsCorrect}" GroupName="{Binding $parent[ItemsControl].DataContext.GetHashCode}" Margin="0,0,10,0"/>
+                                                                                
+                                                                                <StackPanel Grid.Column="1" Spacing="5">
+                                                                                    <TextBox Text="{Binding Text}" Watermark="Option text..." Foreground="{DynamicResource AppForeground}" AcceptsReturn="True" TextWrapping="Wrap"/>
+                                                                                    
+                                                                                    <Border IsVisible="{Binding HasImage}" Background="#E3F2FD" CornerRadius="4" Padding="5" HorizontalAlignment="Left">
+                                                                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                                                                            <TextBlock Text="🖼️" VerticalAlignment="Center"/>
+                                                                                            <TextBlock Text="{Binding AttachedImageFileName}" VerticalAlignment="Center" MaxWidth="120" TextTrimming="CharacterEllipsis"/>
+                                                                                            <Button Content="✕" Command="{Binding #RootView.DataContext.RemoveChoiceImageCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="Red" Padding="5,0"/>
+                                                                                        </StackPanel>
+                                                                                    </Border>
+                                                                                </StackPanel>
+                                                                                
+                                                                                <Button Grid.Column="2" Content="🖼️" Command="{Binding #RootView.DataContext.AttachChoiceImageCommand}" CommandParameter="{Binding}" Background="Transparent" ToolTip.Tip="Attach image to choice" Margin="5,0"/>
+                                                                                
+                                                                                <Button Grid.Column="3" Content="✕" Command="{Binding $parent[ItemsControl].DataContext.RemoveChoiceCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="Red" FontSize="16" Margin="5,0,0,0"/>
+                                                                            </Grid>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
+                                                                <Button Content="+ Add Option" Command="{Binding AddChoiceCommand}" Background="Transparent" Foreground="{DynamicResource PrimaryActionBrush}" HorizontalAlignment="Left"/>
                                                             </StackPanel>
-                                                        </Border>
-                                                    </StackPanel>
 
-                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
-                                                        <TextBlock Text="Points:" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
-                                                        <NumericUpDown Value="{Binding Points}" Minimum="1" Width="80" Foreground="{DynamicResource AppForeground}"/>
-                                                    </StackPanel>
-                                                </Grid>
-                                            </StackPanel>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                                                            <StackPanel IsVisible="{Binding IsTrueFalse}" Spacing="10">
+                                                                <RadioButton Content="True" GroupName="{Binding GetHashCode}" Foreground="{DynamicResource AppForeground}"/>
+                                                                <RadioButton Content="False" GroupName="{Binding GetHashCode}" Foreground="{DynamicResource AppForeground}"/>
+                                                            </StackPanel>
 
-                        <Button Content="+ Add Question to Section" HorizontalAlignment="Center" Margin="0,10,0,0" Background="{DynamicResource StandardButtonBrush}" Foreground="{DynamicResource AppForeground}">
-                            <Button.Flyout>
-                                <MenuFlyout Placement="BottomEdgeAlignedLeft">
-                                    <MenuItem Header="Multiple Choice" Command="{Binding AddMultipleChoiceCommand}" />
-                                    <MenuItem Header="True/False" Command="{Binding AddTrueFalseCommand}" />
-                                    <MenuItem Header="Multiple Answer" Command="{Binding AddMultipleAnswerCommand}" />
-                                    <MenuItem Header="Essay" Command="{Binding AddEssayCommand}" />
-                                </MenuFlyout>
-                            </Button.Flyout>
-                        </Button>
-                        
-                    </StackPanel>
-                </Border>
+                                                            <StackPanel IsVisible="{Binding IsMultipleAnswer}" Spacing="10">
+                                                                <ItemsControl ItemsSource="{Binding Choices}">
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate x:DataType="models:Choice">
+                                                                            <Grid ColumnDefinitions="Auto, *, Auto, Auto" Margin="0,0,0,10">
+                                                                                <RadioButton Grid.Column="0" IsChecked="{Binding IsCorrect}" GroupName="{Binding $parent[ItemsControl].DataContext.GetHashCode}" Margin="0,0,10,0"/>
+                                                                                
+                                                                                <StackPanel Grid.Column="1" Spacing="5">
+                                                                                    <TextBox Text="{Binding Text}" Watermark="Option text..." Foreground="{DynamicResource AppForeground}" AcceptsReturn="True" TextWrapping="Wrap"/>
+                                                                                    
+                                                                                    <Border IsVisible="{Binding HasImage}" Background="#E3F2FD" CornerRadius="4" Padding="5" HorizontalAlignment="Left">
+                                                                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                                                                            <TextBlock Text="🖼️" VerticalAlignment="Center"/>
+                                                                                            <TextBlock Text="{Binding AttachedImageFileName}" VerticalAlignment="Center" MaxWidth="120" TextTrimming="CharacterEllipsis"/>
+                                                                                            <Button Content="✕" Command="{Binding #RootView.DataContext.RemoveChoiceImageCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="Red" Padding="5,0"/>
+                                                                                        </StackPanel>
+                                                                                    </Border>
+                                                                                </StackPanel>
+                                                                                
+                                                                                <Button Grid.Column="2" Content="🖼️" Command="{Binding #RootView.DataContext.AttachChoiceImageCommand}" CommandParameter="{Binding}" Background="Transparent" ToolTip.Tip="Attach image to choice" Margin="5,0"/>
+                                                                                
+                                                                                <Button Grid.Column="3" Content="✕" Command="{Binding $parent[ItemsControl].DataContext.RemoveChoiceCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="Red" FontSize="16" Margin="5,0,0,0"/>
+                                                                            </Grid>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
+                                                                <Grid ColumnDefinitions="Auto, *, Auto, Auto" Margin="0,10,0,0">
+                                                                    <Button Grid.Column="0" Content="+ Add Checkbox" Command="{Binding AddChoiceCommand}" Background="Transparent" Foreground="{DynamicResource PrimaryActionBrush}"/>
+                                                                    <TextBlock Grid.Column="2" Text="Scoring Rubric:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="{DynamicResource AppForeground}"/>
+                                                                    <ComboBox Grid.Column="3" SelectedIndex="{Binding MultipleAnswerRubric}" Width="200">
+                                                                        <ComboBoxItem>All-or-Nothing</ComboBoxItem>
+                                                                        <ComboBoxItem>Partial Credit (-1 penalty)</ComboBoxItem>
+                                                                    </ComboBox>
+                                                                </Grid>
+                                                            </StackPanel>
 
-                <Button Content="+ Add New Section" HorizontalAlignment="Center" Margin="0,10,0,30" Padding="20,10" Background="Transparent" BorderBrush="{DynamicResource AppForeground}" BorderThickness="1" Foreground="{DynamicResource AppForeground}"/>
+                                                            <StackPanel IsVisible="{Binding IsEssay}" Spacing="10">
+                                                                <TextBox MinHeight="100" Watermark="The examinee will type their essay response here..." IsEnabled="False" TextWrapping="Wrap" Background="#EEEEEE"/>
+                                                                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+                                                                    <TextBlock Text="Max Word Count:" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
+                                                                    <NumericUpDown Value="{Binding MaxWordCount}" Minimum="50" Width="120" Foreground="{DynamicResource AppForeground}"/>
+                                                                </StackPanel>
+                                                            </StackPanel>
+                                                            
+                                                            <Grid ColumnDefinitions="*, Auto" Margin="0,15,0,0">
+                                                                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                                                                    <Button Content="Attach Image" Command="{Binding #RootView.DataContext.AttachImageCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="{DynamicResource PrimaryActionBrush}" BorderThickness="1" BorderBrush="{DynamicResource PrimaryActionBrush}"/>
+                                                                    <Border IsVisible="{Binding HasImage}" Background="#E3F2FD" CornerRadius="4" Padding="10,5">
+                                                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                                                            <TextBlock Text="🖼️" VerticalAlignment="Center"/>
+                                                                            <TextBlock Text="{Binding AttachedImageFileName}" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource AppForeground}"/>
+                                                                            <Button Content="✕" Command="{Binding #RootView.DataContext.RemoveImageCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="Red" Padding="5,0"/>
+                                                                        </StackPanel>
+                                                                    </Border>
+                                                                </StackPanel>
+                                                                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                                                                    <TextBlock Text="Points:" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
+                                                                    <NumericUpDown Value="{Binding Points}" Minimum="1" Width="120" Foreground="{DynamicResource AppForeground}"/>
+                                                                </StackPanel>
+                                                            </Grid>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <Button Content="+ Add Question to Section" HorizontalAlignment="Center" Margin="0,10,0,0" Background="{DynamicResource StandardButtonBrush}" Foreground="{DynamicResource AppForeground}">
+                                        <Button.Flyout>
+                                            <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                                <MenuItem Header="Multiple Choice" Command="{Binding #RootView.DataContext.AddMultipleChoiceCommand}" CommandParameter="{Binding}" />
+                                                <MenuItem Header="True/False" Command="{Binding #RootView.DataContext.AddTrueFalseCommand}" CommandParameter="{Binding}" />
+                                                <MenuItem Header="Multiple Answer" Command="{Binding #RootView.DataContext.AddMultipleAnswerCommand}" CommandParameter="{Binding}" />
+                                                <MenuItem Header="Essay" Command="{Binding #RootView.DataContext.AddEssayCommand}" CommandParameter="{Binding}" />
+                                            </MenuFlyout>
+                                        </Button.Flyout>
+                                    </Button>
+                                    
+                                </StackPanel>
+                            </Border>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
             </StackPanel>
         </ScrollViewer>
+        <Border Grid.Row="2" Background="White" Padding="15" BoxShadow="0 -2 5 0 LightGray" ZIndex="10">
+            <Button Content="+ Add New Section" 
+                    Command="{Binding AddSectionCommand}" 
+                    HorizontalAlignment="Center" 
+                    Background="{DynamicResource AppForeground}" 
+                    Foreground="{DynamicResource AppBackground}" 
+                    Padding="30,10" FontSize="16" FontWeight="Bold"/>
+        </Border>
     </Grid>
 </UserControl>
