@@ -34,4 +34,35 @@ public class FileManagementService
         
         return null; // User canceled the dialog
     }
+
+    // Opens the file picker specifically looking for ScriviTest .xamn files
+    public async Task<string?> PickExamArchiveAsync()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var mainWindow = desktop.MainWindow;
+            if (mainWindow != null)
+            {
+                // Create a custom filter so the file browser specifically looks for your app's files
+                var xamnFileType = new FilePickerFileType("ScriviTest Exam Archive")
+                {
+                    Patterns = new[] { "*.xamn" }
+                };
+
+                var files = await mainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                {
+                    Title = "Select a ScriviTest Examination File",
+                    AllowMultiple = false,
+                    FileTypeFilter = new[] { xamnFileType, FilePickerFileTypes.All }
+                });
+
+                if (files.Count >= 1)
+                {
+                    return files[0].Path.LocalPath;
+                }
+            }
+        }
+        
+        return null; // User canceled the dialog
+    }
 }

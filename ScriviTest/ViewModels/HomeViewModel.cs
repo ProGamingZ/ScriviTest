@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScriviTest.ViewModels.Examiner; 
+using ScriviTest.ViewModels.Examinee;
 using System;
 
 namespace ScriviTest.ViewModels;
@@ -41,6 +42,9 @@ public partial class HomeViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsActivated))]
     private void NavigateToExaminee()
     {
-        // TODO: Switch MainViewModel.CurrentPage to ExamineePreTestViewModel
+        if (_navigateAction != null)
+        {
+            _navigateAction(new ExamineeHubViewModel(_navigateAction));
+        }
     }
 }
