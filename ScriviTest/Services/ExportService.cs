@@ -10,10 +10,10 @@ namespace ScriviTest.Services;
 
 public class ExportService
 {
-    // This creates the .xamn file for the Examinees
-    public void ExportStudentArchive(Exam examData, string outputPath)
+    // Now takes both output paths!
+    public void ExportExamPackage(Exam examData, string xamnPath, string xamkPath)
     {
-        // 1. Map the live Exam model to the secure DTO (Scrubbing the answers)
+        // --- 1. PREPARE THE STUDENT DTO (No Answers) ---
         var safeExam = new StudentExamDto
         {
             Title = examData.Title,
@@ -25,15 +25,22 @@ public class ExportService
             AntiCheatStrictness = examData.AntiCheatStrictness
         };
 
-        // We will temporarily collect all referenced image paths so we know what to copy
+        // --- 2. PREPARE THE ANSWER KEY DTO ---
+        var answerKey = new AnswerKeyExamDto
+        {
+            ExamId = Guid.NewGuid().ToString() // Unique ID to link the Test to the Key
+        };
+
         var imagePathsToZip = new HashSet<string>();
 
         foreach (var section in examData.Sections)
         {
             var safeSection = new StudentSectionDto { Title = section.Title, ShuffleQuestions = section.ShuffleQuestions };
+            var keySection = new AnswerKeySectionDto();
             
             foreach (var question in section.Questions)
             {
+                // Build the Student Question
                 var safeQuestion = new StudentQuestionDto
                 {
                     Prompt = question.Prompt,
@@ -43,52 +50,73 @@ public class ExportService
                     MaxWordCount = question.MaxWordCount
                 };
 
+                // Build the Answer Key Question
+                var keyQuestion = new AnswerKeyQuestionDto
+                {
+                    Type = question.Type.ToString(),
+                    Points = question.Points,
+                    MultipleAnswerRubric = question.MultipleAnswerRubric.ToString(),
+                    TrueFalseCorrectAnswer = question.Type == QuestionType.TrueFalse ? question.IsTrueFalseAnswerTrue : null
+                };
+
                 if (!string.IsNullOrEmpty(question.AttachedImageFullPath))
                     imagePathsToZip.Add(question.AttachedImageFullPath);
 
-                foreach (var choice in question.Choices)
+                // Loop through choices to populate BOTH DTOs
+                for (int i = 0; i < question.Choices.Count; i++)
                 {
+                    var choice = question.Choices[i];
+
+                    // Give student the text/image, but NOT the IsCorrect boolean
                     safeQuestion.Choices.Add(new StudentChoiceDto 
                     { 
                         Text = choice.Text,
                         AttachedImageFileName = choice.AttachedImageFileName
                     });
 
+                    // If it's correct, record the index number in the Answer Key!
+                    if (choice.IsCorrect)
+                    {
+                        keyQuestion.CorrectChoiceIndices.Add(i);
+                    }
+
                     if (!string.IsNullOrEmpty(choice.AttachedImageFullPath))
                         imagePathsToZip.Add(choice.AttachedImageFullPath);
                 }
+                
                 safeSection.Questions.Add(safeQuestion);
+                keySection.Questions.Add(keyQuestion);
             }
             safeExam.Sections.Add(safeSection);
+            answerKey.Sections.Add(keySection);
         }
 
-        // 2. Serialize the safe DTO to JSON
+        // --- 3. GENERATE THE .XAMN STUDENT ARCHIVE ---
         var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-        string jsonContent = JsonSerializer.Serialize(safeExam, jsonOptions);
+        string studentJson = JsonSerializer.Serialize(safeExam, jsonOptions);
 
-        // 3. Create the Zip Archive (.xamn)
-        using (FileStream zipToOpen = new FileStream(outputPath, FileMode.Create))
+        using (FileStream zipToOpen = new FileStream(xamnPath, FileMode.Create))
         {
             using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
             {
-                // Add the JSON file
                 ZipArchiveEntry jsonEntry = archive.CreateEntry("exam_data.json");
                 using (StreamWriter writer = new StreamWriter(jsonEntry.Open()))
                 {
-                    writer.Write(jsonContent);
+                    writer.Write(studentJson);
                 }
 
-                // Add the Images into a /media folder
                 foreach (var imagePath in imagePathsToZip)
                 {
                     if (File.Exists(imagePath))
                     {
-                        string fileName = Path.GetFileName(imagePath);
-                        // The forward slash creates the folder structure inside the zip
-                        archive.CreateEntryFromFile(imagePath, $"media/{fileName}");
+                        archive.CreateEntryFromFile(imagePath, $"media/{Path.GetFileName(imagePath)}");
                     }
                 }
             }
         }
+
+        // --- 4. GENERATE THE .XAMK ANSWER KEY ---
+        string keyJson = JsonSerializer.Serialize(answerKey, jsonOptions);
+        File.WriteAllText(xamkPath, keyJson);
     }
 }

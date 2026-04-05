@@ -154,6 +154,7 @@ public partial class ExamCreationViewModel : ViewModelBase
         // For testing purposes, we will just export it to the desktop
         string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         string xamnPath = Path.Combine(desktopPath, "Draft_Exam.xamn");
+        string xamkPath = Path.Combine(desktopPath, "Draft_Exam.xamk");
 
         // We need a dummy Exam object to pass to the service since our properties are scattered in this ViewModel right now
         // Note: In a full refactor, this ViewModel should probably just hold an Exam model directly.
@@ -170,10 +171,10 @@ public partial class ExamCreationViewModel : ViewModelBase
         }
 
         var exportService = new Services.ExportService();
-        exportService.ExportStudentArchive(examToExport, xamnPath);
+        exportService.ExportExamPackage(examToExport, xamnPath, xamkPath);
 
         // TODO: Trigger a UI popup saying "Export Successful!"
-        Console.WriteLine($"Exported successfully to: {xamnPath}");
+        Console.WriteLine($"Successfully generated .xamn and .xamk on the Desktop!");
     }
 
 }

@@ -83,7 +83,7 @@
                                                                     <ItemsControl.ItemTemplate>
                                                                         <DataTemplate x:DataType="models:Choice">
                                                                             <Grid ColumnDefinitions="Auto, *, Auto, Auto" Margin="0,0,0,10">
-                                                                                <RadioButton Grid.Column="0" IsChecked="{Binding IsCorrect}" GroupName="{Binding $parent[ItemsControl].DataContext.GetHashCode}" Margin="0,0,10,0"/>
+                                                                                <RadioButton Grid.Column="0" IsChecked="{Binding IsCorrect}" GroupName="{Binding $parent[ItemsControl].DataContext.GroupId}" Margin="0,0,10,0"/>
                                                                                 
                                                                                 <StackPanel Grid.Column="1" Spacing="5">
                                                                                     <TextBox Text="{Binding Text}" Watermark="Option text..." Foreground="{DynamicResource AppForeground}" AcceptsReturn="True" TextWrapping="Wrap"/>
@@ -108,8 +108,8 @@
                                                             </StackPanel>
 
                                                             <StackPanel IsVisible="{Binding IsTrueFalse}" Spacing="10">
-                                                                <RadioButton Content="True" GroupName="{Binding GetHashCode}" Foreground="{DynamicResource AppForeground}"/>
-                                                                <RadioButton Content="False" GroupName="{Binding GetHashCode}" Foreground="{DynamicResource AppForeground}"/>
+                                                                <RadioButton Content="True" GroupName="{Binding GroupId}" IsChecked="{Binding IsTrueFalseAnswerTrue}" Foreground="{DynamicResource AppForeground}"/>
+                                                                <RadioButton Content="False" GroupName="{Binding GroupId}" IsChecked="{Binding IsTrueFalseAnswerFalse}" Foreground="{DynamicResource AppForeground}"/>
                                                             </StackPanel>
 
                                                             <StackPanel IsVisible="{Binding IsMultipleAnswer}" Spacing="10">
@@ -117,7 +117,7 @@
                                                                     <ItemsControl.ItemTemplate>
                                                                         <DataTemplate x:DataType="models:Choice">
                                                                             <Grid ColumnDefinitions="Auto, *, Auto, Auto" Margin="0,0,0,10">
-                                                                                <RadioButton Grid.Column="0" IsChecked="{Binding IsCorrect}" GroupName="{Binding $parent[ItemsControl].DataContext.GetHashCode}" Margin="0,0,10,0"/>
+                                                                                <CheckBox Grid.Column="0" IsChecked="{Binding IsCorrect}"  Margin="0,0,10,0"/>
                                                                                 
                                                                                 <StackPanel Grid.Column="1" Spacing="5">
                                                                                     <TextBox Text="{Binding Text}" Watermark="Option text..." Foreground="{DynamicResource AppForeground}" AcceptsReturn="True" TextWrapping="Wrap"/>

@@ -6,6 +6,7 @@ namespace ScriviTest.Models;
 
 public partial class Question : ObservableObject
 {
+    public string GroupId { get; } = System.Guid.NewGuid().ToString();
     [ObservableProperty]
     private string _prompt = string.Empty;
 
@@ -21,6 +22,30 @@ public partial class Question : ObservableObject
     public bool IsTrueFalse => Type == QuestionType.TrueFalse;
     public bool IsMultipleAnswer => Type == QuestionType.MultipleAnswer;
     public bool IsEssay => Type == QuestionType.Essay;
+
+    // --- True/False Answer Tracking ---
+    private bool _isTrueFalseAnswerTrue = true;
+
+    public bool IsTrueFalseAnswerTrue
+    {
+        get => _isTrueFalseAnswerTrue;
+        set
+        {
+            if (SetProperty(ref _isTrueFalseAnswerTrue, value))
+            {
+                OnPropertyChanged(nameof(IsTrueFalseAnswerFalse));
+            }
+        }
+    }
+
+    public bool IsTrueFalseAnswerFalse
+    {
+        get => !_isTrueFalseAnswerTrue;
+        set
+        {
+            if (value) IsTrueFalseAnswerTrue = false;
+        }
+    }
 
     [ObservableProperty]
     private int _points = 1;
