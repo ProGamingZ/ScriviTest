@@ -10,6 +10,7 @@ public partial class ExamineeHubViewModel : ViewModelBase
 {
     private readonly Action<ViewModelBase> _navigateAction;
     private readonly Services.FileManagementService _fileService;
+    private readonly Services.CryptographyService _cryptoService;
 
     [ObservableProperty]
     private string? _selectedFilePath;
@@ -27,6 +28,7 @@ public partial class ExamineeHubViewModel : ViewModelBase
     {
         _navigateAction = navigateAction;
         _fileService = new Services.FileManagementService();
+        _cryptoService = new Services.CryptographyService();
     }
 
     [RelayCommand]
@@ -59,7 +61,23 @@ public partial class ExamineeHubViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanStartExam))]
     private void StartExam()
     {
-        // STEP 2 WILL GO HERE: We will pass the FilePath and the Key into the Decryption engine!
-        Console.WriteLine($"Starting Exam with File: {SelectedFilePath} and Key: {WhiteboardKey}");
-    }
+        ErrorMessage = "Decrypting...";
+
+        // 1. Create a secure temporary folder in the OS's temp directory
+        string sessionGuid = Guid.NewGuid().ToString();
+        string tempImageFolder = Path.Combine(Path.GetTempPath(), "ScriviTest_Session", sessionGuid);
+
+        // 2. Attempt Decryption
+        var decryptedExam = _cryptoService.DecryptAndExtractExam(SelectedFilePath!, WhiteboardKey.ToUpper(), tempImageFolder);
+
+        if (decryptedExam == null)
+        {
+            // If it fails, the password was wrong or the file was tampered with.
+            ErrorMessage = "Access Denied. Invalid Whiteboard Key or corrupted file.";
+            return;
+        }
+
+        // 3. Success! Pass the decrypted data and the image folder to the actual Test UI
+        ErrorMessage = string.Empty;
+        _navigateAction(new ExamineeTestViewModel(_navigateAction, decryptedExam, tempImageFolder));    }
 }

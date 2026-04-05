@@ -1,6 +1,9 @@
 ﻿using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using ScriviTest.ViewModels.Examinee;
+using ScriviTest.ViewModels.Examiner;
+
 namespace ScriviTest.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
@@ -35,20 +38,25 @@ public partial class MainWindowViewModel : ViewModelBase
             WindowHeight = 450;
         }
         // Route: Examiner Hub & Creation (Resizable, Standard Window)
-        else if (viewModel is Examiner.ExaminerHubViewModel || viewModel is Examiner.ExamCreationViewModel)
+        else if (viewModel is ExaminerHubViewModel || viewModel is ExamCreationViewModel)
         {
             CanResize = true;
             IsTopmost = false;
-            CurrentWindowState = WindowState.Normal;
-            WindowWidth = 1200; // Give the Examiner a nice wide workspace
-            WindowHeight = 800;
+            CurrentWindowState = WindowState.Maximized;
         }
-        // FUTURE Route: Examinee Test Execution (Topmost Fullscreen)
-        // else if (viewModel is ExamineeTestViewModel)
-        // {
-        //     CanResize = false;
-        //     IsTopmost = true;
-        //     CurrentWindowState = WindowState.FullScreen;
-        // }
+        // NEW Route: Examinee Hub (Maximized but Resizable)
+        else if (viewModel is ExamineeHubViewModel)
+        {
+            CanResize = true;
+            IsTopmost = false;
+            CurrentWindowState = WindowState.Maximized; // Fills the screen, but keeps the taskbar and window controls
+        }
+        // NEW Route: Examinee Test Execution (Strict Fullscreen Lockdown)
+        else if (viewModel is ExamineeTestViewModel)
+        {
+            CanResize = false;
+            IsTopmost = true; // Prevents other apps from opening on top of it
+            CurrentWindowState = WindowState.FullScreen; // Completely hides the taskbar and locks the screen bounds
+        }
     }
 }
