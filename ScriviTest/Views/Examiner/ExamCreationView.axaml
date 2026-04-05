@@ -13,7 +13,7 @@
             <Grid ColumnDefinitions="Auto, *, Auto">
                 <Button Grid.Column="0" Content="← Back" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
                 <TextBlock Grid.Column="1" Text="Drafting Examination" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
-                <Button Grid.Column="2" Content="Preview &amp; Export" Background="{DynamicResource PrimaryActionBrush}" Foreground="{DynamicResource ActionTextBrush}"/>
+                <Button Grid.Column="2" Content="Preview &amp; Export" Command="{Binding ExportExamCommand}" Background="{DynamicResource PrimaryActionBrush}" Foreground="{DynamicResource ActionTextBrush}"/>
             </Grid>
         </Border>
 

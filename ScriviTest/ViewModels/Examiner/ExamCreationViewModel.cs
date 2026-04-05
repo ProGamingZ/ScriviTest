@@ -148,4 +148,32 @@ public partial class ExamCreationViewModel : ViewModelBase
         targetChoice.AttachedImageFileName = null;
     }
 
+    [RelayCommand]
+    private async Task ExportExam()
+    {
+        // For testing purposes, we will just export it to the desktop
+        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        string xamnPath = Path.Combine(desktopPath, "Draft_Exam.xamn");
+
+        // We need a dummy Exam object to pass to the service since our properties are scattered in this ViewModel right now
+        // Note: In a full refactor, this ViewModel should probably just hold an Exam model directly.
+        var examToExport = new Exam
+        {
+            Title = "My Test Exam", // We can bind these properly later
+            TimeLimitMinutes = 60
+        };
+        
+        // Copy our sections into it
+        foreach (var s in Sections)
+        {
+            examToExport.Sections.Add(s);
+        }
+
+        var exportService = new Services.ExportService();
+        exportService.ExportStudentArchive(examToExport, xamnPath);
+
+        // TODO: Trigger a UI popup saying "Export Successful!"
+        Console.WriteLine($"Exported successfully to: {xamnPath}");
+    }
+
 }
