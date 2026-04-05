@@ -29,11 +29,12 @@ public class StudentQuestionDto
     public string? AttachedImageFileName { get; set; }
     public int MaxWordCount { get; set; }
     public List<StudentChoiceDto> Choices { get; set; } = new();
+    public string StudentEssayResponse { get; set; } = string.Empty;
 }
 
 public class StudentChoiceDto
 {
     public string Text { get; set; } = string.Empty;
     public string? AttachedImageFileName { get; set; }
-    // CRITICAL: Notice there is NO "IsCorrect" property here!
+    public bool IsSelected { get; set; } = false;
 }

@@ -1,8 +1,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ScriviTest.DTOs;
 using System;
 
-namespace ScriviTest.ViewModels;
+namespace ScriviTest.ViewModels.Examinee;
 
 public partial class ExamineeTestViewModel : ViewModelBase
 {
@@ -20,5 +21,12 @@ public partial class ExamineeTestViewModel : ViewModelBase
         _navigateAction = navigateAction;
         ExamData = decryptedExam;
         ImageDirectory = tempDirectory;
+    }
+
+    [RelayCommand]
+    private void SubmitExam()
+    {
+        // We will build the .xans Export Logic here in the next step!
+        Console.WriteLine("Student clicked Submit Exam!");
     }
 }

@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScriviTest.ViewModels.Examinee"
+             xmlns:dto="using:ScriviTest.DTOs"
+             x:Class="ScriviTest.Views.Examinee.ExamineeTestView"
+             x:DataType="vm:ExamineeTestViewModel"
+             Background="{DynamicResource AppBackground}">
+
+    <Grid RowDefinitions="Auto, *, Auto">
+        
+        <Border Grid.Row="0" Background="{DynamicResource PrimaryActionBrush}" Padding="20" BoxShadow="0 2 10 0 Gray">
+            <Grid ColumnDefinitions="*, Auto">
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{Binding ExamData.Title}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource ActionTextBrush}"/>
+                    <TextBlock Text="{Binding ExamData.Teacher, StringFormat='Instructor: {0}'}" FontSize="14" Foreground="{DynamicResource ActionTextBrush}" Opacity="0.8"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock Text="⏱️" FontSize="24"/>
+                    <TextBlock Text="{Binding ExamData.TimeLimitMinutes, StringFormat='{}{0} Min Limit'}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource ActionTextBrush}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" Padding="20">
+            <StackPanel Spacing="30" MaxWidth="900" HorizontalAlignment="Center">
+                
+                <Border Background="White" CornerRadius="8" Padding="25" BoxShadow="0 4 10 0 LightGray" IsVisible="{Binding ExamData.Instructions, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Instructions" FontWeight="Bold" FontSize="18" Foreground="{DynamicResource AppForeground}"/>
+                        <TextBlock Text="{Binding ExamData.Instructions}" TextWrapping="Wrap" Foreground="{DynamicResource AppForeground}"/>
+                    </StackPanel>
+                </Border>
+
+                <ItemsControl ItemsSource="{Binding ExamData.Sections}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="dto:StudentSectionDto">
+                            <StackPanel Spacing="15" Margin="0,0,0,40">
+                                
+                                <Border BorderBrush="LightGray" BorderThickness="0,0,0,2" Padding="0,0,0,5">
+                                  <TextBlock Text="{Binding Title}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource PrimaryActionBrush}"/>
+                               </Border>
+
+                                <ItemsControl ItemsSource="{Binding Questions}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="dto:StudentQuestionDto">
+                                            <Border Background="White" CornerRadius="8" Padding="25" BoxShadow="0 2 8 0 LightGray" Margin="0,0,0,20">
+                                                <StackPanel Spacing="15">
+                                                    
+                                                    <Grid ColumnDefinitions="*, Auto">
+                                                        <TextBlock Grid.Column="0" Text="{Binding Prompt}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource AppForeground}"/>
+                                                        <TextBlock Grid.Column="1" Text="{Binding Points, StringFormat='[{0} pts]'}" FontWeight="Bold" Foreground="Gray" VerticalAlignment="Top"/>
+                                                    </Grid>
+
+                                                    <TextBox IsVisible="{Binding Type, Converter={x:Static StringConverters.IsNullOrEmpty}}" 
+                                                             Text="{Binding StudentEssayResponse}" 
+                                                             AcceptsReturn="True" TextWrapping="Wrap" MinHeight="150" 
+                                                             Watermark="Type your response here..."/>
+                                                    
+                                                    <ItemsControl ItemsSource="{Binding Choices}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate x:DataType="dto:StudentChoiceDto">
+                                                                <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,5">
+                                                                    <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" Margin="0,0,10,0"/>
+                                                                    <TextBlock Grid.Column="1" Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                    
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="2" Background="White" Padding="20" BoxShadow="0 -2 10 0 LightGray" ZIndex="10">
+            <Button Content="FINISH &amp; SUBMIT EXAM" Command="{Binding SubmitExamCommand}" 
+                    HorizontalAlignment="Center" Background="#4CAF50" Foreground="White" 
+                    Padding="40,15" FontSize="18" FontWeight="Bold"/>
+        </Border>
+
+    </Grid>
+</UserControl>
