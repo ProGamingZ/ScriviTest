@@ -134,4 +134,43 @@ public class CryptographyService
         }
     }
 
+    // Decrypts a single .xans student submission file
+    public StudentSubmissionDto? DecryptStudentSubmission(string encryptedFilePath, string password)
+    {
+        try
+        {
+            using var fsIn = new FileStream(encryptedFilePath, FileMode.Open, FileAccess.Read);
+            
+            // 1. Read the 16-byte salt
+            byte[] salt = new byte[16];
+            fsIn.ReadExactly(salt, 0, salt.Length);
+
+            // 2. Derive the key using the modern static method
+            byte[] derivedBytes = Rfc2898DeriveBytes.Pbkdf2(password, salt, 100000, HashAlgorithmName.SHA256, 48);
+            byte[] key = derivedBytes[0..32];
+            byte[] iv = derivedBytes[32..48];
+
+            using var aes = Aes.Create();
+            aes.Key = key;
+            aes.IV = iv;
+
+            // 3. Decrypt the stream directly into RAM
+            using var cryptoStream = new CryptoStream(fsIn, aes.CreateDecryptor(), CryptoStreamMode.Read);
+            using var memoryStream = new MemoryStream();
+            cryptoStream.CopyTo(memoryStream);
+            memoryStream.Position = 0;
+
+            // 4. Read the raw JSON string
+            using var reader = new StreamReader(memoryStream);
+            string jsonContent = reader.ReadToEnd();
+            
+            // 5. Deserialize back into our lightweight DTO
+            return JsonSerializer.Deserialize<StudentSubmissionDto>(jsonContent);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to decrypt {Path.GetFileName(encryptedFilePath)}: {ex.Message}");
+            return null;
+        }
+    }
 }

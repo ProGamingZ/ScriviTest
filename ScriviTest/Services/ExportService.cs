@@ -119,4 +119,26 @@ public class ExportService
         string keyJson = JsonSerializer.Serialize(answerKey, jsonOptions);
         File.WriteAllText(xamkPath, keyJson);
     }
+
+    // Generates an Excel-ready CSV Grade Report
+    public void ExportGradeReportToCsv(List<GradeReport> grades, string outputPath)
+    {
+        var csv = new System.Text.StringBuilder();
+        
+        // 1. Write the Header Row
+        csv.AppendLine("Student Name,Total Points Earned,Max Possible Points,Status");
+
+        // 2. Loop through the grades and format each row
+        foreach (var grade in grades)
+        {
+            // Security: If a student types a comma in their name (e.g., "Doe, John"), 
+            // it will break the CSV columns. We wrap the name in quotes to prevent this.
+            string safeName = $"\"{grade.StudentName.Replace("\"", "\"\"")}\"";
+            
+            csv.AppendLine($"{safeName},{grade.TotalPointsEarned},{grade.MaxPossiblePoints},{grade.Status}");
+        }
+
+        // 3. Write to the hard drive
+        File.WriteAllText(outputPath, csv.ToString());
+    }
 }
