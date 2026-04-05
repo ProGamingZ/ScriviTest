@@ -24,8 +24,7 @@ public partial class ExaminerHubViewModel : ViewModelBase
     [RelayCommand]
     private void NavigateToGrading()
     {
-        // TODO: _navigateAction(new GradingDashboardViewModel());
-        Console.WriteLine("Routing to Grading Dashboard...");
+        _navigateAction(new GradingHubViewModel(_navigateAction));
     }
 
     [RelayCommand]

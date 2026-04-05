@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ScriviTest.Services;
@@ -64,5 +65,45 @@ public class FileManagementService
         }
         
         return null; // User canceled the dialog
+    }
+
+    // Looks specifically for the .xamk Answer Key
+    public async Task<string?> PickAnswerKeyAsync()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow != null)
+        {
+            var xamkFileType = new FilePickerFileType("ScriviTest Answer Key") { Patterns = new[] { "*.xamk" } };
+            var files = await desktop.MainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = "Select the Examination Answer Key (.xamk)",
+                AllowMultiple = false,
+                FileTypeFilter = new[] { xamkFileType, FilePickerFileTypes.All }
+            });
+
+            if (files.Count >= 1) return files[0].Path.LocalPath;
+        }
+        return null;
+    }
+
+    // Looks for .xans files and allows the user to highlight dozens of them at once!
+    public async Task<List<string>> PickStudentSubmissionsAsync()
+    {
+        var selectedPaths = new List<string>();
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow != null)
+        {
+            var xansFileType = new FilePickerFileType("ScriviTest Student Submission") { Patterns = new[] { "*.xans" } };
+            var files = await desktop.MainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = "Select Student Submissions (.xans)",
+                AllowMultiple = true, // CRITICAL: This allows batch selection!
+                FileTypeFilter = new[] { xansFileType, FilePickerFileTypes.All }
+            });
+
+            foreach (var file in files)
+            {
+                selectedPaths.Add(file.Path.LocalPath);
+            }
+        }
+        return selectedPaths;
     }
 }

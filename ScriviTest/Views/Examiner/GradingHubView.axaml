@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScriviTest.ViewModels.Examiner"
+             x:Class="ScriviTest.Views.Examiner.GradingHubView"
+             x:DataType="vm:GradingHubViewModel"
+             Background="{DynamicResource AppBackground}">
+
+    <Grid RowDefinitions="Auto, *">
+        
+        <Border Grid.Row="0" Background="White" Padding="15" BoxShadow="0 2 5 0 LightGray">
+            <Button Content="← Back to Hub" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
+        </Border>
+
+        <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="40" BoxShadow="0 8 20 0 LightGray" 
+                HorizontalAlignment="Center" VerticalAlignment="Center" Width="600">
+            
+            <StackPanel Spacing="25">
+                <TextBlock Text="Auto-Grading Dashboard" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryActionBrush}"/>
+                <TextBlock Text="Load your answer key, select the batch of student submissions, and enter the whiteboard key to decrypt and grade." 
+                           TextWrapping="Wrap" TextAlignment="Center" Foreground="{DynamicResource AppForeground}" Opacity="0.7"/>
+
+                <Separator Background="LightGray" Margin="0,10"/>
+
+                <StackPanel Spacing="10">
+                    <TextBlock Text="1. Load Answer Key (.xamk)" FontWeight="SemiBold" Foreground="{DynamicResource AppForeground}"/>
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Border Grid.Column="0" Background="#E3F2FD" BorderBrush="#90CAF9" BorderThickness="1" CornerRadius="4" Padding="10">
+                            <TextBlock Text="{Binding AnswerKeyFileName}" VerticalAlignment="Center" Foreground="#1565C0" FontWeight="SemiBold"/>
+                        </Border>
+                        <Button Grid.Column="1" Content="Browse..." Command="{Binding BrowseForAnswerKeyCommand}" 
+                                Background="{DynamicResource StandardButtonBrush}" Foreground="{DynamicResource AppForeground}" Padding="15,10" Margin="10,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Spacing="10">
+                    <TextBlock Text="2. Load Student Submissions (.xans)" FontWeight="SemiBold" Foreground="{DynamicResource AppForeground}"/>
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Border Grid.Column="0" Background="#F5F5F5" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Padding="10">
+                            <TextBlock Text="{Binding StudentFilesSummary}" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
+                        </Border>
+                        <Button Grid.Column="1" Content="Browse..." Command="{Binding BrowseForStudentFilesCommand}" 
+                                Background="{DynamicResource StandardButtonBrush}" Foreground="{DynamicResource AppForeground}" Padding="15,10" Margin="10,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Spacing="10">
+                    <TextBlock Text="3. Decryption Key (Whiteboard Code)" FontWeight="SemiBold" Foreground="{DynamicResource AppForeground}"/>
+                    <TextBox Text="{Binding WhiteboardKey}" MaxLength="6" FontSize="24" FontWeight="Bold" HorizontalContentAlignment="Center" 
+                             Watermark="XXXXXX" BorderThickness="1" BorderBrush="LightGray" Foreground="{DynamicResource AppForeground}"/>
+                </StackPanel>
+
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="SemiBold" HorizontalAlignment="Center" 
+                           IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+                <Button Content="RUN AUTO-GRADER" Command="{Binding StartGradingCommand}" 
+                        Background="{DynamicResource PrimaryActionBrush}" Foreground="{DynamicResource ActionTextBrush}" 
+                        FontSize="18" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="0,15" Margin="0,10,0,0"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
