@@ -17,11 +17,20 @@ public partial class ExamCreationViewModel : ViewModelBase
     public ObservableCollection<TestSection> Sections { get; } = new();
     [ObservableProperty]
     private int _totalExamPoints = 0;
+
+    private readonly Services.CryptographyService _cryptoService;
+
+    [ObservableProperty]
+    private string _generatedExamKey = string.Empty;
+
+    [ObservableProperty]
+    private bool _hasExported = false;
     
     public ExamCreationViewModel(Action<ViewModelBase> navigateAction)
     {
         _navigateAction = navigateAction;
         _fileService = new Services.FileManagementService();
+        _cryptoService = new Services.CryptographyService();
 
         Sections.CollectionChanged += Sections_CollectionChanged;
         // Create a default section with one default question so the screen isn't blank
@@ -156,8 +165,6 @@ public partial class ExamCreationViewModel : ViewModelBase
         string xamnPath = Path.Combine(desktopPath, "Draft_Exam.xamn");
         string xamkPath = Path.Combine(desktopPath, "Draft_Exam.xamk");
 
-        // We need a dummy Exam object to pass to the service since our properties are scattered in this ViewModel right now
-        // Note: In a full refactor, this ViewModel should probably just hold an Exam model directly.
         var examToExport = new Exam
         {
             Title = "My Test Exam", // We can bind these properly later
@@ -172,6 +179,10 @@ public partial class ExamCreationViewModel : ViewModelBase
 
         var exportService = new Services.ExportService();
         exportService.ExportExamPackage(examToExport, xamnPath, xamkPath);
+
+        GeneratedExamKey = _cryptoService.GenerateExaminationKey();
+        _cryptoService.EncryptFile(xamnPath, GeneratedExamKey);
+        HasExported = true;
 
         // TODO: Trigger a UI popup saying "Export Successful!"
         Console.WriteLine($"Successfully generated .xamn and .xamk on the Desktop!");
