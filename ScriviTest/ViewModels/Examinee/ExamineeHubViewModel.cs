@@ -79,5 +79,5 @@ public partial class ExamineeHubViewModel : ViewModelBase
 
         // 3. Success! Pass the decrypted data and the image folder to the actual Test UI
         ErrorMessage = string.Empty;
-        _navigateAction(new ExamineeTestViewModel(_navigateAction, decryptedExam, tempImageFolder));    }
+        _navigateAction(new ExamineeTestViewModel(_navigateAction, decryptedExam, tempImageFolder, WhiteboardKey.ToUpper()));    }
 }
