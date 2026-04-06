@@ -2,9 +2,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
-using System.Threading.Tasks;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ScriviTest.ViewModels.Examiner;
 
@@ -14,23 +15,24 @@ public partial class GradingHubViewModel : ViewModelBase
     private readonly Services.FileManagementService _fileService;
     private readonly Services.CryptographyService _cryptoService;
 
-    [ObservableProperty]
-    private string? _answerKeyPath;
+    // To store the answer key globally after unlocking
+    private DTOs.AnswerKeyExamDto? _loadedAnswerKey;
 
-    [ObservableProperty]
-    private string _answerKeyFileName = "No answer key selected.";
+    // Navigation for the Middle Panel
+    [ObservableProperty] private ObservableCollection<Models.ReviewQuestion> _currentStudentQuestions = new();
+    [ObservableProperty] private Models.ReviewQuestion? _currentVisibleQuestion;
+    
+    private int _currentQuestionIndex = 0;
+    [ObservableProperty] private string? _answerKeyPath;
+    [ObservableProperty] private string _answerKeyFileName = string.Empty;
+    [ObservableProperty] private List<string> _studentSubmissionPaths = new();
+    [ObservableProperty] private string _studentFilesSummary = string.Empty;
+    [ObservableProperty] private string _whiteboardKey = string.Empty;
+    [ObservableProperty] private string _errorMessage = string.Empty;
 
-    [ObservableProperty]
-    private List<string> _studentSubmissionPaths = new();
-
-    [ObservableProperty]
-    private string _studentFilesSummary = "0 student submissions loaded.";
-
-    [ObservableProperty]
-    private string _whiteboardKey = string.Empty;
-
-    [ObservableProperty]
-    private string _errorMessage = string.Empty;
+    
+    [ObservableProperty] private ObservableCollection<Models.GradeReport> _studentList = new();
+    [ObservableProperty] private Models.GradeReport? _selectedStudent;
 
     public GradingHubViewModel(Action<ViewModelBase> navigateAction)
     {
@@ -39,7 +41,6 @@ public partial class GradingHubViewModel : ViewModelBase
         _cryptoService = new Services.CryptographyService();
     }
 
-    // Assuming the user navigates here from the Examiner Hub
     [RelayCommand]
     private void GoBack() => _navigateAction(new ExaminerHubViewModel(_navigateAction));
 
@@ -63,29 +64,28 @@ public partial class GradingHubViewModel : ViewModelBase
         if (paths.Count > 0)
         {
             StudentSubmissionPaths = paths;
-            StudentFilesSummary = $"{paths.Count} student submission(s) loaded for grading.";
+            StudentFilesSummary = $"{paths.Count} student submission(s) loaded.";
         }
     }
 
-    private bool CanStartGrading => !string.IsNullOrEmpty(AnswerKeyPath) && StudentSubmissionPaths.Count > 0 && WhiteboardKey.Length >= 6;
+    // Validation for the Check button
+    private bool CanCheckAndUnlock => !string.IsNullOrEmpty(AnswerKeyPath) && StudentSubmissionPaths.Count > 0 && WhiteboardKey.Length >= 6;
 
-    partial void OnAnswerKeyPathChanged(string? value) => StartGradingCommand.NotifyCanExecuteChanged();
-    partial void OnStudentSubmissionPathsChanged(List<string> value) => StartGradingCommand.NotifyCanExecuteChanged();
-    partial void OnWhiteboardKeyChanged(string value) => StartGradingCommand.NotifyCanExecuteChanged();
+    partial void OnAnswerKeyPathChanged(string? value) => CheckAndUnlockCommand.NotifyCanExecuteChanged();
+    partial void OnStudentSubmissionPathsChanged(List<string> value) => CheckAndUnlockCommand.NotifyCanExecuteChanged();
+    partial void OnWhiteboardKeyChanged(string value) => CheckAndUnlockCommand.NotifyCanExecuteChanged();
 
-    
-    [RelayCommand(CanExecute = nameof(CanStartGrading))]
-    private void StartGrading()
+    [RelayCommand(CanExecute = nameof(CanCheckAndUnlock))]
+    private void CheckAndUnlock()
     {
-        ErrorMessage = "Running Auto-Grader...";
+        ErrorMessage = string.Empty;
+        StudentList.Clear(); // Clear old list if they click it twice
 
-        // 1. READ THE ANSWER KEY (.xamk)
-        DTOs.AnswerKeyExamDto? answerKey;
         try
         {
             string keyJson = File.ReadAllText(AnswerKeyPath!);
-            answerKey = JsonSerializer.Deserialize<DTOs.AnswerKeyExamDto>(keyJson);
-            if (answerKey == null) throw new Exception("Answer Key is empty.");
+            _loadedAnswerKey = JsonSerializer.Deserialize<DTOs.AnswerKeyExamDto>(keyJson);
+            if (_loadedAnswerKey == null) throw new Exception("Answer Key is empty.");
         }
         catch (Exception ex)
         {
@@ -93,115 +93,135 @@ public partial class GradingHubViewModel : ViewModelBase
             return;
         }
 
-        // 2. BATCH DECRYPT STUDENT SUBMISSIONS
-        var decryptedSubmissions = new List<DTOs.StudentSubmissionDto>();
+        // 2. BATCH DECRYPT & GRADE
         foreach (var path in StudentSubmissionPaths)
         {
-            var submission = _cryptoService.DecryptStudentSubmission(path, WhiteboardKey.ToUpper());
-            if (submission != null) decryptedSubmissions.Add(submission);
-            else
+            var studentSubmission = _cryptoService.DecryptStudentSubmission(path, WhiteboardKey.ToUpper());
+            if (studentSubmission == null)
             {
-                ErrorMessage = $"Access Denied: Failed to decrypt {Path.GetFileName(path)}.";
-                return;
+                ErrorMessage = $"Access Denied: Failed to decrypt {Path.GetFileName(path)}. Wrong Whiteboard Key?";
+                return; 
             }
-        }
 
-        // 3. THE AUTO-GRADER ENGINE
-        var finalGrades = new List<Models.GradeReport>();
-
-        foreach (var student in decryptedSubmissions)
-        {
+            // Create the Grade Report using our new fields
             var report = new Models.GradeReport 
             { 
-                StudentName = student.StudentName,
+                FirstName = studentSubmission.FirstName,
+                MiddleName = studentSubmission.MiddleName,
+                LastName = studentSubmission.LastName,
+                StudentID = studentSubmission.StudentID,
+                SubmissionData = studentSubmission, // Keep the raw data for the Middle Panel!
                 MaxPossiblePoints = 0,
                 TotalPointsEarned = 0,
                 RequiresManualReview = false
             };
 
-            // Loop through Sections
-            for (int s = 0; s < student.Sections.Count; s++)
+            // Loop through and Auto-Grade (Keeping this simplified for now)
+            for (int s = 0; s < studentSubmission.Sections.Count; s++)
             {
-                if (s >= answerKey.Sections.Count) continue; // Safety check
-                
-                var studentSection = student.Sections[s];
-                var keySection = answerKey.Sections[s];
+                if (s >= _loadedAnswerKey.Sections.Count) continue;
+                var studentSection = studentSubmission.Sections[s];
+                var keySection = _loadedAnswerKey.Sections[s];
 
-                // Loop through Questions
                 for (int q = 0; q < studentSection.Questions.Count; q++)
                 {
-                    if (q >= keySection.Questions.Count) continue; // Safety check
-
+                    if (q >= keySection.Questions.Count) continue;
                     var studentQ = studentSection.Questions[q];
                     var keyQ = keySection.Questions[q];
 
                     report.MaxPossiblePoints += keyQ.Points;
 
-                    // GRADE: ESSAY
-                    if (keyQ.Type == "Essay")
+                    if (keyQ.Type == "Essay") report.RequiresManualReview = true;
+                    else if ((keyQ.Type == "MultipleChoice" || keyQ.Type == "TrueFalse") && studentQ.SelectedChoiceIndices.Count == 1 && keyQ.CorrectChoiceIndices.Contains(studentQ.SelectedChoiceIndices[0]))
                     {
-                        report.RequiresManualReview = true;
-                        // Essays get 0 auto-points. Teacher must grade manually later.
-                        continue; 
+                        report.TotalPointsEarned += keyQ.Points;
                     }
-
-                    // GRADE: MULTIPLE CHOICE or TRUE/FALSE
-                    if (keyQ.Type == "MultipleChoice" || keyQ.Type == "TrueFalse")
-                    {
-                        // Check if the exact single correct index was selected
-                        if (studentQ.SelectedChoiceIndices.Count == 1 && 
-                            keyQ.CorrectChoiceIndices.Contains(studentQ.SelectedChoiceIndices[0]))
-                        {
-                            report.TotalPointsEarned += keyQ.Points;
-                        }
-                    }
-
-                    // GRADE: MULTIPLE ANSWER
-                    if (keyQ.Type == "MultipleAnswer")
-                    {
-                        int correctGuesses = 0;
-                        int wrongGuesses = 0;
-
-                        foreach (var selectedIndex in studentQ.SelectedChoiceIndices)
-                        {
-                            if (keyQ.CorrectChoiceIndices.Contains(selectedIndex)) correctGuesses++;
-                            else wrongGuesses++;
-                        }
-
-                        if (keyQ.MultipleAnswerRubric == "All-or-Nothing")
-                        {
-                            // Must have exact same number of correct choices, and zero wrong choices
-                            if (wrongGuesses == 0 && correctGuesses == keyQ.CorrectChoiceIndices.Count)
-                            {
-                                report.TotalPointsEarned += keyQ.Points;
-                            }
-                        }
-                        else // Partial Credit (-1 Penalty)
-                        {
-                            // Calculate percentage of correct answers found, minus a penalty for guessing wrong things
-                            double pointPerCorrect = (double)keyQ.Points / keyQ.CorrectChoiceIndices.Count;
-                            double pointsEarned = (correctGuesses * pointPerCorrect) - (wrongGuesses * pointPerCorrect);
-                            
-                            // Prevent negative scores on a question
-                            if (pointsEarned > 0) report.TotalPointsEarned += pointsEarned;
-                        }
-                    }
+                    // Add MultipleAnswer logic here as needed
                 }
             }
-            finalGrades.Add(report);
+            
+            // Add it to the UI List!
+            StudentList.Add(report);
+        }
+    }
+
+    partial void OnSelectedStudentChanged(Models.GradeReport? value)
+    {
+        CurrentStudentQuestions.Clear();
+        _currentQuestionIndex = 0;
+        CurrentVisibleQuestion = null;
+
+        if (value == null || value.SubmissionData == null || _loadedAnswerKey == null) return;
+
+        int qNumber = 1;
+
+        // Merge the Student Answers and the Answer Key into our UI models
+        for (int s = 0; s < value.SubmissionData.Sections.Count; s++)
+        {
+            if (s >= _loadedAnswerKey.Sections.Count) continue;
+            var studentSection = value.SubmissionData.Sections[s];
+            var keySection = _loadedAnswerKey.Sections[s];
+
+            for (int q = 0; q < studentSection.Questions.Count; q++)
+            {
+                if (q >= keySection.Questions.Count) continue;
+                var studentQ = studentSection.Questions[q];
+                var keyQ = keySection.Questions[q];
+
+                var reviewQ = new Models.ReviewQuestion
+                {
+                    QuestionNumber = qNumber++,
+                    Prompt = keyQ.Prompt,
+                    Type = keyQ.Type,
+                    MaxPoints = keyQ.Points,
+                    EssayResponse = studentQ.EssayResponse ?? string.Empty,
+                    PointsAwarded = 0 
+                };
+
+                for (int c = 0; c < keyQ.Choices.Count; c++)
+                {
+                    reviewQ.Choices.Add(new Models.ReviewChoice
+                    {
+                        Text = keyQ.Choices[c].Text,
+                        IsCorrectAnswer = keyQ.CorrectChoiceIndices.Contains(c),
+                        IsStudentSelected = studentQ.SelectedChoiceIndices.Contains(c)
+                    });
+                }
+                CurrentStudentQuestions.Add(reviewQ);
+            }
         }
 
-        // 4. EXPORT THE CSV GRADE REPORT
-        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        
-        // Generate a filename with a timestamp so teachers don't accidentally overwrite older reports
-        string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmm");
-        string csvPath = Path.Combine(desktopPath, $"ScriviTest_Grades_{timestamp}.csv");
-
-        var exportService = new Services.ExportService();
-        exportService.ExportGradeReportToCsv(finalGrades, csvPath);
-
-        // 5. Update the UI to show total success!
-        ErrorMessage = $"SUCCESS! Graded {finalGrades.Count} exams. CSV Report saved to your Desktop.";
+        if (CurrentStudentQuestions.Count > 0)
+        {
+            CurrentVisibleQuestion = CurrentStudentQuestions[0];
+            UpdateNavigationCommands();
+        }
     }
+
+    [RelayCommand(CanExecute = nameof(CanGoPrev))]
+    private void PrevQuestion()
+    {
+        _currentQuestionIndex--;
+        CurrentVisibleQuestion = CurrentStudentQuestions[_currentQuestionIndex];
+        UpdateNavigationCommands();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanGoNext))]
+    private void NextQuestion()
+    {
+        _currentQuestionIndex++;
+        CurrentVisibleQuestion = CurrentStudentQuestions[_currentQuestionIndex];
+        UpdateNavigationCommands();
+    }
+
+    private bool CanGoPrev => _currentQuestionIndex > 0;
+    private bool CanGoNext => _currentQuestionIndex < CurrentStudentQuestions.Count - 1;
+
+    private void UpdateNavigationCommands()
+    {
+        PrevQuestionCommand.NotifyCanExecuteChanged();
+        NextQuestionCommand.NotifyCanExecuteChanged();
+    }
+
+
 }

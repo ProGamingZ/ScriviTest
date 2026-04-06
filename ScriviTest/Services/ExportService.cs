@@ -121,21 +121,28 @@ public class ExportService
     }
 
     // Generates an Excel-ready CSV Grade Report
-    public void ExportGradeReportToCsv(List<GradeReport> grades, string outputPath)
+    // Generates an Excel-ready CSV Grade Report
+    public void ExportGradeReportToCsv(List<Models.GradeReport> grades, string outputPath)
     {
         var csv = new System.Text.StringBuilder();
         
-        // 1. Write the Header Row
-        csv.AppendLine("Student Name,Total Points Earned,Max Possible Points,Status");
+        // 1. Write the updated Header Row
+        csv.AppendLine("First Name,Middle Name,Last Name,Student ID,Total Points Earned,Max Possible Points,Review Status");
 
         // 2. Loop through the grades and format each row
         foreach (var grade in grades)
         {
-            // Security: If a student types a comma in their name (e.g., "Doe, John"), 
-            // it will break the CSV columns. We wrap the name in quotes to prevent this.
-            string safeName = $"\"{grade.StudentName.Replace("\"", "\"\"")}\"";
+            // Security: Wrap text fields in quotes to prevent rogue commas from breaking the CSV layout
+            string safeFirst = $"\"{grade.FirstName.Replace("\"", "\"\"")}\"";
+            string safeMiddle = $"\"{grade.MiddleName.Replace("\"", "\"\"")}\"";
+            string safeLast = $"\"{grade.LastName.Replace("\"", "\"\"")}\"";
+            string safeID = $"\"{grade.StudentID.Replace("\"", "\"\"")}\"";
             
-            csv.AppendLine($"{safeName},{grade.TotalPointsEarned},{grade.MaxPossiblePoints},{grade.Status}");
+            // Recreate the status string
+            string status = grade.RequiresManualReview ? "Needs Manual Review (Essay)" : "Auto-Graded";
+
+            // Append the row!
+            csv.AppendLine($"{safeFirst},{safeMiddle},{safeLast},{safeID},{grade.TotalPointsEarned},{grade.MaxPossiblePoints},{status}");
         }
 
         // 3. Write to the hard drive

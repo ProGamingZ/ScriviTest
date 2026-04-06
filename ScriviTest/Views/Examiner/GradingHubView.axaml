@@ -50,7 +50,50 @@
             </Border>
 
             <Border Grid.Column="1" BorderBrush="Black" BorderThickness="0,0,4,0" Padding="30" Background="#FAFAFA">
-                <TextBlock Text="[Middle Panel Layout Pending]" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="Gray"/>
+                
+                <TextBlock Text="Select a student from the list to review their answers." 
+                                                IsVisible="{Binding CurrentVisibleQuestion, Converter={x:Static ObjectConverters.IsNull}}"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="Gray"/>
+
+                <Grid RowDefinitions="*, Auto" IsVisible="{Binding CurrentVisibleQuestion, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    
+                    <ScrollViewer Grid.Row="0">
+                        <StackPanel Spacing="20">
+                            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Top">
+                                <TextBlock Text="{Binding CurrentVisibleQuestion.QuestionNumber, StringFormat='{0})'}" FontSize="20" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding CurrentVisibleQuestion.Prompt}" FontSize="20" TextWrapping="Wrap" MaxWidth="500"/>
+                            </StackPanel>
+
+                            <ItemsControl ItemsSource="{Binding CurrentVisibleQuestion.Choices}" Margin="30,20,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,5">
+                                            <TextBlock Text="{Binding Icon}" Foreground="{Binding IconColor}" FontSize="24" VerticalAlignment="Center" Width="30" TextAlignment="Center"/>
+                                            <TextBlock Text="{Binding Text}" FontSize="18" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <Border IsVisible="{Binding CurrentVisibleQuestion.Type, Converter={x:Static StringConverters.IsNullOrEmpty}}" 
+                                    Background="White" BorderBrush="LightGray" BorderThickness="1" Padding="15" Margin="30,20,0,0">
+                                <TextBlock Text="{Binding CurrentVisibleQuestion.EssayResponse}" TextWrapping="Wrap"/>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <Grid Grid.Row="1" ColumnDefinitions="Auto, *, Auto" Margin="0,20,0,0">
+                        <Button Grid.Column="0" Content="&lt; Prev" Command="{Binding PrevQuestionCommand}" Background="Transparent" BorderBrush="Black" BorderThickness="2" FontSize="16" FontWeight="Bold" Padding="20,10"/>
+                        
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+                            <TextBox Text="{Binding CurrentVisibleQuestion.PointsAwarded}" Width="60" FontSize="20" FontWeight="Bold" TextAlignment="Center" BorderBrush="Black" BorderThickness="1"/>
+                            <TextBlock Text="{Binding CurrentVisibleQuestion.MaxPoints, StringFormat='/ {0} pts'}" FontSize="20" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="2" Content="Next &gt;" Command="{Binding NextQuestionCommand}" Background="Transparent" BorderBrush="Black" BorderThickness="2" FontSize="16" FontWeight="Bold" Padding="20,10"/>
+                    </Grid>
+
+                </Grid>
             </Border>
 
             <Border Grid.Column="2" Padding="20" Background="White">

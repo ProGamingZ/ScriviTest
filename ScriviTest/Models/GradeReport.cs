@@ -2,11 +2,19 @@ namespace ScriviTest.Models;
 
 public class GradeReport
 {
-    public string StudentName { get; set; } = string.Empty;
+    // Properties for the DataGrid Columns
+    public string FirstName { get; set; } = string.Empty;
+    public string MiddleName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string StudentID { get; set; } = string.Empty;
+
     public double TotalPointsEarned { get; set; }
     public int MaxPossiblePoints { get; set; }
-    
-    // We use this to flag if the test had an essay that the teacher needs to read manually
-    public bool RequiresManualReview { get; set; } 
-    public string Status => RequiresManualReview ? "Needs Manual Review (Essay)" : "Auto-Graded";
+    public bool RequiresManualReview { get; set; }
+
+    // What actually shows up in the "Scores" column
+    public string DisplayScore => RequiresManualReview ? "Pending Review" : $"{TotalPointsEarned} / {MaxPossiblePoints}";
+
+    // CRITICAL: We keep the raw student answers attached here so the Middle Panel can read them!
+    public ScriviTest.DTOs.StudentSubmissionDto? SubmissionData { get; set; } 
 }
