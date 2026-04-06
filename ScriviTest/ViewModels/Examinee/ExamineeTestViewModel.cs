@@ -19,11 +19,9 @@ public partial class ExamineeTestViewModel : ViewModelBase
     [ObservableProperty]
     private string _imageDirectory;
 
-    // NEW: We need to ask the student for their name!
-    [ObservableProperty]
-    private string _studentName = string.Empty;
+    private readonly string _firstName, _middleName, _lastName, _suffix, _studentID;
 
-    public ExamineeTestViewModel(Action<ViewModelBase> navigateAction, StudentExamDto decryptedExam, string tempDirectory, string whiteboardKey)
+    public ExamineeTestViewModel(Action<ViewModelBase> navigateAction, StudentExamDto decryptedExam, string tempDirectory, string whiteboardKey, string firstName, string middleName, string lastName, string suffix, string studentID)
     {
         _navigateAction = navigateAction;
         _cryptoService = new Services.CryptographyService();
@@ -31,22 +29,24 @@ public partial class ExamineeTestViewModel : ViewModelBase
         ExamData = decryptedExam;
         ImageDirectory = tempDirectory;
         _whiteboardKey = whiteboardKey;
+        _firstName = firstName;
+        _middleName = middleName;
+        _lastName = lastName;
+        _suffix = suffix;
+        _studentID = studentID;
     }
 
     [RelayCommand]
     private void SubmitExam()
     {
-        // 1. Ensure they typed a name
-        if (string.IsNullOrWhiteSpace(StudentName))
-        {
-            Console.WriteLine("Error: Student must enter their name!");
-            return; 
-        }
-
         // 2. Map the UI data to the lightweight Scantron DTO
         var submission = new StudentSubmissionDto 
         { 
-            StudentName = this.StudentName, 
+            FirstName = _firstName,
+            MiddleName = _middleName,
+            LastName = _lastName,
+            Suffix = _suffix,
+            StudentID = _studentID, 
             ExamTitle = ExamData.Title 
         };
 
@@ -74,8 +74,8 @@ public partial class ExamineeTestViewModel : ViewModelBase
 
         // 3. Serialize to JSON and save as .xans on the Desktop
         string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        string safeStudentName = StudentName.Replace(" ", "_");
-        string xansPath = Path.Combine(desktopPath, $"{safeStudentName}_Submission.xans");
+        string safeName = $"{_studentID}_{_lastName}".Replace(" ", "_");
+        string xansPath = Path.Combine(desktopPath, $"{safeName}_Submission.xans");
 
         string jsonContent = JsonSerializer.Serialize(submission, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(xansPath, jsonContent);

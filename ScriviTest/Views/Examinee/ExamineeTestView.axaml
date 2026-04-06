@@ -84,11 +84,6 @@
 
         <Border Grid.Row="2" Background="White" Padding="20" BoxShadow="0 -2 10 0 LightGray" ZIndex="10">
             <StackPanel HorizontalAlignment="Center" Spacing="15">
-                
-                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-                    <TextBlock Text="Examinee Full Name:" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
-                    <TextBox Text="{Binding StudentName}" Watermark="e.g., John Doe" Width="300" FontSize="16" BorderBrush="LightGray" BorderThickness="1"/>
-                </StackPanel>
 
                 <Button Content="FINISH &amp; SUBMIT EXAM" Command="{Binding SubmitExamCommand}" 
                         HorizontalAlignment="Center" Background="#4CAF50" Foreground="White" 

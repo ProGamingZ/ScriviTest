@@ -7,55 +7,56 @@
 
     <Grid RowDefinitions="Auto, *">
         
-        <Border Grid.Row="0" Background="White" Padding="15" BoxShadow="0 2 5 0 LightGray">
-            <Button Content="← Back to Hub" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
+        <Border Grid.Row="0" Background="White" Padding="15" BoxShadow="0 2 5 0 LightGray" ZIndex="10">
+            <Grid ColumnDefinitions="Auto, *">
+                <Button Grid.Column="0" Content="← back to hub" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
+                <TextBlock Grid.Column="1" Text="GRADING DASHBOARD" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryActionBrush}"/>
+            </Grid>
         </Border>
 
-        <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="40" BoxShadow="0 8 20 0 LightGray" 
-                HorizontalAlignment="Center" VerticalAlignment="Center" Width="600">
+        <Grid Grid.Row="1" ColumnDefinitions="2.5*, 5*, 2.5*">
             
-            <StackPanel Spacing="25">
-                <TextBlock Text="Auto-Grading Dashboard" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryActionBrush}"/>
-                <TextBlock Text="Load your answer key, select the batch of student submissions, and enter the whiteboard key to decrypt and grade." 
-                           TextWrapping="Wrap" TextAlignment="Center" Foreground="{DynamicResource AppForeground}" Opacity="0.7"/>
-
-                <Separator Background="LightGray" Margin="0,10"/>
-
-                <StackPanel Spacing="10">
-                    <TextBlock Text="1. Load Answer Key (.xamk)" FontWeight="SemiBold" Foreground="{DynamicResource AppForeground}"/>
-                    <Grid ColumnDefinitions="*, Auto">
-                        <Border Grid.Column="0" Background="#E3F2FD" BorderBrush="#90CAF9" BorderThickness="1" CornerRadius="4" Padding="10">
-                            <TextBlock Text="{Binding AnswerKeyFileName}" VerticalAlignment="Center" Foreground="#1565C0" FontWeight="SemiBold"/>
-                        </Border>
-                        <Button Grid.Column="1" Content="Browse..." Command="{Binding BrowseForAnswerKeyCommand}" 
-                                Background="{DynamicResource StandardButtonBrush}" Foreground="{DynamicResource AppForeground}" Padding="15,10" Margin="10,0,0,0"/>
+            <Border Grid.Column="0" BorderBrush="Black" BorderThickness="0,0,4,0" Padding="15" Background="White">
+                <Grid RowDefinitions="Auto, Auto, Auto, *">
+                    
+                    <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
+                        <TextBox Grid.Column="0" Text="{Binding AnswerKeyFileName}" Watermark="Load Answer Key (.xamk)" IsReadOnly="True" BorderBrush="Black" BorderThickness="1" CornerRadius="0"/>
+                        <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseForAnswerKeyCommand}" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="0" Margin="5,0,0,0" Background="White"/>
                     </Grid>
-                </StackPanel>
 
-                <StackPanel Spacing="10">
-                    <TextBlock Text="2. Load Student Submissions (.xans)" FontWeight="SemiBold" Foreground="{DynamicResource AppForeground}"/>
-                    <Grid ColumnDefinitions="*, Auto">
-                        <Border Grid.Column="0" Background="#F5F5F5" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Padding="10">
-                            <TextBlock Text="{Binding StudentFilesSummary}" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
-                        </Border>
-                        <Button Grid.Column="1" Content="Browse..." Command="{Binding BrowseForStudentFilesCommand}" 
-                                Background="{DynamicResource StandardButtonBrush}" Foreground="{DynamicResource AppForeground}" Padding="15,10" Margin="10,0,0,0"/>
+                    <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
+                        <TextBox Grid.Column="0" Text="{Binding WhiteboardKey}" Watermark="Decryption Key" BorderBrush="Black" BorderThickness="1" CornerRadius="0"/>
+                        <Button Grid.Column="1" Content="Check" Command="{Binding CheckAndUnlockCommand}" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="0" Margin="5,0,0,0" Background="White"/>
                     </Grid>
-                </StackPanel>
 
-                <StackPanel Spacing="10">
-                    <TextBlock Text="3. Decryption Key (Whiteboard Code)" FontWeight="SemiBold" Foreground="{DynamicResource AppForeground}"/>
-                    <TextBox Text="{Binding WhiteboardKey}" MaxLength="6" FontSize="24" FontWeight="Bold" HorizontalContentAlignment="Center" 
-                             Watermark="XXXXXX" BorderThickness="1" BorderBrush="LightGray" Foreground="{DynamicResource AppForeground}"/>
-                </StackPanel>
+                    <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
+                        <TextBox Grid.Column="0" Text="{Binding StudentFilesSummary}" Watermark="Load Student Submissions (.xans)" IsReadOnly="True" BorderBrush="Black" BorderThickness="1" CornerRadius="0"/>
+                        <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseForStudentFilesCommand}" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="0" Margin="5,0,0,0" Background="White"/>
+                    </Grid>
 
-                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="SemiBold" HorizontalAlignment="Center" 
-                           IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                    <DataGrid Grid.Row="3" ItemsSource="{Binding StudentList}" SelectedItem="{Binding SelectedStudent}"
+                              AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="Black" BorderThickness="1"
+                              CanUserReorderColumns="True" CanUserSortColumns="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="First" Binding="{Binding FirstName}" Width="*"/>
+                            <DataGridTextColumn Header="Middle" Binding="{Binding MiddleName}" Width="*"/>
+                            <DataGridTextColumn Header="Last" Binding="{Binding LastName}" Width="*"/>
+                            <DataGridTextColumn Header="ID" Binding="{Binding StudentID}" Width="*"/>
+                            <DataGridTextColumn Header="Scores" Binding="{Binding DisplayScore}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
 
-                <Button Content="RUN AUTO-GRADER" Command="{Binding StartGradingCommand}" 
-                        Background="{DynamicResource PrimaryActionBrush}" Foreground="{DynamicResource ActionTextBrush}" 
-                        FontSize="18" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="0,15" Margin="0,10,0,0"/>
-            </StackPanel>
-        </Border>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" BorderBrush="Black" BorderThickness="0,0,4,0" Padding="30" Background="#FAFAFA">
+                <TextBlock Text="[Middle Panel Layout Pending]" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="Gray"/>
+            </Border>
+
+            <Border Grid.Column="2" Padding="20" Background="White">
+                <TextBlock Text="[Right Panel Layout Pending]" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="Gray"/>
+            </Border>
+
+        </Grid>
     </Grid>
 </UserControl>

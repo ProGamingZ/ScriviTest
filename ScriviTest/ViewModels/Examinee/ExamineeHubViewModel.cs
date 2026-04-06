@@ -12,17 +12,19 @@ public partial class ExamineeHubViewModel : ViewModelBase
     private readonly Services.FileManagementService _fileService;
     private readonly Services.CryptographyService _cryptoService;
 
-    [ObservableProperty]
-    private string? _selectedFilePath;
+    [ObservableProperty]private string? _selectedFilePath;
+    [ObservableProperty]private string _selectedFileName = "No file selected.";
+    [ObservableProperty]private string _whiteboardKey = string.Empty;
+    [ObservableProperty]private string _errorMessage = string.Empty;
+    [ObservableProperty] private string _firstName = string.Empty;
+    [ObservableProperty] private string _middleName = string.Empty;
+    [ObservableProperty] private string _lastName = string.Empty;
+    [ObservableProperty] private string _suffix = string.Empty;
+    [ObservableProperty] private string _studentID = string.Empty;
 
-    [ObservableProperty]
-    private string _selectedFileName = "No file selected.";
-
-    [ObservableProperty]
-    private string _whiteboardKey = string.Empty;
-
-    [ObservableProperty]
-    private string _errorMessage = string.Empty;
+    partial void OnFirstNameChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
+    partial void OnLastNameChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
+    partial void OnStudentIDChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
 
     public ExamineeHubViewModel(Action<ViewModelBase> navigateAction)
     {
@@ -52,7 +54,12 @@ public partial class ExamineeHubViewModel : ViewModelBase
     }
 
     // This button only becomes clickable when the file is loaded and the key is typed!
-    private bool CanStartExam => !string.IsNullOrEmpty(SelectedFilePath) && WhiteboardKey.Length >= 6;
+    private bool CanStartExam => 
+        !string.IsNullOrWhiteSpace(FirstName) && 
+        !string.IsNullOrWhiteSpace(LastName) && 
+        !string.IsNullOrWhiteSpace(StudentID) && 
+        !string.IsNullOrEmpty(SelectedFilePath) && 
+        WhiteboardKey.Length >= 6;
 
     // We tell the UI to re-evaluate the Start button whenever the Key or File changes
     partial void OnWhiteboardKeyChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
@@ -78,6 +85,9 @@ public partial class ExamineeHubViewModel : ViewModelBase
         }
 
         // 3. Success! Pass the decrypted data and the image folder to the actual Test UI
-        ErrorMessage = string.Empty;
-        _navigateAction(new ExamineeTestViewModel(_navigateAction, decryptedExam, tempImageFolder, WhiteboardKey.ToUpper()));    }
+        ErrorMessage = string.Empty;   
+        // We pass the DTO data directly to the test constructor!
+        _navigateAction(new ExamineeTestViewModel(_navigateAction, decryptedExam, tempImageFolder, WhiteboardKey.ToUpper(), FirstName, MiddleName, LastName, Suffix, StudentID));
+    }
+        
 }
