@@ -30,6 +30,13 @@ public class StudentQuestionDto
     public int MaxWordCount { get; set; }
     public List<StudentChoiceDto> Choices { get; set; } = new();
     public string StudentEssayResponse { get; set; } = string.Empty;
+
+    public string GroupId { get; } = System.Guid.NewGuid().ToString(); 
+    
+    public bool IsSingleSelection => Type == "MultipleChoice" || Type == "TrueFalse";
+    public bool IsMultipleSelection => Type == "MultipleAnswer";
+    public bool IsEssay => Type == "Essay";
+    public bool IsObjective => !IsEssay; // True for anything with choices
 }
 
 public class StudentChoiceDto

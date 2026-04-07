@@ -1,3 +1,4 @@
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScriviTest.DTOs;
@@ -12,6 +13,11 @@ public partial class ExamineeTestViewModel : ViewModelBase
     private readonly Action<ViewModelBase> _navigateAction;
     private readonly Services.CryptographyService _cryptoService;
     private readonly string _whiteboardKey;
+    [ObservableProperty]
+    private string _timeRemainingDisplay = string.Empty;
+
+    private TimeSpan _timeRemaining;
+    private DispatcherTimer? _examTimer;
 
     [ObservableProperty]
     private StudentExamDto _examData;
@@ -34,6 +40,33 @@ public partial class ExamineeTestViewModel : ViewModelBase
         _lastName = lastName;
         _suffix = suffix;
         _studentID = studentID;
+
+        _timeRemaining = TimeSpan.FromMinutes(ExamData.TimeLimitMinutes);
+        UpdateTimeDisplay();
+
+        _examTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        _examTimer.Tick += Timer_Tick;
+        _examTimer.Start();
+    }
+
+    private void Timer_Tick(object? sender, EventArgs e)
+    {
+        if (_timeRemaining.TotalSeconds > 0)
+        {
+            _timeRemaining = _timeRemaining.Subtract(TimeSpan.FromSeconds(1));
+            UpdateTimeDisplay();
+        }
+        else
+        {
+            _examTimer?.Stop();
+            // Force submit when time is up!
+            SubmitExam();
+        }
+    }
+
+    private void UpdateTimeDisplay()
+    {
+        TimeRemainingDisplay = $"{_timeRemaining.Hours:D2}:{_timeRemaining.Minutes:D2}:{_timeRemaining.Seconds:D2}";
     }
 
     [RelayCommand]

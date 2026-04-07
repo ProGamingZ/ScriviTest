@@ -10,6 +10,13 @@ namespace ScriviTest.ViewModels.Examiner;
 
 public partial class ExamCreationViewModel : ViewModelBase
 {
+    // --- EXAM METADATA BINDINGS ---
+    [ObservableProperty] private string _examTitle = string.Empty;
+    [ObservableProperty] private string _examDescription = string.Empty;
+    [ObservableProperty] private string _teacherName = string.Empty;
+    [ObservableProperty] private string _subject = string.Empty;
+    [ObservableProperty] private string _targetSection = string.Empty;
+    [ObservableProperty] private int _timeLimitMinutes = 60;
     private readonly Action<ViewModelBase> _navigateAction;
     private readonly Services.FileManagementService _fileService;
 
@@ -167,8 +174,12 @@ public partial class ExamCreationViewModel : ViewModelBase
 
         var examToExport = new Exam
         {
-            Title = "My Test Exam", // We can bind these properly later
-            TimeLimitMinutes = 60
+            Title = string.IsNullOrWhiteSpace(ExamTitle) ? "Untitled Exam" : ExamTitle,
+            Instructions = ExamDescription,
+            Teacher = TeacherName,
+            Subject = Subject,
+            Section = TargetSection,
+            TimeLimitMinutes = this.TimeLimitMinutes
         };
         
         // Copy our sections into it

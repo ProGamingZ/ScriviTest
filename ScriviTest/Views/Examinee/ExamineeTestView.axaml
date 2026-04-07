@@ -17,7 +17,7 @@
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
                     <TextBlock Text="⏱️" FontSize="24"/>
-                    <TextBlock Text="{Binding ExamData.TimeLimitMinutes, StringFormat='{}{0} Min Limit'}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource ActionTextBrush}"/>
+                    <TextBlock Text="{Binding TimeRemainingDisplay}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource ActionTextBrush}"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -52,16 +52,25 @@
                                                         <TextBlock Grid.Column="1" Text="{Binding Points, StringFormat='[{0} pts]'}" FontWeight="Bold" Foreground="Gray" VerticalAlignment="Top"/>
                                                     </Grid>
 
-                                                    <TextBox IsVisible="{Binding Type, Converter={x:Static StringConverters.IsNullOrEmpty}}" 
+                                                    <TextBox IsVisible="{Binding IsEssay}" 
                                                              Text="{Binding StudentEssayResponse}" 
                                                              AcceptsReturn="True" TextWrapping="Wrap" MinHeight="150" 
-                                                             Watermark="Type your response here..."/>
+                                                             Watermark="Type your essay response here..."/>
                                                     
-                                                    <ItemsControl ItemsSource="{Binding Choices}">
+                                                    <ItemsControl ItemsSource="{Binding Choices}" IsVisible="{Binding IsObjective}">
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate x:DataType="dto:StudentChoiceDto">
                                                                 <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,5">
-                                                                    <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" Margin="0,0,10,0"/>
+                                                                    
+                                                                    <RadioButton Grid.Column="0" IsVisible="{Binding $parent[ItemsControl].((dto:StudentQuestionDto)DataContext).IsSingleSelection}" 
+                                                                                 IsChecked="{Binding IsSelected}" 
+                                                                                 GroupName="{Binding $parent[ItemsControl].((dto:StudentQuestionDto)DataContext).GroupId}" 
+                                                                                 Margin="0,0,10,0"/>
+
+                                                                    <CheckBox Grid.Column="0" IsVisible="{Binding $parent[ItemsControl].((dto:StudentQuestionDto)DataContext).IsMultipleSelection}" 
+                                                                              IsChecked="{Binding IsSelected}" 
+                                                                              Margin="0,0,10,0"/>
+                                                                    
                                                                     <TextBlock Grid.Column="1" Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
                                                                 </Grid>
                                                             </DataTemplate>

@@ -34,20 +34,23 @@
                 <Border Background="White" CornerRadius="8" Padding="25" BoxShadow="0 4 10 0 LightGray" BorderBrush="{DynamicResource PrimaryActionBrush}" BorderThickness="0,8,0,0">
                     <StackPanel Spacing="15">
                         <Grid ColumnDefinitions="*, Auto">
-                            <TextBox Grid.Column="0" FontSize="28" FontWeight="Bold" Watermark="Untitled Exam" BorderThickness="0,0,0,1" Background="Transparent" Padding="0,5" Foreground="{DynamicResource AppForeground}"/>
+                            <TextBox Grid.Column="0" FontSize="28" FontWeight="Bold" Text="{Binding ExamTitle}" Watermark="Untitled Exam" BorderThickness="0,0,0,1" Background="Transparent" Padding="0,5" Foreground="{DynamicResource AppForeground}"/>
                             <TextBlock Grid.Column="1" Text="{Binding TotalExamPoints, StringFormat='Total Points: {0}'}" 
                                        FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryActionBrush}" VerticalAlignment="Center"/>
                         </Grid>
-                        <TextBox TextWrapping="Wrap" MinHeight="60" Watermark="Exam Instructions or Description" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
+                        <TextBox Text="{Binding ExamDescription}" TextWrapping="Wrap" MinHeight="60" Watermark="Exam Instructions or Description" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
 
                         <Grid ColumnDefinitions="*, *" Margin="0,15,0,0">
                             <StackPanel Grid.Column="0" Spacing="10" Margin="0,0,10,0">
-                                <TextBox Watermark="Teacher Name" Foreground="{DynamicResource AppForeground}"/>
-                                <TextBox Watermark="Subject" Foreground="{DynamicResource AppForeground}"/>
+                                <TextBox Text="{Binding TeacherName}" Watermark="Teacher Name" Foreground="{DynamicResource AppForeground}"/>
+                                <TextBox Text="{Binding Subject}" Watermark="Subject" Foreground="{DynamicResource AppForeground}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Spacing="10" Margin="10,0,0,0">
-                                <TextBox Watermark="Section / Target Audience" Foreground="{DynamicResource AppForeground}"/>
-                                <NumericUpDown Watermark="Time Limit (Minutes)" Minimum="0" Value="60" FormatString="0 Minutes" ParsingNumberStyle="Integer" Foreground="{DynamicResource AppForeground}"/>
+                                <TextBox Text="{Binding TargetSection}" Watermark="Section / Target Audience" Foreground="{DynamicResource AppForeground}"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                    <NumericUpDown Value="{Binding TimeLimitMinutes}" Minimum="1" FormatString="0" ParsingNumberStyle="Integer" Foreground="{DynamicResource AppForeground}"/>
+                                    <TextBlock Text="minutes" FontSize="12" Opacity="0.6" Foreground="{DynamicResource AppForeground}" VerticalAlignment="Center"/>
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
