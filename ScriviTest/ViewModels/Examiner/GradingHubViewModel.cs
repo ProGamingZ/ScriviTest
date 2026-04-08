@@ -168,6 +168,15 @@ public partial class GradingHubViewModel : ViewModelBase
                 var studentQ = studentSection.Questions[q];
                 var keyQ = keySection.Questions[q];
 
+                double earnedPoints = 0;
+                if (keyQ.Type == "MultipleChoice" || keyQ.Type == "TrueFalse")
+                {
+                    if (studentQ.SelectedChoiceIndices.Count == 1 && keyQ.CorrectChoiceIndices.Contains(studentQ.SelectedChoiceIndices[0]))
+                    {
+                        earnedPoints = keyQ.Points;
+                    }
+                }
+                
                 var reviewQ = new Models.ReviewQuestion
                 {
                     QuestionNumber = qNumber++,
@@ -175,7 +184,7 @@ public partial class GradingHubViewModel : ViewModelBase
                     Type = keyQ.Type,
                     MaxPoints = keyQ.Points,
                     EssayResponse = studentQ.EssayResponse ?? string.Empty,
-                    PointsAwarded = 0 
+                    PointsAwarded = earnedPoints 
                 };
 
                 for (int c = 0; c < keyQ.Choices.Count; c++)

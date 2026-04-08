@@ -7,7 +7,9 @@ public class ReviewQuestion
     public int QuestionNumber { get; set; }
     public string Prompt { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty; 
-    
+
+    public bool IsEssay => Type == "Essay";
+    public bool IsObjective => Type != "Essay";
     public double PointsAwarded { get; set; }
     public int MaxPoints { get; set; }
     

@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:ScriviTest.ViewModels.Examiner"
+             xmlns:models="using:ScriviTest.Models"
              x:Class="ScriviTest.Views.Examiner.GradingHubView"
              x:DataType="vm:GradingHubViewModel"
              Background="{DynamicResource AppBackground}">
@@ -64,18 +65,19 @@
                                     <TextBlock Text="{Binding CurrentVisibleQuestion.Prompt}" FontSize="20" TextWrapping="Wrap" MaxWidth="500"/>
                                 </StackPanel>
 
-                                <ItemsControl ItemsSource="{Binding CurrentVisibleQuestion.Choices}" Margin="30,20,0,0">
+                                <ItemsControl ItemsSource="{Binding CurrentVisibleQuestion.Choices}" IsVisible="{Binding CurrentVisibleQuestion.IsObjective}" Margin="30,20,0,0">
                                     <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
+                                        <DataTemplate x:DataType="models:ReviewChoice">
                                             <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,5">
-                                                <TextBlock Text="{Binding Icon}" Foreground="{Binding IconColor}" FontSize="24" VerticalAlignment="Center" Width="30" TextAlignment="Center"/>
+                                                <TextBlock Text="{Binding Icon}" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Width="30" TextAlignment="Center"/>
+                                                <Border Background="{Binding IconColor}" Width="25" Height="25" BorderBrush="Black" BorderThickness="1" VerticalAlignment="Center"/>
                                                 <TextBlock Text="{Binding Text}" FontSize="18" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
 
-                                <Border IsVisible="{Binding CurrentVisibleQuestion.Type, Converter={x:Static StringConverters.IsNullOrEmpty}}" 
+                                <Border IsVisible="{Binding CurrentVisibleQuestion.IsEssay}" 
                                         Background="White" BorderBrush="LightGray" BorderThickness="1" Padding="15" Margin="30,20,0,0">
                                     <TextBlock Text="{Binding CurrentVisibleQuestion.EssayResponse}" TextWrapping="Wrap"/>
                                 </Border>
@@ -92,6 +94,7 @@
 
                             <Button Grid.Column="2" Content="Next &gt;" Command="{Binding NextQuestionCommand}" Background="Transparent" BorderBrush="Black" BorderThickness="2" FontSize="16" FontWeight="Bold" Padding="20,10"/>
                         </Grid>
+
                     </Grid>
                 </Panel>
             </Border>

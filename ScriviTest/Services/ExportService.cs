@@ -11,116 +11,132 @@ namespace ScriviTest.Services;
 public class ExportService
 {
     // Now takes both output paths!
-    public void ExportExamPackage(Exam examData, string xamnPath, string xamkPath)
+    public void ExportExamPackage(Models.Exam rawExam, string xamnPath, string xamkPath)
     {
-        // --- 1. PREPARE THE STUDENT DTO (No Answers) ---
-        var safeExam = new StudentExamDto
+        // 1. Create the Answer Key DTO (.xamk)
+        var answerKey = new DTOs.AnswerKeyExamDto { ExamId = Guid.NewGuid().ToString() };
+        
+        // 2. Create the Student Exam DTO (.xamn)
+        var studentExam = new DTOs.StudentExamDto
         {
-            Title = examData.Title,
-            Instructions = examData.Instructions,
-            TimeLimitMinutes = examData.TimeLimitMinutes,
-            Teacher = examData.Teacher,
-            Subject = examData.Subject,
-            Section = examData.Section,
-            AntiCheatStrictness = examData.AntiCheatStrictness
+            Title = rawExam.Title,
+            Instructions = rawExam.Instructions,
+            TimeLimitMinutes = rawExam.TimeLimitMinutes,
+            Teacher = rawExam.Teacher,
+            Subject = rawExam.Subject,
+            Section = rawExam.Section,
+            AntiCheatStrictness = rawExam.AntiCheatStrictness
         };
 
-        // --- 2. PREPARE THE ANSWER KEY DTO ---
-        var answerKey = new AnswerKeyExamDto
+        foreach (var section in rawExam.Sections)
         {
-            ExamId = Guid.NewGuid().ToString() // Unique ID to link the Test to the Key
-        };
+            var keySection = new DTOs.AnswerKeySectionDto();
+            var studentSection = new DTOs.StudentSectionDto 
+            { 
+                Title = section.Title,
+                ShuffleQuestions = section.ShuffleQuestions
+            };
 
-        var imagePathsToZip = new HashSet<string>();
-
-        foreach (var section in examData.Sections)
-        {
-            var safeSection = new StudentSectionDto { Title = section.Title, ShuffleQuestions = section.ShuffleQuestions };
-            var keySection = new AnswerKeySectionDto();
-            
             foreach (var question in section.Questions)
             {
-                // Build the Student Question
-                var safeQuestion = new StudentQuestionDto
+                // -- BUILD THE ANSWER KEY QUESTION --
+                var keyQuestion = new DTOs.AnswerKeyQuestionDto
                 {
-                    Prompt = question.Prompt,
+                    Prompt = question.Prompt, // FIX: Saving the question text!
                     Type = question.Type.ToString(),
                     Points = question.Points,
-                    AttachedImageFileName = question.AttachedImageFileName,
-                    MaxWordCount = question.MaxWordCount
+                    MultipleAnswerRubric = question.MultipleAnswerRubric.ToString()
                 };
 
-                // Build the Answer Key Question
-                var keyQuestion = new AnswerKeyQuestionDto
+                // -- BUILD THE STUDENT QUESTION --
+                var studentQuestion = new DTOs.StudentQuestionDto
                 {
+                    Prompt = question.Prompt, // FIX: Saving the question text!
                     Type = question.Type.ToString(),
                     Points = question.Points,
-                    MultipleAnswerRubric = question.MultipleAnswerRubric.ToString(),
-                    TrueFalseCorrectAnswer = question.Type == QuestionType.TrueFalse ? question.IsTrueFalseAnswerTrue : null
+                    MaxWordCount = question.MaxWordCount,
+                    AttachedImageFileName = question.AttachedImageFileName
                 };
 
-                if (!string.IsNullOrEmpty(question.AttachedImageFullPath))
-                    imagePathsToZip.Add(question.AttachedImageFullPath);
-
-                // Loop through choices to populate BOTH DTOs
-                for (int i = 0; i < question.Choices.Count; i++)
+                // -- FIX: MAP THE CHOICES PROPERLY --
+                if (question.Type == Models.QuestionType.TrueFalse)
                 {
-                    var choice = question.Choices[i];
+                    // Manually build True/False choices so the UI has text to display
+                    keyQuestion.Choices.Add(new DTOs.AnswerKeyChoiceDto { Text = "True" });
+                    keyQuestion.Choices.Add(new DTOs.AnswerKeyChoiceDto { Text = "False" });
+                    
+                    studentQuestion.Choices.Add(new DTOs.StudentChoiceDto { Text = "True" });
+                    studentQuestion.Choices.Add(new DTOs.StudentChoiceDto { Text = "False" });
 
-                    // Give student the text/image, but NOT the IsCorrect boolean
-                    safeQuestion.Choices.Add(new StudentChoiceDto 
-                    { 
-                        Text = choice.Text,
-                        AttachedImageFileName = choice.AttachedImageFileName
-                    });
-
-                    // If it's correct, record the index number in the Answer Key!
-                    if (choice.IsCorrect)
-                    {
-                        keyQuestion.CorrectChoiceIndices.Add(i);
-                    }
-
-                    if (!string.IsNullOrEmpty(choice.AttachedImageFullPath))
-                        imagePathsToZip.Add(choice.AttachedImageFullPath);
+                    if (question.IsTrueFalseAnswerTrue)
+                        keyQuestion.CorrectChoiceIndices.Add(0); // 0 is True
+                    else
+                        keyQuestion.CorrectChoiceIndices.Add(1); // 1 is False
                 }
-                
-                safeSection.Questions.Add(safeQuestion);
+                else if (question.Type != Models.QuestionType.Essay)
+                {
+                    // Map Multiple Choice & Multiple Answer Options
+                    for (int i = 0; i < question.Choices.Count; i++)
+                    {
+                        var choice = question.Choices[i];
+                        
+                        keyQuestion.Choices.Add(new DTOs.AnswerKeyChoiceDto { Text = choice.Text });
+                        studentQuestion.Choices.Add(new DTOs.StudentChoiceDto 
+                        { 
+                            Text = choice.Text,
+                            AttachedImageFileName = choice.AttachedImageFileName
+                        });
+
+                        if (choice.IsCorrect)
+                        {
+                            keyQuestion.CorrectChoiceIndices.Add(i);
+                        }
+                    }
+                }
+
                 keySection.Questions.Add(keyQuestion);
+                studentSection.Questions.Add(studentQuestion);
             }
-            safeExam.Sections.Add(safeSection);
             answerKey.Sections.Add(keySection);
+            studentExam.Sections.Add(studentSection);
         }
 
-        // --- 3. GENERATE THE .XAMN STUDENT ARCHIVE ---
-        var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-        string studentJson = JsonSerializer.Serialize(safeExam, jsonOptions);
+        // 3. Serialize and save the Answer Key (.xamk)
+        string keyJson = JsonSerializer.Serialize(answerKey, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(xamkPath, keyJson);
 
-        using (FileStream zipToOpen = new FileStream(xamnPath, FileMode.Create))
+        // 4. Serialize and Package the Student Exam (.xamn)
+        string studentJson = JsonSerializer.Serialize(studentExam, new JsonSerializerOptions { WriteIndented = true });
+        
+        using (var archive = System.IO.Compression.ZipFile.Open(xamnPath, System.IO.Compression.ZipArchiveMode.Create))
         {
-            using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
+            var jsonEntry = archive.CreateEntry("exam_data.json");
+            using (var writer = new StreamWriter(jsonEntry.Open()))
             {
-                ZipArchiveEntry jsonEntry = archive.CreateEntry("exam_data.json");
-                using (StreamWriter writer = new StreamWriter(jsonEntry.Open()))
-                {
-                    writer.Write(studentJson);
-                }
+                writer.Write(studentJson);
+            }
 
-                foreach (var imagePath in imagePathsToZip)
+            // Copy images into the Zip
+            foreach (var section in rawExam.Sections)
+            {
+                foreach (var question in section.Questions)
                 {
-                    if (File.Exists(imagePath))
+                    if (question.HasImage && File.Exists(question.AttachedImageFullPath))
                     {
-                        archive.CreateEntryFromFile(imagePath, $"media/{Path.GetFileName(imagePath)}");
+                        archive.CreateEntryFromFile(question.AttachedImageFullPath, $"media/{question.AttachedImageFileName}");
+                    }
+                    foreach (var choice in question.Choices)
+                    {
+                        if (choice.HasImage && File.Exists(choice.AttachedImageFullPath))
+                        {
+                            archive.CreateEntryFromFile(choice.AttachedImageFullPath, $"media/{choice.AttachedImageFileName}");
+                        }
                     }
                 }
             }
         }
-
-        // --- 4. GENERATE THE .XAMK ANSWER KEY ---
-        string keyJson = JsonSerializer.Serialize(answerKey, jsonOptions);
-        File.WriteAllText(xamkPath, keyJson);
     }
 
-    // Generates an Excel-ready CSV Grade Report
     // Generates an Excel-ready CSV Grade Report
     public void ExportGradeReportToCsv(List<Models.GradeReport> grades, string outputPath)
     {
