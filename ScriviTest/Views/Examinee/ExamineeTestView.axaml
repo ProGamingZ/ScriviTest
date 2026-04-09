@@ -49,6 +49,7 @@
                                                     
                                                     <Grid ColumnDefinitions="*, Auto">
                                                         <TextBlock Grid.Column="0" Text="{Binding Prompt}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource AppForeground}"/>
+                                                        <Image Grid.Column="0" Source="{Binding ImageBitmap}" IsVisible="{Binding ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" MaxHeight="300" Margin="0,15,0,15" HorizontalAlignment="Left"/>
                                                         <TextBlock Grid.Column="1" Text="{Binding Points, StringFormat='[{0} pts]'}" FontWeight="Bold" Foreground="Gray" VerticalAlignment="Top"/>
                                                     </Grid>
 
@@ -72,6 +73,7 @@
                                                                               Margin="0,0,10,0"/>
                                                                     
                                                                     <TextBlock Grid.Column="1" Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
+                                                                    <Image Grid.Column="1" Source="{Binding ImageBitmap}" IsVisible="{Binding ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" MaxHeight="150" Margin="0,5,0,5" HorizontalAlignment="Left"/>
                                                                 </Grid>
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>

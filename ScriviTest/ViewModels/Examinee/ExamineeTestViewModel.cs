@@ -1,4 +1,5 @@
 using Avalonia.Threading;
+using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScriviTest.DTOs;
@@ -47,6 +48,27 @@ public partial class ExamineeTestViewModel : ViewModelBase
         _examTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         _examTimer.Tick += Timer_Tick;
         _examTimer.Start();
+
+        foreach (var section in ExamData.Sections)
+        {
+            foreach (var q in section.Questions)
+            {
+                if (!string.IsNullOrEmpty(q.AttachedImageFileName))
+                {
+                    string fullPath = Path.Combine(ImageDirectory, q.AttachedImageFileName);
+                    if (File.Exists(fullPath)) q.ImageBitmap = new Avalonia.Media.Imaging.Bitmap(fullPath);
+                }
+
+                foreach (var c in q.Choices)
+                {
+                    if (!string.IsNullOrEmpty(c.AttachedImageFileName))
+                    {
+                        string fullPath = Path.Combine(ImageDirectory, c.AttachedImageFileName);
+                        if (File.Exists(fullPath)) c.ImageBitmap = new Avalonia.Media.Imaging.Bitmap(fullPath);
+                    }
+                }
+            }
+        }
     }
 
     private void Timer_Tick(object? sender, EventArgs e)

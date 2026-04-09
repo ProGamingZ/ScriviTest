@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ScriviTest.DTOs;
 
@@ -37,6 +38,9 @@ public class StudentQuestionDto
     public bool IsMultipleSelection => Type == "MultipleAnswer";
     public bool IsEssay => Type == "Essay";
     public bool IsObjective => !IsEssay; // True for anything with choices
+    
+    [JsonIgnore] // Don't try to save this to JSON!
+    public Avalonia.Media.Imaging.Bitmap? ImageBitmap { get; set; }
 }
 
 public class StudentChoiceDto
@@ -44,4 +48,7 @@ public class StudentChoiceDto
     public string Text { get; set; } = string.Empty;
     public string? AttachedImageFileName { get; set; }
     public bool IsSelected { get; set; } = false;
+
+    [JsonIgnore]
+    public Avalonia.Media.Imaging.Bitmap? ImageBitmap { get; set; }
 }
