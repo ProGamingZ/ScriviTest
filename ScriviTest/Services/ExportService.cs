@@ -42,16 +42,17 @@ public class ExportService
                 // -- BUILD THE ANSWER KEY QUESTION --
                 var keyQuestion = new DTOs.AnswerKeyQuestionDto
                 {
-                    Prompt = question.Prompt, // FIX: Saving the question text!
+                    Prompt = question.Prompt, 
                     Type = question.Type.ToString(),
                     Points = question.Points,
-                    MultipleAnswerRubric = question.MultipleAnswerRubric.ToString()
+                    MultipleAnswerRubric = question.MultipleAnswerRubric.ToString(),
+                    AttachedImageFileName = question.AttachedImageFileName
                 };
 
                 // -- BUILD THE STUDENT QUESTION --
                 var studentQuestion = new DTOs.StudentQuestionDto
                 {
-                    Prompt = question.Prompt, // FIX: Saving the question text!
+                    Prompt = question.Prompt, 
                     Type = question.Type.ToString(),
                     Points = question.Points,
                     MaxWordCount = question.MaxWordCount,
@@ -103,7 +104,28 @@ public class ExportService
 
         // 3. Serialize and save the Answer Key (.xamk)
         string keyJson = JsonSerializer.Serialize(answerKey, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(xamkPath, keyJson);
+        
+        using (var archive = System.IO.Compression.ZipFile.Open(xamkPath, System.IO.Compression.ZipArchiveMode.Create))
+        {
+            var jsonEntry = archive.CreateEntry("answer_key.json");
+            using (var writer = new StreamWriter(jsonEntry.Open())) { writer.Write(keyJson); }
+
+            // Copy images into the .xamk Zip
+            foreach (var section in rawExam.Sections)
+            {
+                foreach (var question in section.Questions)
+                {
+                    if (question.HasImage && File.Exists(question.AttachedImageFullPath))
+                        archive.CreateEntryFromFile(question.AttachedImageFullPath, $"media/{question.AttachedImageFileName}");
+                    
+                    foreach (var choice in question.Choices)
+                    {
+                        if (choice.HasImage && File.Exists(choice.AttachedImageFullPath))
+                            archive.CreateEntryFromFile(choice.AttachedImageFullPath, $"media/{choice.AttachedImageFileName}");
+                    }
+                }
+            }
+        }
 
         // 4. Serialize and Package the Student Exam (.xamn)
         string studentJson = JsonSerializer.Serialize(studentExam, new JsonSerializerOptions { WriteIndented = true });
@@ -135,6 +157,7 @@ public class ExportService
                 }
             }
         }
+
     }
 
     // Generates an Excel-ready CSV Grade Report

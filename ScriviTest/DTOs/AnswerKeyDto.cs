@@ -18,6 +18,7 @@ public class AnswerKeyQuestionDto
     public string Prompt { get; set; } = string.Empty; 
     public string Type { get; set; } = string.Empty;
     public int Points { get; set; }
+    public string? AttachedImageFileName { get; set; }
     
     public string MultipleAnswerRubric { get; set; } = string.Empty;
     public bool? TrueFalseCorrectAnswer { get; set; }
@@ -30,4 +31,5 @@ public class AnswerKeyQuestionDto
 public class AnswerKeyChoiceDto
 {
     public string Text { get; set; } = string.Empty;
+    public string? AttachedImageFileName { get; set; }
 }

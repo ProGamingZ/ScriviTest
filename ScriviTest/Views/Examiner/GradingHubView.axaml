@@ -64,14 +64,18 @@
                                     <TextBlock Text="{Binding CurrentVisibleQuestion.QuestionNumber, StringFormat='{}{0})'}" FontSize="20" FontWeight="Bold"/>
                                     <TextBlock Text="{Binding CurrentVisibleQuestion.Prompt}" FontSize="20" TextWrapping="Wrap" MaxWidth="500"/>
                                 </StackPanel>
+                                <Image Source="{Binding CurrentVisibleQuestion.ImageBitmap}" IsVisible="{Binding CurrentVisibleQuestion.ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" MaxHeight="300" HorizontalAlignment="Left" Margin="30,0,0,0"/>
 
                                 <ItemsControl ItemsSource="{Binding CurrentVisibleQuestion.Choices}" IsVisible="{Binding CurrentVisibleQuestion.IsObjective}" Margin="30,20,0,0">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="models:ReviewChoice">
-                                            <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,5">
-                                                <TextBlock Text="{Binding Icon}" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Width="30" TextAlignment="Center"/>
-                                                <Border Background="{Binding IconColor}" Width="25" Height="25" BorderBrush="Black" BorderThickness="1" VerticalAlignment="Center"/>
-                                                <TextBlock Text="{Binding Text}" FontSize="18" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                            <StackPanel Orientation="Vertical" Spacing="5" Margin="0,5">
+                                                <StackPanel Orientation="Horizontal" Spacing="15">
+                                                    <TextBlock Text="{Binding Icon}" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Width="30" TextAlignment="Center"/>
+                                                    <Border Background="{Binding IconColor}" Width="25" Height="25" BorderBrush="Black" BorderThickness="1" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding Text}" FontSize="18" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                    <Image Source="{Binding ImageBitmap}" IsVisible="{Binding ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" MaxHeight="150" HorizontalAlignment="Left" Margin="70,0,0,0"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>

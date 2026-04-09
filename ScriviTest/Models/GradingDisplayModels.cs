@@ -14,6 +14,7 @@ public class ReviewQuestion
     public int MaxPoints { get; set; }
     
     public string EssayResponse { get; set; } = string.Empty;
+    public Avalonia.Media.Imaging.Bitmap? ImageBitmap { get; set; }
     public List<ReviewChoice> Choices { get; set; } = new();
 }
 
@@ -22,6 +23,7 @@ public class ReviewChoice
     public string Text { get; set; } = string.Empty;
     public bool IsStudentSelected { get; set; }
     public bool IsCorrectAnswer { get; set; }
+    public Avalonia.Media.Imaging.Bitmap? ImageBitmap { get; set; }
 
     // This perfectly matches your wireframe request!
     public string Icon => (IsStudentSelected, IsCorrectAnswer) switch

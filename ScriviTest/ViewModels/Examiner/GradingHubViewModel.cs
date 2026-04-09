@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.Compression;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ public partial class GradingHubViewModel : ViewModelBase
     private readonly Action<ViewModelBase> _navigateAction;
     private readonly Services.FileManagementService _fileService;
     private readonly Services.CryptographyService _cryptoService;
+    private readonly string _examinerTempImageDir = Path.Combine(Path.GetTempPath(), "ScriviTest", "ExaminerKeyMedia");
 
     // To store the answer key globally after unlocking
     private DTOs.AnswerKeyExamDto? _loadedAnswerKey;
@@ -83,9 +85,25 @@ public partial class GradingHubViewModel : ViewModelBase
 
         try
         {
-            string keyJson = File.ReadAllText(AnswerKeyPath!);
-            _loadedAnswerKey = JsonSerializer.Deserialize<DTOs.AnswerKeyExamDto>(keyJson);
-            if (_loadedAnswerKey == null) throw new Exception("Answer Key is empty.");
+            if (Directory.Exists(_examinerTempImageDir)) Directory.Delete(_examinerTempImageDir, true);
+            Directory.CreateDirectory(_examinerTempImageDir);
+
+            using var archive = System.IO.Compression.ZipFile.OpenRead(AnswerKeyPath!);
+            
+            // Extract Images
+            foreach (var entry in archive.Entries)
+            {
+                if (entry.FullName.StartsWith("media/") && !string.IsNullOrEmpty(entry.Name))
+                {
+                    entry.ExtractToFile(Path.Combine(_examinerTempImageDir, entry.Name), true);
+                }
+            }
+
+            // Read the JSON
+            var jsonEntry = archive.GetEntry("answer_key.json");
+            if (jsonEntry == null) throw new Exception("Invalid Answer Key Format.");
+            using var reader = new StreamReader(jsonEntry.Open());
+            _loadedAnswerKey = JsonSerializer.Deserialize<DTOs.AnswerKeyExamDto>(reader.ReadToEnd());
         }
         catch (Exception ex)
         {
@@ -186,6 +204,11 @@ public partial class GradingHubViewModel : ViewModelBase
                     EssayResponse = studentQ.EssayResponse ?? string.Empty,
                     PointsAwarded = earnedPoints 
                 };
+                if (!string.IsNullOrEmpty(keyQ.AttachedImageFileName))
+                {
+                    string imgPath = Path.Combine(_examinerTempImageDir, keyQ.AttachedImageFileName);
+                    if (File.Exists(imgPath)) reviewQ.ImageBitmap = new Avalonia.Media.Imaging.Bitmap(imgPath);
+                }
 
                 for (int c = 0; c < keyQ.Choices.Count; c++)
                 {
