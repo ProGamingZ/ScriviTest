@@ -114,6 +114,11 @@ public partial class GradingHubViewModel : ViewModelBase
         }
 
         // 2. BATCH DECRYPT & GRADE
+        if (_loadedAnswerKey == null)
+        {
+            ErrorMessage = "Answer key not loaded. Cannot grade submissions.";
+            return;
+        }
         foreach (var path in StudentSubmissionPaths)
         {
             var studentSubmission = _cryptoService.DecryptStudentSubmission(path, WhiteboardKey.ToUpper());
