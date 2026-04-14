@@ -32,6 +32,8 @@ public partial class GradingHubViewModel : ViewModelBase
     [ObservableProperty] private string _whiteboardKey = string.Empty;
     [ObservableProperty] private string _errorMessage = string.Empty;
 
+    [ObservableProperty] private double _currentTotalScore = 0;
+    [ObservableProperty] private int _currentMaxScore = 0;
     
     [ObservableProperty] private ObservableCollection<Models.GradeReport> _studentList = new();
     [ObservableProperty] private Models.GradeReport? _selectedStudent;
@@ -204,6 +206,11 @@ public partial class GradingHubViewModel : ViewModelBase
                     EssayResponse = studentQ.EssayResponse ?? string.Empty,
                     PointsAwarded = earnedPoints 
                 };
+                reviewQ.PropertyChanged += (sender, e) =>
+                {
+                    if (e.PropertyName == nameof(Models.ReviewQuestion.PointsAwarded))
+                        RecalculateCurrentScore();
+                };
                 if (!string.IsNullOrEmpty(keyQ.AttachedImageFileName))
                 {
                     string imgPath = Path.Combine(_examinerTempImageDir, keyQ.AttachedImageFileName);
@@ -227,6 +234,47 @@ public partial class GradingHubViewModel : ViewModelBase
         {
             CurrentVisibleQuestion = CurrentStudentQuestions[0];
             UpdateNavigationCommands();
+        }
+        CurrentMaxScore = value.MaxPossiblePoints;
+        RecalculateCurrentScore();
+    }
+    private void RecalculateCurrentScore()
+    {
+        double total = 0;
+        foreach (var q in CurrentStudentQuestions) total += q.PointsAwarded;
+        CurrentTotalScore = total;
+    }
+
+    [RelayCommand]
+    private void JumpToQuestion(Models.ReviewQuestion question)
+    {
+        if (question == null) return;
+        _currentQuestionIndex = CurrentStudentQuestions.IndexOf(question);
+        CurrentVisibleQuestion = question;
+        UpdateNavigationCommands();
+    }
+
+    [RelayCommand]
+    private void FinishChecking()
+    {
+        if (SelectedStudent == null) return;
+
+        // 1. Save the final score to the Left Panel DataGrid
+        SelectedStudent.TotalPointsEarned = CurrentTotalScore;
+        SelectedStudent.RequiresManualReview = false; 
+
+        // Force the DataGrid to refresh this specific row
+        int index = StudentList.IndexOf(SelectedStudent);
+        StudentList[index] = SelectedStudent; 
+
+        // 2. Auto-advance to the next student!
+        if (index >= 0 && index < StudentList.Count - 1)
+        {
+            SelectedStudent = StudentList[index + 1];
+        }
+        else
+        {
+            SelectedStudent = null; // We are done with the whole class!
         }
     }
 
