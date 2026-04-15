@@ -9,8 +9,8 @@ public class StudentSubmissionDto
     public string LastName { get; set; } = string.Empty;
     public string Suffix { get; set; } = string.Empty;
     public string StudentID { get; set; } = string.Empty;
-    
     public string ExamTitle { get; set; } = string.Empty;
+    public string TimeTakenDisplay { get; set; } = string.Empty;
     public List<SubmissionSectionDto> Sections { get; set; } = new();
 }
 

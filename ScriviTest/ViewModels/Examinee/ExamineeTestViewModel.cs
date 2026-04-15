@@ -94,6 +94,16 @@ public partial class ExamineeTestViewModel : ViewModelBase
     [RelayCommand]
     private void SubmitExam()
     {
+        int totalLimitSeconds = ExamData.TimeLimitMinutes * 60;
+        int remainingSeconds = (int)_timeRemaining.TotalSeconds;
+        int takenSeconds = totalLimitSeconds - remainingSeconds;
+
+        TimeSpan takenSpan = TimeSpan.FromSeconds(takenSeconds);
+        TimeSpan totalSpan = TimeSpan.FromMinutes(ExamData.TimeLimitMinutes);
+
+        // Format neatly (MM:SS or HH:MM:SS)
+        string takenStr = takenSpan.Hours > 0 ? $"{takenSpan.Hours:D2}:{takenSpan.Minutes:D2}:{takenSpan.Seconds:D2}" : $"{takenSpan.Minutes:D2}:{takenSpan.Seconds:D2}";
+        string totalStr = totalSpan.Hours > 0 ? $"{totalSpan.Hours:D2}:{totalSpan.Minutes:D2}:{totalSpan.Seconds:D2}" : $"{totalSpan.Minutes:D2}:{totalSpan.Seconds:D2}";
         // 2. Map the UI data to the lightweight Scantron DTO
         var submission = new StudentSubmissionDto 
         { 
@@ -102,7 +112,8 @@ public partial class ExamineeTestViewModel : ViewModelBase
             LastName = _lastName,
             Suffix = _suffix,
             StudentID = _studentID, 
-            ExamTitle = ExamData.Title 
+            ExamTitle = ExamData.Title,
+            TimeTakenDisplay = $"{takenStr} / {totalStr}"
         };
 
         foreach (var section in ExamData.Sections)

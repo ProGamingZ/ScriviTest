@@ -20,7 +20,7 @@ public partial class GradingHubViewModel : ViewModelBase
     // To store the answer key globally after unlocking
     private DTOs.AnswerKeyExamDto? _loadedAnswerKey;
 
-    // This is what the Right Panel Grid will bind to!
+    [ObservableProperty] private string _currentTimeTakenDisplay = string.Empty;
     [ObservableProperty] private ObservableCollection<Models.ReviewSection> _currentReviewSections = new();
     // Navigation for the Middle Panel
     [ObservableProperty] private ObservableCollection<Models.ReviewQuestion> _currentStudentQuestions = new();
@@ -186,6 +186,7 @@ public partial class GradingHubViewModel : ViewModelBase
             // Wipe the UI clean if no student is selected
             CurrentStudentQuestions = freshFlatList;
             CurrentReviewSections = freshSectionList;
+            CurrentTimeTakenDisplay = string.Empty;
             return;
         }
 
@@ -270,6 +271,7 @@ public partial class GradingHubViewModel : ViewModelBase
         }
         
         CurrentMaxScore = value.MaxPossiblePoints;
+        CurrentTimeTakenDisplay = value.SubmissionData.TimeTakenDisplay;
         RecalculateCurrentScore();
     }    
     
