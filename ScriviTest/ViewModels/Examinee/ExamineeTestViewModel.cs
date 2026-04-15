@@ -94,6 +94,7 @@ public partial class ExamineeTestViewModel : ViewModelBase
     [RelayCommand]
     private void SubmitExam()
     {
+        _examTimer?.Stop();
         int totalLimitSeconds = ExamData.TimeLimitMinutes * 60;
         int remainingSeconds = (int)_timeRemaining.TotalSeconds;
         int takenSeconds = totalLimitSeconds - remainingSeconds;
