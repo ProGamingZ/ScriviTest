@@ -20,6 +20,8 @@ public partial class GradingHubViewModel : ViewModelBase
     // To store the answer key globally after unlocking
     private DTOs.AnswerKeyExamDto? _loadedAnswerKey;
 
+    // This is what the Right Panel Grid will bind to!
+    [ObservableProperty] private ObservableCollection<Models.ReviewSection> _currentReviewSections = new();
     // Navigation for the Middle Panel
     [ObservableProperty] private ObservableCollection<Models.ReviewQuestion> _currentStudentQuestions = new();
     [ObservableProperty] private Models.ReviewQuestion? _currentVisibleQuestion;
@@ -172,20 +174,31 @@ public partial class GradingHubViewModel : ViewModelBase
 
     partial void OnSelectedStudentChanged(Models.GradeReport? value)
     {
-        CurrentStudentQuestions.Clear();
+        // 1. Build brand-new lists in memory to force Avalonia to redraw the UI!
+        var freshFlatList = new ObservableCollection<Models.ReviewQuestion>();
+        var freshSectionList = new ObservableCollection<Models.ReviewSection>();
+        
         _currentQuestionIndex = 0;
         CurrentVisibleQuestion = null;
 
-        if (value == null || value.SubmissionData == null || _loadedAnswerKey == null) return;
+        if (value == null || value.SubmissionData == null || _loadedAnswerKey == null)
+        {
+            // Wipe the UI clean if no student is selected
+            CurrentStudentQuestions = freshFlatList;
+            CurrentReviewSections = freshSectionList;
+            return;
+        }
 
         int qNumber = 1;
 
-        // Merge the Student Answers and the Answer Key into our UI models
         for (int s = 0; s < value.SubmissionData.Sections.Count; s++)
         {
             if (s >= _loadedAnswerKey.Sections.Count) continue;
             var studentSection = value.SubmissionData.Sections[s];
             var keySection = _loadedAnswerKey.Sections[s];
+
+            // Create the Section Wrapper
+            var reviewSection = new Models.ReviewSection();
 
             for (int q = 0; q < studentSection.Questions.Count; q++)
             {
@@ -211,11 +224,13 @@ public partial class GradingHubViewModel : ViewModelBase
                     EssayResponse = studentQ.EssayResponse ?? string.Empty,
                     PointsAwarded = earnedPoints 
                 };
+
                 reviewQ.PropertyChanged += (sender, e) =>
                 {
                     if (e.PropertyName == nameof(Models.ReviewQuestion.PointsAwarded))
                         RecalculateCurrentScore();
                 };
+
                 if (!string.IsNullOrEmpty(keyQ.AttachedImageFileName))
                 {
                     string imgPath = Path.Combine(_examinerTempImageDir, keyQ.AttachedImageFileName);
@@ -231,18 +246,33 @@ public partial class GradingHubViewModel : ViewModelBase
                         IsStudentSelected = studentQ.SelectedChoiceIndices.Contains(c)
                     });
                 }
-                CurrentStudentQuestions.Add(reviewQ);
+
+                // Add to BOTH the Section (for the grid) and the Flat List (for Prev/Next buttons)
+                reviewSection.Questions.Add(reviewQ);
+                freshFlatList.Add(reviewQ);
+            }
+            
+            // Add the finished section to our list
+            if (reviewSection.Questions.Count > 0)
+            {
+                freshSectionList.Add(reviewSection);
             }
         }
+
+        // 2. SWAP THE LISTS: This triggers the instant visual update!
+        CurrentStudentQuestions = freshFlatList;
+        CurrentReviewSections = freshSectionList;
 
         if (CurrentStudentQuestions.Count > 0)
         {
             CurrentVisibleQuestion = CurrentStudentQuestions[0];
             UpdateNavigationCommands();
         }
+        
         CurrentMaxScore = value.MaxPossiblePoints;
         RecalculateCurrentScore();
-    }
+    }    
+    
     private void RecalculateCurrentScore()
     {
         double total = 0;

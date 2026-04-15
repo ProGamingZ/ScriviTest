@@ -47,6 +47,12 @@ public partial class ReviewQuestion : ObservableObject
     public string GridIconColor => (IsEssay && PointsAwarded == 0) ? "#2196F3" : (PointsAwarded > 0 ? "#4CAF50" : "#F44336");
 }
 
+public class ReviewSection
+{
+    // Holds questions for specific sections
+    public System.Collections.ObjectModel.ObservableCollection<ReviewQuestion> Questions { get; set; } = new();
+}
+
 public class ReviewChoice
 {
     public string Text { get; set; } = string.Empty;
