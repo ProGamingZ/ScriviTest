@@ -208,14 +208,37 @@ public partial class GradingHubViewModel : ViewModelBase
                 var keyQ = keySection.Questions[q];
 
                 double earnedPoints = 0;
-                if (keyQ.Type == "MultipleChoice" || keyQ.Type == "TrueFalse")
+                bool isSingleSelection = keyQ.Type == "MultipleChoice" || keyQ.Type == "TrueFalse";
+
+                if (isSingleSelection)
                 {
+                    // Single choice logic
                     if (studentQ.SelectedChoiceIndices.Count == 1 && keyQ.CorrectChoiceIndices.Contains(studentQ.SelectedChoiceIndices[0]))
                     {
                         earnedPoints = keyQ.Points;
                     }
                 }
-                
+                if (keyQ.Type == "MultipleAnswer")
+                {
+                    var studentAns = new HashSet<int>(studentQ.SelectedChoiceIndices);
+                    var keyAns = new HashSet<int>(keyQ.CorrectChoiceIndices);
+
+                    if (keyQ.MultipleAnswerRubric == "AllOrNothing")
+                    {
+                        if (studentAns.SetEquals(keyAns)) earnedPoints = keyQ.Points;
+                    }
+                    else // Partial Credit Logic
+                    {
+                        double pointsPerCorrect = keyAns.Count > 0 ? (double)keyQ.Points / keyAns.Count : 0;
+                        foreach (int ans in studentAns)
+                        {
+                            if (keyAns.Contains(ans)) earnedPoints += pointsPerCorrect;
+                            else earnedPoints -= 1; // Penalty for wrong guess
+                        }
+                        if (earnedPoints < 0) earnedPoints = 0; // Floor at zero
+                    }
+                }
+
                 var reviewQ = new Models.ReviewQuestion
                 {
                     QuestionNumber = qNumber++,
@@ -244,7 +267,8 @@ public partial class GradingHubViewModel : ViewModelBase
                     {
                         Text = keyQ.Choices[c].Text,
                         IsCorrectAnswer = keyQ.CorrectChoiceIndices.Contains(c),
-                        IsStudentSelected = studentQ.SelectedChoiceIndices.Contains(c)
+                        IsStudentSelected = studentQ.SelectedChoiceIndices.Contains(c),
+                        IsSingleSelection = isSingleSelection
                     });
                 }
 

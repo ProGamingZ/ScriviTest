@@ -59,21 +59,27 @@ public class ReviewChoice
     public bool IsStudentSelected { get; set; }
     public bool IsCorrectAnswer { get; set; }
     public Avalonia.Media.Imaging.Bitmap? ImageBitmap { get; set; }
-
-    // This perfectly matches your wireframe request!
-    public string Icon => (IsStudentSelected, IsCorrectAnswer) switch
-    {
-        (true, true) => "✔️", // Correct answer chosen
-        (true, false) => "❌", // Wrong answer chosen
-        (false, true) => "❓", // Correct answer NOT chosen
-        _ => "⬜"              // Neutral (Not correct, not chosen)
-    };
+    public bool IsSingleSelection { get; set; }
     
-    public string IconColor => (IsStudentSelected, IsCorrectAnswer) switch
+    public Avalonia.CornerRadius BoxCornerRadius => IsSingleSelection ? new Avalonia.CornerRadius(15) : new Avalonia.CornerRadius(4);
+
+    // Inner symbol (Clean text characters, not emojis!)
+    public string InnerSymbol => (IsStudentSelected, IsCorrectAnswer) switch
     {
-        (true, true) => "#8BC34A", // Green
+        (true, true) => "✓",
+        (true, false) => "✕",
+        (false, true) => "?",
+        _ => ""
+    };
+
+    public string BoxBackgroundColor => (IsStudentSelected, IsCorrectAnswer) switch
+    {
+        (true, true) => "#4CAF50", // Green
         (true, false) => "#F44336", // Red
         (false, true) => "#2196F3", // Blue
-        _ => "LightGray"
+        _ => "Transparent"
     };
+
+    // If it's completely unselected/neutral, give it a gray border.
+    public string BoxBorderColor => (IsStudentSelected, IsCorrectAnswer) == (false, false) ? "Gray" : "Transparent";
 }
