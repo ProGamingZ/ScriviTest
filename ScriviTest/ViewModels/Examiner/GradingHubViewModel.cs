@@ -130,43 +130,61 @@ public partial class GradingHubViewModel : ViewModelBase
                 return; 
             }
 
-            // Create the Grade Report using our new fields
+            // Create Grade Report 
             var report = new Models.GradeReport 
             { 
                 FirstName = studentSubmission.FirstName,
                 MiddleName = studentSubmission.MiddleName,
                 LastName = studentSubmission.LastName,
                 StudentID = studentSubmission.StudentID,
-                SubmissionData = studentSubmission, // Keep the raw data for the Middle Panel!
+                SubmissionData = studentSubmission, // keep raw data Middle Panel
+                FilePath = path,
                 MaxPossiblePoints = 0,
                 TotalPointsEarned = 0,
                 RequiresManualReview = false
             };
 
-            // Loop through and Auto-Grade (Keeping this simplified for now)
+
+            // calculate autograde & inject directly into DTO
             for (int s = 0; s < studentSubmission.Sections.Count; s++)
             {
                 if (s >= _loadedAnswerKey.Sections.Count) continue;
-                var studentSection = studentSubmission.Sections[s];
-                var keySection = _loadedAnswerKey.Sections[s];
-
-                for (int q = 0; q < studentSection.Questions.Count; q++)
+                for (int q = 0; q < studentSubmission.Sections[s].Questions.Count; q++)
                 {
-                    if (q >= keySection.Questions.Count) continue;
-                    var studentQ = studentSection.Questions[q];
-                    var keyQ = keySection.Questions[q];
+                    if (q >= _loadedAnswerKey.Sections[s].Questions.Count) continue;
+                    var studentQ = studentSubmission.Sections[s].Questions[q];
+                    var keyQ = _loadedAnswerKey.Sections[s].Questions[q];
 
                     report.MaxPossiblePoints += keyQ.Points;
 
-                    if (keyQ.Type == "Essay") report.RequiresManualReview = true;
-                    else if ((keyQ.Type == "MultipleChoice" || keyQ.Type == "TrueFalse") && studentQ.SelectedChoiceIndices.Count == 1 && keyQ.CorrectChoiceIndices.Contains(studentQ.SelectedChoiceIndices[0]))
+                    // if not graded yet, run Auto-Grader
+                    if (!studentQ.AwardedPoints.HasValue)
                     {
-                        report.TotalPointsEarned += keyQ.Points;
+                        double autoGrade = 0;
+                        if (keyQ.Type == "Essay") report.RequiresManualReview = true;
+                        else if (keyQ.Type == "MultipleChoice" || keyQ.Type == "TrueFalse")
+                        {
+                            if (studentQ.SelectedChoiceIndices.Count == 1 && keyQ.CorrectChoiceIndices.Contains(studentQ.SelectedChoiceIndices[0]))
+                                autoGrade = keyQ.Points;
+                        }
+                        else if (keyQ.Type == "MultipleAnswer")
+                        {
+                            var studentAns = new HashSet<int>(studentQ.SelectedChoiceIndices);
+                            var keyAns = new HashSet<int>(keyQ.CorrectChoiceIndices);
+                            if (keyQ.MultipleAnswerRubric == "AllOrNothing") { if (studentAns.SetEquals(keyAns)) autoGrade = keyQ.Points; }
+                            else
+                            {
+                                double pointsPerCorrect = keyAns.Count > 0 ? (double)keyQ.Points / keyAns.Count : 0;
+                                foreach (int ans in studentAns) { if (keyAns.Contains(ans)) autoGrade += pointsPerCorrect; else autoGrade -= 1; }
+                                if (autoGrade < 0) autoGrade = 0; 
+                            }
+                        }
+                        studentQ.AwardedPoints = autoGrade; // save auto-grade into DTO!
                     }
-                    // Add MultipleAnswer logic here as needed
+
+                    report.TotalPointsEarned += studentQ.AwardedPoints.Value;
                 }
             }
-            
             // Add it to the UI List!
             StudentList.Add(report);
         }
@@ -207,37 +225,8 @@ public partial class GradingHubViewModel : ViewModelBase
                 var studentQ = studentSection.Questions[q];
                 var keyQ = keySection.Questions[q];
 
-                double earnedPoints = 0;
+                double earnedPoints = studentQ.AwardedPoints ?? 0;
                 bool isSingleSelection = keyQ.Type == "MultipleChoice" || keyQ.Type == "TrueFalse";
-
-                if (isSingleSelection)
-                {
-                    // Single choice logic
-                    if (studentQ.SelectedChoiceIndices.Count == 1 && keyQ.CorrectChoiceIndices.Contains(studentQ.SelectedChoiceIndices[0]))
-                    {
-                        earnedPoints = keyQ.Points;
-                    }
-                }
-                if (keyQ.Type == "MultipleAnswer")
-                {
-                    var studentAns = new HashSet<int>(studentQ.SelectedChoiceIndices);
-                    var keyAns = new HashSet<int>(keyQ.CorrectChoiceIndices);
-
-                    if (keyQ.MultipleAnswerRubric == "AllOrNothing")
-                    {
-                        if (studentAns.SetEquals(keyAns)) earnedPoints = keyQ.Points;
-                    }
-                    else // Partial Credit Logic
-                    {
-                        double pointsPerCorrect = keyAns.Count > 0 ? (double)keyQ.Points / keyAns.Count : 0;
-                        foreach (int ans in studentAns)
-                        {
-                            if (keyAns.Contains(ans)) earnedPoints += pointsPerCorrect;
-                            else earnedPoints -= 1; // Penalty for wrong guess
-                        }
-                        if (earnedPoints < 0) earnedPoints = 0; // Floor at zero
-                    }
-                }
 
                 var reviewQ = new Models.ReviewQuestion
                 {
@@ -320,22 +309,51 @@ public partial class GradingHubViewModel : ViewModelBase
     {
         if (SelectedStudent == null) return;
 
-        // 1. Save the final score to the Left Panel DataGrid
+        // 1. Map the Examiner's UI changes back into the raw DTO
+        int flatIndex = 0;
+        foreach (var studentSection in SelectedStudent.SubmissionData!.Sections)
+        {
+            foreach (var studentQ in studentSection.Questions)
+            {
+                if (flatIndex < CurrentStudentQuestions.Count)
+                {
+                    studentQ.AwardedPoints = CurrentStudentQuestions[flatIndex].PointsAwarded;
+                    flatIndex++;
+                }
+            }
+        }
+
+        // 2. OVERWRITE THE .XANS FILE SECURELY ON THE HARD DRIVE
+        try
+        {
+            string jsonContent = JsonSerializer.Serialize(SelectedStudent.SubmissionData, new JsonSerializerOptions { WriteIndented = true });
+            
+            // Write the unencrypted JSON temporarily, then encrypt it in-place using the Whiteboard key!
+            File.WriteAllText(SelectedStudent.FilePath, jsonContent);
+            _cryptoService.EncryptFile(SelectedStudent.FilePath, WhiteboardKey.ToUpper());
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Failed to save grades: {ex.Message}";
+            return;
+        }
+
+        // 3. Update the Left Panel DataGrid
         SelectedStudent.TotalPointsEarned = CurrentTotalScore;
         SelectedStudent.RequiresManualReview = false; 
 
-        // Force the DataGrid to refresh this specific row
+        // Force the DataGrid to visually refresh this specific row
         int index = StudentList.IndexOf(SelectedStudent);
         StudentList[index] = SelectedStudent; 
 
-        // 2. Auto-advance to the next student!
+        // 4. Auto-advance to the next student
         if (index >= 0 && index < StudentList.Count - 1)
         {
             SelectedStudent = StudentList[index + 1];
         }
         else
         {
-            SelectedStudent = null; // We are done with the whole class!
+            SelectedStudent = null; 
         }
     }
 

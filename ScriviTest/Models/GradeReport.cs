@@ -1,20 +1,32 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace ScriviTest.Models;
 
-public class GradeReport
+public partial class GradeReport : ObservableObject
 {
-    // Properties for the DataGrid Columns
-    public string FirstName { get; set; } = string.Empty;
-    public string MiddleName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string StudentID { get; set; } = string.Empty;
+    [ObservableProperty] private string _firstName = string.Empty;
+    [ObservableProperty] private string _middleName = string.Empty;
+    [ObservableProperty] private string _lastName = string.Empty;
+    [ObservableProperty] private string _studentID = string.Empty;
 
-    public double TotalPointsEarned { get; set; }
-    public int MaxPossiblePoints { get; set; }
-    public bool RequiresManualReview { get; set; }
+    [ObservableProperty] 
+    [NotifyPropertyChangedFor(nameof(DisplayScore))]
+    private double _totalPointsEarned;
 
-    // What actually shows up in the "Scores" column
-    public string DisplayScore => RequiresManualReview ? "Pending Review" : $"{TotalPointsEarned} / {MaxPossiblePoints}";
+    [ObservableProperty] 
+    [NotifyPropertyChangedFor(nameof(DisplayScore))]
+    private int _maxPossiblePoints;
+
+    [ObservableProperty] 
+    [NotifyPropertyChangedFor(nameof(DisplayScore))]
+    private bool _requiresManualReview;
+
+    // Always shows score. Appends a (!) if there is an ungraded essay.
+    public string DisplayScore => RequiresManualReview ? $"{TotalPointsEarned} / {MaxPossiblePoints} (!)" : $"{TotalPointsEarned} / {MaxPossiblePoints}";
 
     // CRITICAL: We keep the raw student answers attached here so the Middle Panel can read them!
     public ScriviTest.DTOs.StudentSubmissionDto? SubmissionData { get; set; } 
+
+    //Remembers exact location of file to overwrite!
+    public string FilePath { get; set; } = string.Empty;
 }
