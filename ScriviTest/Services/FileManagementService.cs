@@ -86,7 +86,7 @@ public class FileManagementService
     }
 
     // Looks for .xans files and allows the user to highlight dozens of them at once!
-    public async Task<List<string>> PickStudentSubmissionsAsync()
+    public async Task<List<string> > PickStudentSubmissionsAsync()
     {
         var selectedPaths = new List<string>();
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow != null)
@@ -105,5 +105,31 @@ public class FileManagementService
             }
         }
         return selectedPaths;
+    }
+
+    public async Task<string?> SaveCsvFileAsync(string defaultFileName)
+    {
+        // Get the current window to act as the parent for the popup dialog
+        if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var window = desktop.MainWindow;
+            if (window == null) return null;
+
+            // Open the native Windows/Mac Save File Explorer
+            var file = await window.StorageProvider.SaveFilePickerAsync(new Avalonia.Platform.Storage.FilePickerSaveOptions
+            {
+                Title = "Save Class Roster Export",
+                SuggestedFileName = defaultFileName,
+                DefaultExtension = "csv",
+                FileTypeChoices = new[]
+                {
+                    new Avalonia.Platform.Storage.FilePickerFileType("CSV Document") { Patterns = new[] { "*.csv" } }
+                }
+            });
+
+            // Return the full path the user chose (or null if they hit Cancel)
+            return file?.TryGetLocalPath();
+        }
+        return null;
     }
 }

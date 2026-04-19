@@ -407,7 +407,7 @@ public partial class GradingHubViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void ExportToExcel()
+    private async Task ExportToExcel() // <-- Changed to async Task!
     {
         if (StudentList.Count == 0)
         {
@@ -417,26 +417,32 @@ public partial class GradingHubViewModel : ViewModelBase
 
         try
         {
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string csvPath = Path.Combine(desktopPath, $"Class_Roster_Export_{DateTime.Now:yyyyMMdd_HHmm}.csv");
+            // 1. Generate the suggested file name
+            string suggestedName = $"Class_Roster_Export_{DateTime.Now:yyyyMMdd_HHmm}.csv";
 
-            using (var writer = new StreamWriter(csvPath))
+            // 2. Open the OS Folder Explorer and wait for the user to pick a spot
+            string? customPath = await _fileService.SaveCsvFileAsync(suggestedName);
+
+            // 3. If the user clicks "Cancel" or "X" on the folder popup, just stop safely.
+            if (string.IsNullOrEmpty(customPath)) return;
+
+            // 4. Save the file exactly where they asked!
+            using (var writer = new StreamWriter(customPath))
             {
-                // Write the headers
                 writer.WriteLine("First Name,Middle Name,Last Name,Student ID,Final Score,Needs Review");
 
-                // Write the student data
                 foreach (var student in StudentList)
                 {
                     writer.WriteLine($"{student.FirstName},{student.MiddleName},{student.LastName},{student.StudentID},=\"{student.DisplayScore}\",{student.RequiresManualReview}");
                 }
             }
 
-            ErrorMessage = $"Successfully exported to: {Path.GetFileName(csvPath)}";
+            ErrorMessage = $"Successfully exported to: {Path.GetFileName(customPath)}";
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Export failed: {ex.Message}";
         }
     }
+
 }
