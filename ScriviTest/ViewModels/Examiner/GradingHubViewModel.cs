@@ -16,6 +16,7 @@ public partial class GradingHubViewModel : ViewModelBase
     private readonly Services.FileManagementService _fileService;
     private readonly Services.CryptographyService _cryptoService;
     private readonly string _examinerTempImageDir = Path.Combine(Path.GetTempPath(), "ScriviTest", "ExaminerKeyMedia");
+    private readonly Dictionary<string, Avalonia.Media.Imaging.Bitmap> _imageCache = new(); //holds images in ram
 
     // To store the answer key globally after unlocking
     private DTOs.AnswerKeyExamDto? _loadedAnswerKey;
@@ -100,12 +101,20 @@ public partial class GradingHubViewModel : ViewModelBase
 
             using var archive = System.IO.Compression.ZipFile.OpenRead(AnswerKeyPath!);
             
-            // Extract Images
+            // Clear old images from previous grading sessions
+            foreach (var bmp in _imageCache.Values) bmp.Dispose(); 
+            _imageCache.Clear();
+
+            // Extract Images & Cache them instantly
             foreach (var entry in archive.Entries)
             {
                 if (entry.FullName.StartsWith("media/") && !string.IsNullOrEmpty(entry.Name))
                 {
-                    entry.ExtractToFile(Path.Combine(_examinerTempImageDir, entry.Name), true);
+                    string destPath = Path.Combine(_examinerTempImageDir, entry.Name);
+                    entry.ExtractToFile(destPath, true);
+                    
+                    // LOAD INTO RAM ONCE
+                    _imageCache[entry.Name] = new Avalonia.Media.Imaging.Bitmap(destPath);
                 }
             }
 
@@ -250,21 +259,30 @@ public partial class GradingHubViewModel : ViewModelBase
                         RecalculateCurrentScore();
                 };
 
-                if (!string.IsNullOrEmpty(keyQ.AttachedImageFileName))
+                
+                if (!string.IsNullOrEmpty(keyQ.AttachedImageFileName) && _imageCache.TryGetValue(keyQ.AttachedImageFileName, out var cachedQImg))
                 {
-                    string imgPath = Path.Combine(_examinerTempImageDir, keyQ.AttachedImageFileName);
-                    if (File.Exists(imgPath)) reviewQ.ImageBitmap = new Avalonia.Media.Imaging.Bitmap(imgPath);
+                    reviewQ.ImageBitmap = cachedQImg;
                 }
 
                 for (int c = 0; c < keyQ.Choices.Count; c++)
                 {
-                    reviewQ.Choices.Add(new Models.ReviewChoice
+                    var reviewChoice = new Models.ReviewChoice
                     {
                         Text = keyQ.Choices[c].Text,
                         IsCorrectAnswer = keyQ.CorrectChoiceIndices.Contains(c),
                         IsStudentSelected = studentQ.SelectedChoiceIndices.Contains(c),
                         IsSingleSelection = isSingleSelection
-                    });
+                    };
+
+                    var attachedImageFileName = keyQ.Choices[c].AttachedImageFileName;
+                    if (!string.IsNullOrEmpty(attachedImageFileName) && 
+                        _imageCache.TryGetValue(attachedImageFileName!, out var cachedCImg))
+                    {
+                        reviewChoice.ImageBitmap = cachedCImg;
+                    }
+
+                    reviewQ.Choices.Add(reviewChoice);
                 }
 
                 // Add to BOTH the Section (for the grid) and the Flat List (for Prev/Next buttons)
@@ -279,7 +297,7 @@ public partial class GradingHubViewModel : ViewModelBase
             }
         }
 
-        // 2. SWAP THE LISTS: This triggers the instant visual update!
+        // SWAP THE LISTS: This triggers the instant visual update!
         CurrentStudentQuestions = freshFlatList;
         CurrentReviewSections = freshSectionList;
 
