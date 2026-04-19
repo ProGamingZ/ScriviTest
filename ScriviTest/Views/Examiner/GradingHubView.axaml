@@ -19,7 +19,7 @@
         <Grid Grid.Row="1" ColumnDefinitions="2.5*, 5*, 2.5*">
             
             <Border Grid.Column="0" BorderBrush="Black" BorderThickness="0,0,4,0" Padding="15" Background="White">
-                <Grid RowDefinitions="Auto, Auto, Auto, *">
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto, *, Auto">
                     
                     <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
                         <TextBox Grid.Column="0" Text="{Binding AnswerKeyFileName}" Watermark="Load Answer Key (.xamk)" IsReadOnly="True" BorderBrush="Black" BorderThickness="1" CornerRadius="0"/>
@@ -36,17 +36,41 @@
                         <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseForStudentFilesCommand}" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="0" Margin="5,0,0,0" Background="White"/>
                     </Grid>
 
-                    <DataGrid Grid.Row="3" ItemsSource="{Binding StudentList}" SelectedItem="{Binding SelectedStudent}"
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,5">
+                        <Button Content="⚙️ Columns" Background="Transparent" BorderBrush="Gray" BorderThickness="1" Padding="10,5">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel Spacing="10" MinWidth="150">
+                                        <TextBlock Text="Show/Hide Columns" FontWeight="Bold" Margin="0,0,0,5"/>
+                                        <CheckBox Content="First Name" IsChecked="{Binding ShowFirstName}"/>
+                                        <CheckBox Content="Middle Name" IsChecked="{Binding ShowMiddleName}"/>
+                                        <CheckBox Content="Last Name" IsChecked="{Binding ShowLastName}"/>
+                                        <CheckBox Content="Student ID" IsChecked="{Binding ShowID}"/>
+                                        <CheckBox Content="Scores" IsChecked="{Binding ShowScores}"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="4" ItemsSource="{Binding StudentList}" SelectedItem="{Binding SelectedStudent}"
                               AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="Black" BorderThickness="1"
-                              CanUserReorderColumns="True" CanUserSortColumns="True">
+                              CanUserReorderColumns="True" CanUserSortColumns="True"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="First" Binding="{Binding FirstName}" Width="*"/>
-                            <DataGridTextColumn Header="Middle" Binding="{Binding MiddleName}" Width="*"/>
-                            <DataGridTextColumn Header="Last" Binding="{Binding LastName}" Width="*"/>
-                            <DataGridTextColumn Header="ID" Binding="{Binding StudentID}" Width="*"/>
-                            <DataGridTextColumn Header="Scores" Binding="{Binding DisplayScore}" Width="*"/>
+                            <DataGridTextColumn Header="First" Binding="{Binding FirstName}" Width="*" MinWidth="80" IsVisible="{Binding ShowFirstName}"/>
+                            <DataGridTextColumn Header="Middle" Binding="{Binding MiddleName}" Width="*" MinWidth="80" IsVisible="{Binding ShowMiddleName}"/>
+                            <DataGridTextColumn Header="Last" Binding="{Binding LastName}" Width="*" MinWidth="80" IsVisible="{Binding ShowLastName}"/>
+                            <DataGridTextColumn Header="ID" Binding="{Binding StudentID}" Width="*" MinWidth="100" IsVisible="{Binding ShowID}"/>
+                            <DataGridTextColumn Header="Scores" Binding="{Binding DisplayScore}" Width="*" MinWidth="100" IsVisible="{Binding ShowScores}"/>
                         </DataGrid.Columns>
                     </DataGrid>
+
+                    <Button Grid.Row="5" Content="Export to Excel" Command="{Binding ExportToExcelCommand}" 
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
+                            Background="White" BorderBrush="Black" BorderThickness="2" 
+                            FontSize="18" FontWeight="Bold" Padding="0,15" Margin="0,15,0,0"/>
 
                 </Grid>
             </Border>

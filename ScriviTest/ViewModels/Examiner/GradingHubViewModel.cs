@@ -40,6 +40,12 @@ public partial class GradingHubViewModel : ViewModelBase
     [ObservableProperty] private ObservableCollection<Models.GradeReport> _studentList = new();
     [ObservableProperty] private Models.GradeReport? _selectedStudent;
 
+    [ObservableProperty] private bool _showFirstName = true;
+    [ObservableProperty] private bool _showMiddleName = true;
+    [ObservableProperty] private bool _showLastName = true;
+    [ObservableProperty] private bool _showID = true;
+    [ObservableProperty] private bool _showScores = true;
+
     public GradingHubViewModel(Action<ViewModelBase> navigateAction)
     {
         _navigateAction = navigateAction;
@@ -382,5 +388,37 @@ public partial class GradingHubViewModel : ViewModelBase
         NextQuestionCommand.NotifyCanExecuteChanged();
     }
 
+    [RelayCommand]
+    private void ExportToExcel()
+    {
+        if (StudentList.Count == 0)
+        {
+            ErrorMessage = "No graded students to export.";
+            return;
+        }
 
+        try
+        {
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string csvPath = Path.Combine(desktopPath, $"Class_Roster_Export_{DateTime.Now:yyyyMMdd_HHmm}.csv");
+
+            using (var writer = new StreamWriter(csvPath))
+            {
+                // Write the headers
+                writer.WriteLine("First Name,Middle Name,Last Name,Student ID,Final Score,Needs Review");
+
+                // Write the student data
+                foreach (var student in StudentList)
+                {
+                    writer.WriteLine($"{student.FirstName},{student.MiddleName},{student.LastName},{student.StudentID},=\"{student.DisplayScore}\",{student.RequiresManualReview}");
+                }
+            }
+
+            ErrorMessage = $"Successfully exported to: {Path.GetFileName(csvPath)}";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Export failed: {ex.Message}";
+        }
+    }
 }
