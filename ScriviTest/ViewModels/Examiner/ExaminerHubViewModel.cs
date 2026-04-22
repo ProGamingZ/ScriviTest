@@ -22,6 +22,12 @@ public partial class ExaminerHubViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void NavigateToHistory()
+    {
+        _navigateAction(new ExamHistoryViewModel(_navigateAction));
+    }
+
+    [RelayCommand]
     private void NavigateToGrading()
     {
         _navigateAction(new GradingHubViewModel(_navigateAction));

@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScriviTest.ViewModels.Examiner"
+             x:Class="ScriviTest.Views.Examiner.ExamHistoryView"
+             x:DataType="vm:ExamHistoryViewModel"
+             Background="{DynamicResource AppBackground}">
+
+    <Grid RowDefinitions="Auto, *">
+        
+        <Border Grid.Row="0" Background="White" Padding="15" BoxShadow="0 2 5 0 LightGray" ZIndex="10">
+            <Grid ColumnDefinitions="Auto, *">
+                <Button Grid.Column="0" Content="← back to hub" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
+                <TextBlock Grid.Column="1" Text="EXAM HISTORY" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryActionBrush}"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Margin="40" Background="White" BorderBrush="Black" BorderThickness="2" Padding="20">
+            <Grid RowDefinitions="Auto, *">
+                <TextBlock Grid.Row="0" Text="Exported Questionnaires Log" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"/>
+                
+                <DataGrid Grid.Row="1" ItemsSource="{Binding HistoryList}" 
+                          AutoGenerateColumns="False" IsReadOnly="True" 
+                          GridLinesVisibility="All" BorderBrush="Black" BorderThickness="1"
+                          CanUserSortColumns="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Date Exported" Binding="{Binding ExportDate}" Width="Auto"/>
+                        <DataGridTextColumn Header="Exam Title" Binding="{Binding ExamTitle}" Width="*"/>
+                        <DataGridTextColumn Header="Whiteboard Key" Binding="{Binding WhiteboardKey}" Width="Auto"/>
+                        <DataGridTextColumn Header="Save Location" Binding="{Binding FilePath}" Width="2*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>
