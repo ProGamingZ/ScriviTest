@@ -167,11 +167,11 @@ public partial class ExamCreationViewModel : ViewModelBase
     [RelayCommand]
     private async Task ExportExam()
     {
-        // For testing purposes, we will just export it to the desktop
-        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        string xamnPath = Path.Combine(desktopPath, "Draft_Exam.xamn");
-        string xamkPath = Path.Combine(desktopPath, "Draft_Exam.xamk");
+        Services.AppPaths.InitializeFolders();
 
+        string safeTitle = string.IsNullOrWhiteSpace(ExamTitle) ? "Untitled_Exam" : ExamTitle.Replace(" ", "_");
+        string xamnPath = Path.Combine(Services.AppPaths.QuestionnairesDir, $"{safeTitle}.xamn");
+        string xamkPath = Path.Combine(Services.AppPaths.AnswersDir, $"Ans_{safeTitle}.xamk");
         var examToExport = new Exam
         {
             Title = string.IsNullOrWhiteSpace(ExamTitle) ? "Untitled Exam" : ExamTitle,
@@ -193,10 +193,11 @@ public partial class ExamCreationViewModel : ViewModelBase
 
         GeneratedExamKey = _cryptoService.GenerateExaminationKey();
         _cryptoService.EncryptFile(xamnPath, GeneratedExamKey);
+        exportService.SaveToHistoryLog(examToExport.Title, GeneratedExamKey, xamnPath);
         HasExported = true;
 
-        // TODO: Trigger a UI popup saying "Export Successful!"
-        Console.WriteLine($"Successfully generated .xamn and .xamk on the Desktop!");
+        Console.WriteLine($"Successfully saved exam to: {xamnPath}");
+        Console.WriteLine($"History Log Updated!");
     }
 
 }

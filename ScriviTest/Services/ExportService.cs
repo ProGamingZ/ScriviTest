@@ -187,4 +187,39 @@ public class ExportService
         // 3. Write to the hard drive
         File.WriteAllText(outputPath, csv.ToString());
     }
+
+    public void SaveToHistoryLog(string title, string key, string path)
+    {
+        // 1. Ensure the folder exists!
+        AppPaths.InitializeFolders();
+
+        var historyList = new List<HistoryRecord>();
+
+        // 2. Try to read the existing history (if the file exists)
+        if (File.Exists(AppPaths.HistoryFile))
+        {
+            try
+            {
+                string existingJson = File.ReadAllText(AppPaths.HistoryFile);
+                var parsed = JsonSerializer.Deserialize<List<HistoryRecord>>(existingJson);
+                if (parsed != null) historyList = parsed;
+            }
+            catch { /* If the file is corrupted, we just start a new list */ }
+        }
+
+        // 3. Add the new record
+        historyList.Add(new HistoryRecord
+        {
+            ExamTitle = string.IsNullOrWhiteSpace(title) ? "Untitled Exam" : title,
+            ExportDate = DateTime.Now.ToString("yyyy-MM-dd hh:mm tt"),
+            WhiteboardKey = key,
+            FilePath = path
+        });
+
+        // 4. Save it back to the .dat file
+        string newJson = JsonSerializer.Serialize(historyList, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(AppPaths.HistoryFile, newJson);
+        
+        // (Optional: You could encrypt this text with a master app key here if you want it heavily secured)
+    }
 }
