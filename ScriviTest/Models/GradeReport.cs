@@ -19,10 +19,14 @@ public partial class GradeReport : ObservableObject
 
     [ObservableProperty] 
     [NotifyPropertyChangedFor(nameof(DisplayScore))]
+    [NotifyPropertyChangedFor(nameof(StatusHexColor))]
+    [NotifyPropertyChangedFor(nameof(StatusTooltip))]
     private bool _requiresManualReview;
-
+    
     // Always shows score. Appends a (!) if there is an ungraded essay.
     public string DisplayScore => RequiresManualReview ? $"{TotalPointsEarned} / {MaxPossiblePoints} (!)" : $"{TotalPointsEarned} / {MaxPossiblePoints}";
+    public string StatusHexColor => RequiresManualReview ? "#FFB300" : "#4CAF50"; 
+    public string StatusTooltip => RequiresManualReview ? "Needs manual review" : "Finished";
 
     // CRITICAL: We keep the raw student answers attached here so the Middle Panel can read them!
     public ScriviTest.DTOs.StudentSubmissionDto? SubmissionData { get; set; } 

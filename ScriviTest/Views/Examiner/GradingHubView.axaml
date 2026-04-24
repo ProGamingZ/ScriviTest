@@ -58,13 +58,40 @@
                               CanUserReorderColumns="True" CanUserSortColumns="True"
                               CanUserResizeColumns="True"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto" 
-                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              RowBackground="White">
+                                <DataGrid.Styles>
+                                    <Style Selector="DataGridRow:nth-child(odd)">
+                                        <Setter Property="Background" Value="#ddddddf5"/>
+                                    </Style>
+                                    <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+                                        <Setter Property="Fill" Value="#D0E8FF"/> 
+                                    </Style>
+                                    <Style Selector="DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
+                                        <Setter Property="Fill" Value="#BBE0FF"/>
+                                    </Style>
+                                    
+                                </DataGrid.Styles>
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="First" Binding="{Binding FirstName}" Width="Auto" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowFirstName}"/>
                             <DataGridTextColumn Header="Middle" Binding="{Binding MiddleName}" Width="Auto" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowMiddleName}"/>
                             <DataGridTextColumn Header="Last" Binding="{Binding LastName}" Width="Auto" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowLastName}"/>
                             <DataGridTextColumn Header="ID" Binding="{Binding StudentID}" Width="Auto" MinWidth="100" MaxWidth="250" IsVisible="{Binding ShowID}"/>
-                            <DataGridTextColumn Header="Scores" Binding="{Binding DisplayScore}" Width="Auto" MinWidth="100" MaxWidth="200" IsVisible="{Binding ShowScores}"/>
+                            
+                            <DataGridTemplateColumn Header="Score Status" Width="Auto" MinWidth="140" MaxWidth="250" IsVisible="{Binding ShowScores}" SortMemberPath="TotalPointsEarned">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="models:GradeReport">
+                                        <StackPanel Orientation="Horizontal" Spacing="10" Margin="10,0,0,0" VerticalAlignment="Center">
+                                            
+                                            <Ellipse Width="14" Height="14" Fill="{Binding StatusHexColor}" ToolTip.Tip="{Binding StatusTooltip}"/>
+                                            
+                                            <TextBlock Text="{Binding DisplayScore}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                            
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        
                         </DataGrid.Columns>
                     </DataGrid>
 
