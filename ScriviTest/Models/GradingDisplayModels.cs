@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 
 namespace ScriviTest.Models;
@@ -36,7 +37,7 @@ public partial class ReviewQuestion : ObservableObject
             // Try to parse what they typed into a valid number
             else if (double.TryParse(value, out double parsed))
             {
-                PointsAwarded = parsed;
+                PointsAwarded = Math.Clamp(parsed, 0, MaxPoints);
             }
             // (If they accidentally type letters like "5a", it safely ignores the letter!)
             
