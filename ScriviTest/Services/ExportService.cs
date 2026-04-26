@@ -21,7 +21,7 @@ public class ExportService
         {
             Title = rawExam.Title,
             Instructions = rawExam.Instructions,
-            TimeLimitMinutes = rawExam.TimeLimitMinutes,
+            TimeLimitMinutes = rawExam.TimeLimitMinutes ?? 60,
             Teacher = rawExam.Teacher,
             Subject = rawExam.Subject,
             Section = rawExam.Section,
@@ -44,7 +44,7 @@ public class ExportService
                 {
                     Prompt = question.Prompt, 
                     Type = question.Type.ToString(),
-                    Points = question.Points,
+                    Points = question.Points ?? 1,
                     MultipleAnswerRubric = question.MultipleAnswerRubric.ToString(),
                     AttachedImageFileName = question.AttachedImageFileName
                 };
@@ -54,8 +54,8 @@ public class ExportService
                 {
                     Prompt = question.Prompt, 
                     Type = question.Type.ToString(),
-                    Points = question.Points,
-                    MaxWordCount = question.MaxWordCount,
+                    Points = question.Points ?? 1,
+                    MaxWordCount = question.MaxWordCount ?? 500,
                     AttachedImageFileName = question.AttachedImageFileName
                 };
 
