@@ -24,22 +24,32 @@ public partial class ReviewQuestion : ObservableObject
     [NotifyPropertyChangedFor(nameof(GridIconColor))]
     [NotifyPropertyChangedFor(nameof(PointsInputText))]
     private double _pointsAwarded;
-    public string PointsInputText
+    private string? _uiTextOverride;
+    public string PointsInputText 
     {
-        get => PointsAwarded.ToString();
+        get => _uiTextOverride ?? PointsAwarded.ToString();
         set
         {
-            // If the examiner backspaces everything, safely default to 0 to prevent a crash
             if (string.IsNullOrWhiteSpace(value))
             {
+                _uiTextOverride = "";
                 PointsAwarded = 0;
             }
-            // Try to parse what they typed into a valid number
             else if (double.TryParse(value, out double parsed))
             {
-                PointsAwarded = Math.Clamp(parsed, 0, MaxPoints);
+                double clamped = Math.Clamp(parsed, 0, MaxPoints);
+                double rounded = Math.Round(clamped, 1);
+                PointsAwarded = rounded;
+                
+                if (parsed != clamped || parsed != rounded)
+                {
+                    _uiTextOverride = rounded.ToString();
+                }
+                else
+                {
+                    _uiTextOverride = value;
+                }
             }
-            // (If they accidentally type letters like "5a", it safely ignores the letter!)
             
             OnPropertyChanged(nameof(PointsInputText));
         }
