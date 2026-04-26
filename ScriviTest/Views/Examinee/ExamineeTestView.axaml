@@ -4,104 +4,149 @@
              xmlns:dto="using:ScriviTest.DTOs"
              x:Class="ScriviTest.Views.Examinee.ExamineeTestView"
              x:DataType="vm:ExamineeTestViewModel"
+             x:Name="RootView"
              Background="{DynamicResource AppBackground}">
 
-    <Grid RowDefinitions="Auto, *, Auto">
-        
-        <Border Grid.Row="0" Background="{DynamicResource PrimaryActionBrush}" Padding="20" BoxShadow="0 2 10 0 Gray">
-            <Grid ColumnDefinitions="*, Auto">
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="{Binding ExamData.Title}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource ActionTextBrush}"/>
-                    <TextBlock Text="{Binding ExamData.Teacher, StringFormat='Instructor: {0}'}" FontSize="14" Foreground="{DynamicResource ActionTextBrush}" Opacity="0.8"/>
-                </StackPanel>
-
-                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                    <TextBlock Text="⏱️" FontSize="24"/>
-                    <TextBlock Text="{Binding TimeRemainingDisplay}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource ActionTextBrush}"/>
-                </StackPanel>
+    <Grid>
+        <Border ZIndex="100" Background="#DD000000" IsVisible="{Binding IsLightboxOpen}">
+            <Grid>
+                <Image Source="{Binding LightboxImage}" Margin="50" Stretch="Uniform"/>
+                <Button Content="✕ Close Image" Command="{Binding CloseLightboxCommand}" 
+                        HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20"
+                        Background="#F44336" Foreground="White" FontSize="18" FontWeight="Bold" Padding="15,10"/>
             </Grid>
         </Border>
 
-        <ScrollViewer Grid.Row="1" Padding="20">
-            <StackPanel Spacing="30" MaxWidth="900" HorizontalAlignment="Center">
+        <Grid RowDefinitions="Auto, *">
+            
+            <Border Grid.Row="0" Background="{DynamicResource PrimaryActionBrush}" Padding="20" BoxShadow="0 2 10 0 Gray">
+                <StackPanel>
+                    <TextBlock Text="{Binding ExamData.Title}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource ActionTextBrush}"/>
+                    <TextBlock Text="{Binding ExamData.Teacher, StringFormat='Instructor: {0}'}" FontSize="14" Foreground="{DynamicResource ActionTextBrush}" Opacity="0.8"/>
+                </StackPanel>
+            </Border>
+
+            <Grid Grid.Row="1" ColumnDefinitions="3*, 1*">
                 
-                <Border Background="White" CornerRadius="8" Padding="25" BoxShadow="0 4 10 0 LightGray" IsVisible="{Binding ExamData.Instructions, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                    <StackPanel Spacing="10">
-                        <TextBlock Text="Instructions" FontWeight="Bold" FontSize="18" Foreground="{DynamicResource AppForeground}"/>
-                        <TextBlock Text="{Binding ExamData.Instructions}" TextWrapping="Wrap" Foreground="{DynamicResource AppForeground}"/>
-                    </StackPanel>
-                </Border>
-
-                <ItemsControl ItemsSource="{Binding ExamData.Sections}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="dto:StudentSectionDto">
-                            <StackPanel Spacing="15" Margin="0,0,0,40">
+                <Border Grid.Column="0" Background="White" Padding="40" Margin="20" CornerRadius="10" BoxShadow="0 4 15 0 LightGray">
+                    <Grid RowDefinitions="*, Auto">
+                        
+                        <ScrollViewer Grid.Row="0">
+                            <StackPanel Spacing="20" DataContext="{Binding CurrentQuestion}">
                                 
-                                <Border BorderBrush="LightGray" BorderThickness="0,0,0,2" Padding="0,0,0,5">
-                                  <TextBlock Text="{Binding Title}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource PrimaryActionBrush}"/>
-                               </Border>
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <TextBlock Grid.Column="0" Text="{Binding DisplayNumber, StringFormat='{}{0}. '}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource PrimaryActionBrush}"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Question.Prompt}" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource AppForeground}"/>
+                                </Grid>
 
-                                <ItemsControl ItemsSource="{Binding Questions}">
+                                <TextBlock Text="{Binding Question.Points, StringFormat='[{0} pts]'}" FontWeight="Bold" Foreground="Gray" Margin="0,-10,0,10"/>
+
+                                <Button Command="{Binding #RootView.DataContext.OpenLightboxCommand}" CommandParameter="{Binding Question.ImageBitmap}"
+                                        IsVisible="{Binding Question.ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                        Background="Transparent" HorizontalAlignment="Left" Padding="0" Cursor="Hand" ToolTip.Tip="Click to enlarge image">
+                                    <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Padding="5">
+                                        <Image Source="{Binding Question.ImageBitmap}" MaxHeight="300"/>
+                                    </Border>
+                                </Button>
+
+                                <TextBox IsVisible="{Binding Question.IsEssay}" 
+                                         Text="{Binding Question.StudentEssayResponse}" 
+                                         AcceptsReturn="True" TextWrapping="Wrap" MinHeight="250" FontSize="18"
+                                         Watermark="Type your essay response here..."/>
+                                
+                                <ItemsControl ItemsSource="{Binding Question.Choices}" IsVisible="{Binding Question.IsObjective}">
                                     <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="dto:StudentQuestionDto">
-                                            <Border Background="White" CornerRadius="8" Padding="25" BoxShadow="0 2 8 0 LightGray" Margin="0,0,0,20">
-                                                <StackPanel Spacing="15">
+                                        <DataTemplate x:DataType="dto:StudentChoiceDto">
+                                            <Border Background="#FAFAFA" CornerRadius="8" Padding="15" Margin="0,5" BorderBrush="#EEEEEE" BorderThickness="1">
+                                                <Grid ColumnDefinitions="Auto, *">
                                                     
-                                                    <Grid ColumnDefinitions="*, Auto">
-                                                        <TextBlock Grid.Column="0" Text="{Binding Prompt}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource AppForeground}"/>
-                                                        <Image Grid.Column="0" Source="{Binding ImageBitmap}" IsVisible="{Binding ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" MaxHeight="300" Margin="0,15,0,15" HorizontalAlignment="Left"/>
-                                                        <TextBlock Grid.Column="1" Text="{Binding Points, StringFormat='[{0} pts]'}" FontWeight="Bold" Foreground="Gray" VerticalAlignment="Top"/>
-                                                    </Grid>
+                                                    <RadioButton Grid.Column="0" IsVisible="{Binding $parent[ItemsControl].((vm:ExamineeQuestionWrapper)DataContext).Question.IsSingleSelection}" 
+                                                                 IsChecked="{Binding IsSelected}" 
+                                                                 GroupName="{Binding $parent[ItemsControl].((vm:ExamineeQuestionWrapper)DataContext).Question.GroupId}" 
+                                                                 Margin="0,0,15,0" VerticalAlignment="Center"/>
 
-                                                    <TextBox IsVisible="{Binding IsEssay}" 
-                                                             Text="{Binding StudentEssayResponse}" 
-                                                             AcceptsReturn="True" TextWrapping="Wrap" MinHeight="150" 
-                                                             Watermark="Type your essay response here..."/>
+                                                    <CheckBox Grid.Column="0" IsVisible="{Binding $parent[ItemsControl].((vm:ExamineeQuestionWrapper)DataContext).Question.IsMultipleSelection}" 
+                                                              IsChecked="{Binding IsSelected}" 
+                                                              Margin="0,0,15,0" VerticalAlignment="Center"/>
                                                     
-                                                    <ItemsControl ItemsSource="{Binding Choices}" IsVisible="{Binding IsObjective}">
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate x:DataType="dto:StudentChoiceDto">
-                                                                <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,5">
-                                                                    
-                                                                    <RadioButton Grid.Column="0" IsVisible="{Binding $parent[ItemsControl].((dto:StudentQuestionDto)DataContext).IsSingleSelection}" 
-                                                                                 IsChecked="{Binding IsSelected}" 
-                                                                                 GroupName="{Binding $parent[ItemsControl].((dto:StudentQuestionDto)DataContext).GroupId}" 
-                                                                                 Margin="0,0,10,0"/>
-
-                                                                    <CheckBox Grid.Column="0" IsVisible="{Binding $parent[ItemsControl].((dto:StudentQuestionDto)DataContext).IsMultipleSelection}" 
-                                                                              IsChecked="{Binding IsSelected}" 
-                                                                              Margin="0,0,10,0"/>
-                                                                    
-                                                                    <TextBlock Grid.Column="1" Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
-                                                                    <Image Grid.Column="1" Source="{Binding ImageBitmap}" IsVisible="{Binding ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" MaxHeight="150" Margin="0,5,0,5" HorizontalAlignment="Left"/>
-                                                                </Grid>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
-                                                    
-                                                </StackPanel>
+                                                    <StackPanel Grid.Column="1" Spacing="10">
+                                                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap" FontSize="18" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
+                                                        
+                                                        <Button Command="{Binding #RootView.DataContext.OpenLightboxCommand}" CommandParameter="{Binding ImageBitmap}"
+                                                                IsVisible="{Binding ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                                Background="Transparent" HorizontalAlignment="Left" Padding="0" Cursor="Hand" ToolTip.Tip="Click to enlarge image">
+                                                            <Image Source="{Binding ImageBitmap}" MaxHeight="150"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-
                             </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                        </ScrollViewer>
 
-            </StackPanel>
-        </ScrollViewer>
+                        <Border Grid.Row="1" Margin="0,20,0,0" Padding="0,20,0,0" BorderThickness="0,2,0,0" BorderBrush="LightGray">
+                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                <Button Grid.Column="0" Content="← Previous" Command="{Binding PrevQuestionCommand}" FontSize="18" Padding="20,10" Background="Transparent" BorderBrush="Gray" BorderThickness="1"/>
+                                
+                                <Button Grid.Column="1" Content="⚑ Flag for Review" Command="{Binding ToggleFlagCommand}" HorizontalAlignment="Center" FontSize="16" Padding="20,10" Background="Transparent" Foreground="#F57F17" BorderBrush="#F57F17" BorderThickness="1"/>
+                                
+                                <Button Grid.Column="2" Content="Next →" Command="{Binding NextQuestionCommand}" FontSize="18" FontWeight="Bold" Padding="30,10" Background="{DynamicResource PrimaryActionBrush}" Foreground="White"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
 
-        <Border Grid.Row="2" Background="White" Padding="20" BoxShadow="0 -2 10 0 LightGray" ZIndex="10">
-            <StackPanel HorizontalAlignment="Center" Spacing="15">
+                <Border Grid.Column="1" Background="#FAFAFA" BorderBrush="LightGray" BorderThickness="2,0,0,0" Padding="20">
+                    <Grid RowDefinitions="Auto, *, Auto">
+                        
+                        <Border Grid.Row="0" Background="#333333" CornerRadius="8" Padding="15" Margin="0,0,0,20" HorizontalAlignment="Stretch">
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="⏱️" FontSize="24" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding TimeRemainingDisplay}" FontSize="28" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
 
-                <Button Content="FINISH &amp; SUBMIT EXAM" Command="{Binding SubmitExamCommand}" 
-                        HorizontalAlignment="Center" Background="#4CAF50" Foreground="White" 
-                        Padding="40,15" FontSize="18" FontWeight="Bold"/>
-                
-            </StackPanel>
-        </Border>
+                        <ScrollViewer Grid.Row="1" Margin="0,0,0,20">
+                            <StackPanel>
+                                <TextBlock Text="Question Navigation" FontWeight="Bold" FontSize="18" Margin="0,0,0,15" Foreground="Gray"/>
+                                
+                                <ItemsControl ItemsSource="{Binding AllQuestions}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
 
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:ExamineeQuestionWrapper">
+                                            <Button Command="{Binding #RootView.DataContext.JumpToQuestionCommand}" 
+                                                    CommandParameter="{Binding}"
+                                                    Background="{Binding GridBackgroundColor}" 
+                                                    BorderBrush="Black" 
+                                                    BorderThickness="{Binding GridBorderThickness}" 
+                                                    Width="60" Height="50" Margin="5" Padding="5">
+                                                <Grid ColumnDefinitions="Auto, *">
+                                                    <TextBlock Grid.Column="0" Text="{Binding GridIcon}" Foreground="White" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding DisplayNumber}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                                </Grid>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <Button Grid.Row="2" Content="SUBMIT EXAM" Command="{Binding SubmitExamCommand}" 
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
+                                Background="#4CAF50" Foreground="White" 
+                                Padding="0,20" FontSize="20" FontWeight="Bold"/>
+
+                    </Grid>
+                </Border>
+
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
