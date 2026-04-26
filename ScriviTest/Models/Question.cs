@@ -48,7 +48,7 @@ public partial class Question : ObservableObject
     }
 
     [ObservableProperty]
-    private int _points = 1;
+    private int? _points = 1;
 
     public string? AttachedImageFullPath { get; set; }
     // Media Integration (The Zip Method)
@@ -70,7 +70,7 @@ public partial class Question : ObservableObject
 
     // Specific to Essay
     [ObservableProperty]
-    private int _maxWordCount = 500;
+    private int? _maxWordCount = 500;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ExpandCollapseIcon))]

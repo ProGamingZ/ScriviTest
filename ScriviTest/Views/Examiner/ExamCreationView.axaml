@@ -48,7 +48,7 @@
                             <StackPanel Grid.Column="1" Spacing="10" Margin="10,0,0,0">
                                 <TextBox Text="{Binding TargetSection}" Watermark="Section / Target Audience" Foreground="{DynamicResource AppForeground}"/>
                                 <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                    <NumericUpDown Value="{Binding TimeLimitMinutes}" Minimum="1" FormatString="0" ParsingNumberStyle="Integer" Foreground="{DynamicResource AppForeground}"/>
+                                    <NumericUpDown Value="{Binding TimeLimitMinutes}" Minimum="1" Maximum="1440" FormatString="0" ParsingNumberStyle="Integer" Foreground="{DynamicResource AppForeground}"/>
                                     <TextBlock Text="minutes" FontSize="12" Opacity="0.6" Foreground="{DynamicResource AppForeground}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </StackPanel>
@@ -166,7 +166,7 @@
                                                                 <TextBox MinHeight="100" Watermark="The examinee will type their essay response here..." IsEnabled="False" TextWrapping="Wrap" Background="#EEEEEE"/>
                                                                 <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
                                                                     <TextBlock Text="Max Word Count:" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
-                                                                    <NumericUpDown Value="{Binding MaxWordCount}" Minimum="50" Width="120" FormatString="0" ParsingNumberStyle="Integer" Foreground="{DynamicResource AppForeground}"/>
+                                                                    <NumericUpDown Value="{Binding MaxWordCount}" Minimum="50" Maximum="2000" Width="120" FormatString="0" ParsingNumberStyle="Integer" Foreground="{DynamicResource AppForeground}"/>
                                                                 </StackPanel>
                                                             </StackPanel>
                                                             
@@ -183,7 +183,7 @@
                                                                 </StackPanel>
                                                                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
                                                                     <TextBlock Text="Points:" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
-                                                                    <NumericUpDown Value="{Binding Points}" Minimum="1" Width="120" FormatString="0" ParsingNumberStyle="Integer" Foreground="{DynamicResource AppForeground}"/>
+                                                                    <NumericUpDown Value="{Binding Points}" Minimum="1" Maximum="100" Width="120" FormatString="0" ParsingNumberStyle="Integer" Foreground="{DynamicResource AppForeground}"/>
                                                                 </StackPanel>
                                                             </Grid>
                                                         </StackPanel>

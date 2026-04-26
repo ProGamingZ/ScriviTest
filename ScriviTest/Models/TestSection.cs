@@ -60,6 +60,6 @@ public partial class TestSection : ObservableObject
     private void RecalculatePoints()
     {
         // Sum up all the points in this section and update the UI
-        SectionTotalPoints = Questions.Sum(q => q.Points);
+        SectionTotalPoints = Questions.Sum(q => q.Points ?? 0);
     }
 }

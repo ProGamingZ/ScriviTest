@@ -14,7 +14,7 @@ public partial class Exam : ObservableObject
     private string _instructions = string.Empty;
     
     [ObservableProperty]
-    private int _timeLimitMinutes = 60;
+    private int? _timeLimitMinutes = 60;
     
     [ObservableProperty]
     private string _teacher = string.Empty;
