@@ -232,7 +232,10 @@ public partial class GradingHubViewModel : ViewModelBase
             var keySection = _loadedAnswerKey.Sections[s];
 
             // Create the Section Wrapper
-            var reviewSection = new Models.ReviewSection();
+            var reviewSection = new Models.ReviewSection
+            {
+                Title = string.IsNullOrEmpty(keySection.Title) ? $"Section {s + 1}" : keySection.Title
+            };
 
             for (int q = 0; q < studentSection.Questions.Count; q++)
             {
