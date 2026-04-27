@@ -110,7 +110,7 @@ public partial class ExamineeTestViewModel : ViewModelBase
         _suffix = suffix;
         _studentID = studentID;
 
-        // 2. Hardware Timer Setup
+        // Hardware Timer Setup
         _totalTimeLimit = TimeSpan.FromMinutes(ExamData.TimeLimitMinutes);
         _hardwareTimer.Start();
         
@@ -119,13 +119,17 @@ public partial class ExamineeTestViewModel : ViewModelBase
         _uiPollTimer.Start();
         UpdateTimeDisplay();
 
-        // 3. Flatten Questions & Load Images
+        // Flatten Questions, Group by Section & Load Images
         int qNum = 1;
+        var rng = new Random();
         foreach (var section in ExamData.Sections)
         {
             var sectionWrapper = new ExamineeSectionWrapper(section.Title);
+            var presentationQuestions = section.ShuffleQuestions 
+                ? section.Questions.OrderBy(x => rng.Next()).ToList() 
+                : section.Questions;
 
-            foreach (var q in section.Questions)
+            foreach (var q in presentationQuestions)
             {
                 if (!string.IsNullOrEmpty(q.AttachedImageFileName))
                 {
