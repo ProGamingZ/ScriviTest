@@ -112,29 +112,42 @@
                             <StackPanel>
                                 <TextBlock Text="Question Navigation" FontWeight="Bold" FontSize="18" Margin="0,0,0,15" Foreground="Gray"/>
                                 
-                                <ItemsControl ItemsSource="{Binding AllQuestions}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-
+                                <ItemsControl ItemsSource="{Binding NavigationSections}">
                                     <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="vm:ExamineeQuestionWrapper">
-                                            <Button Command="{Binding #RootView.DataContext.JumpToQuestionCommand}" 
-                                                    CommandParameter="{Binding}"
-                                                    Background="{Binding GridBackgroundColor}" 
-                                                    BorderBrush="Black" 
-                                                    BorderThickness="{Binding GridBorderThickness}" 
-                                                    Width="60" Height="50" Margin="5" Padding="5">
-                                                <Grid ColumnDefinitions="Auto, *">
-                                                    <TextBlock Grid.Column="0" Text="{Binding GridIcon}" Foreground="White" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
-                                                    <TextBlock Grid.Column="1" Text="{Binding DisplayNumber}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                                                </Grid>
-                                            </Button>
+                                        <DataTemplate x:DataType="vm:ExamineeSectionWrapper">
+                                            <StackPanel Margin="0,0,0,15">
+                                                
+                                                <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="14" Foreground="Gray" Margin="0,0,0,5" TextWrapping="Wrap"/>
+                                                
+                                                <ItemsControl ItemsSource="{Binding Questions}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate x:DataType="vm:ExamineeQuestionWrapper">
+                                                            <Button Command="{Binding #RootView.DataContext.JumpToQuestionCommand}" 
+                                                                    CommandParameter="{Binding}"
+                                                                    Background="{Binding GridBackgroundColor}" 
+                                                                    BorderBrush="Black" 
+                                                                    BorderThickness="{Binding GridBorderThickness}" 
+                                                                    Width="60" Height="50" Margin="5" Padding="5">
+                                                                <Grid ColumnDefinitions="Auto, *">
+                                                                    <TextBlock Grid.Column="0" Text="{Binding GridIcon}" Foreground="White" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                                                                    <TextBlock Grid.Column="1" Text="{Binding DisplayNumber}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                                                </Grid>
+                                                            </Button>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                                
+                                            </StackPanel>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
+
                             </StackPanel>
                         </ScrollViewer>
 

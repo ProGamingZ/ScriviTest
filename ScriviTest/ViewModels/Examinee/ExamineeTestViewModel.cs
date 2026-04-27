@@ -58,9 +58,20 @@ public partial class ExamineeQuestionWrapper : ObservableObject
         GridBorderThickness = IsActive ? new Avalonia.Thickness(3) : new Avalonia.Thickness(1);
     }
 }
+public partial class ExamineeSectionWrapper : ObservableObject
+{
+    public string Title { get; }
+    public ObservableCollection<ExamineeQuestionWrapper> Questions { get; } = new();
+
+    public ExamineeSectionWrapper(string title)
+    {
+        Title = title;
+    }
+}
 
 public partial class ExamineeTestViewModel : ViewModelBase
 {
+    
     private readonly Action<ViewModelBase> _navigateAction;
     private readonly Services.CryptographyService _cryptoService;
     private readonly string _whiteboardKey;
@@ -77,6 +88,7 @@ public partial class ExamineeTestViewModel : ViewModelBase
 
     // --- NEW: Pagination & Grid State ---
     [ObservableProperty] private ObservableCollection<ExamineeQuestionWrapper> _allQuestions = new();
+    [ObservableProperty] private ObservableCollection<ExamineeSectionWrapper> _navigationSections = new(); // <-- ADD THIS
     [ObservableProperty] private ExamineeQuestionWrapper? _currentQuestion;
     private int _currentIndex = 0;
 
@@ -111,6 +123,8 @@ public partial class ExamineeTestViewModel : ViewModelBase
         int qNum = 1;
         foreach (var section in ExamData.Sections)
         {
+            var sectionWrapper = new ExamineeSectionWrapper(section.Title);
+
             foreach (var q in section.Questions)
             {
                 if (!string.IsNullOrEmpty(q.AttachedImageFileName))
@@ -128,7 +142,14 @@ public partial class ExamineeTestViewModel : ViewModelBase
                     }
                 }
 
-                AllQuestions.Add(new ExamineeQuestionWrapper(q, qNum++));
+                var qWrapper = new ExamineeQuestionWrapper(q, qNum++);
+                AllQuestions.Add(qWrapper); // Keep the flat list for Prev/Next navigation
+                sectionWrapper.Questions.Add(qWrapper); // Add to the group for the UI grid
+            }
+
+            if (sectionWrapper.Questions.Count > 0)
+            {
+                NavigationSections.Add(sectionWrapper);
             }
         }
 

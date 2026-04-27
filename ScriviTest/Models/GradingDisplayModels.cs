@@ -60,6 +60,7 @@ public partial class ReviewQuestion : ObservableObject
 
 public class ReviewSection
 {
+    public string Title { get; set; } = string.Empty;
     // Holds questions for specific sections
     public System.Collections.ObjectModel.ObservableCollection<ReviewQuestion> Questions { get; set; } = new();
 }

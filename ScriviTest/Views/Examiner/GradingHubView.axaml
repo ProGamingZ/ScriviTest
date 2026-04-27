@@ -176,39 +176,44 @@
                     </Grid>
 
                     <ScrollViewer Grid.Row="1" Margin="0,10">
-                        
-                        <ItemsControl ItemsSource="{Binding CurrentReviewSections}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate x:DataType="models:ReviewSection">
-                                    
-                                    <StackPanel Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="Question Navigation" FontWeight="Bold" FontSize="18" Margin="0,0,0,15" Foreground="Gray"/>
+                            
+                            <ItemsControl ItemsSource="{Binding CurrentReviewSections}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:ReviewSection">
                                         
-                                        <ItemsControl ItemsSource="{Binding Questions}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
+                                        <StackPanel Margin="0,0,0,20">
 
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate x:DataType="models:ReviewQuestion">
-                                                    <Button Command="{Binding #RootView.DataContext.JumpToQuestionCommand}" 
-                                                            CommandParameter="{Binding}"
-                                                            Background="White" BorderBrush="Black" BorderThickness="1" 
-                                                            Width="75" Height="50" Margin="5" Padding="5">
-                                                        <Grid ColumnDefinitions="Auto, *">
-                                                            <TextBlock Grid.Column="0" Text="{Binding GridIcon}" Foreground="{Binding GridIconColor}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
-                                                            <TextBlock Grid.Column="1" Text="{Binding QuestionNumber}" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                                                        </Grid>
-                                                    </Button>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                            <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="14" Foreground="Gray" Margin="0,0,0,5" TextWrapping="Wrap"/>
 
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                                            <ItemsControl ItemsSource="{Binding Questions}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="models:ReviewQuestion">
+                                                        <Button Command="{Binding #RootView.DataContext.JumpToQuestionCommand}" 
+                                                                CommandParameter="{Binding}"
+                                                                Background="White" BorderBrush="Black" BorderThickness="1" 
+                                                                Width="75" Height="50" Margin="5" Padding="5">
+                                                            <Grid ColumnDefinitions="Auto, *">
+                                                                <TextBlock Grid.Column="0" Text="{Binding GridIcon}" Foreground="{Binding GridIconColor}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                                                                <TextBlock Grid.Column="1" Text="{Binding QuestionNumber}" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                                            </Grid>
+                                                        </Button>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
                     </ScrollViewer>
 
                     <Button Grid.Row="2" Content="Finish Checking" Command="{Binding FinishCheckingCommand}" 

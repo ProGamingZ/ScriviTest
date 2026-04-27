@@ -30,7 +30,7 @@ public class ExportService
 
         foreach (var section in rawExam.Sections)
         {
-            var keySection = new DTOs.AnswerKeySectionDto();
+            var keySection = new DTOs.AnswerKeySectionDto { Title = section.Title };
             var studentSection = new DTOs.StudentSectionDto 
             { 
                 Title = section.Title,

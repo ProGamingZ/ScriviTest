@@ -10,6 +10,7 @@ public class AnswerKeyExamDto
 
 public class AnswerKeySectionDto
 {
+    public string Title { get; set; } = string.Empty;
     public List<AnswerKeyQuestionDto> Questions { get; set; } = new();
 }
 
