@@ -62,15 +62,27 @@
                               RowBackground="White">
                                 <DataGrid.Styles>
                                     <Style Selector="DataGridRow:nth-child(odd)">
-                                        <Setter Property="Background" Value="#ddddddf5"/>
+                                        <Setter Property="Background" Value="#F0F0F0"/> 
                                     </Style>
-                                    <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
-                                        <Setter Property="Fill" Value="#D0E8FF"/> 
+
+                                    <Style Selector="DataGridRow:pointerover, DataGridRow:selected">
+                                        <Setter Property="Background" Value="Transparent"/>
                                     </Style>
-                                    <Style Selector="DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
-                                        <Setter Property="Fill" Value="#BBE0FF"/>
+
+                                    <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+                                        <Setter Property="Fill" Value="#e8e8e8"/>
+                                        <Setter Property="Opacity" Value="1"/>
                                     </Style>
-                                    
+
+                                    <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle, 
+                                                    DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
+                                        <Setter Property="Fill" Value="#dddddd"/>
+                                        <Setter Property="Opacity" Value="1"/> 
+                                    </Style>
+
+                                    <Style Selector="DataGridCell:selected, DataGridCell:pointerover, DataGridCell:selected:pointerover">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                    </Style>
                                 </DataGrid.Styles>
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="First" Binding="{Binding FirstName}" Width="Auto" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowFirstName}"/>
