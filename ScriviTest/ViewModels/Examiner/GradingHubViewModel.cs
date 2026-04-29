@@ -26,6 +26,7 @@ public partial class GradingHubViewModel : ViewModelBase
     // Navigation for the Middle Panel
     [ObservableProperty] private ObservableCollection<Models.ReviewQuestion> _currentStudentQuestions = new();
     [ObservableProperty] private Models.ReviewQuestion? _currentVisibleQuestion;
+    [ObservableProperty]  private System.Collections.ObjectModel.ObservableCollection<string> _currentIncidentLog = new();
     
     private int _currentQuestionIndex = 0;
     [ObservableProperty] private string? _answerKeyPath;
@@ -312,6 +313,16 @@ public partial class GradingHubViewModel : ViewModelBase
         
         CurrentMaxScore = value.MaxPossiblePoints;
         CurrentTimeTakenDisplay = value.SubmissionData.TimeTakenDisplay;
+
+        CurrentIncidentLog.Clear();
+        if (value.SubmissionData.IncidentLog != null)
+        {
+            foreach (var log in value.SubmissionData.IncidentLog)
+            {
+                CurrentIncidentLog.Add(log);
+            }
+        }
+        
         RecalculateCurrentScore();
     }    
     
