@@ -162,7 +162,7 @@
             </Border>
 
             <Border Grid.Column="2" Padding="20" Background="White" BorderBrush="Black" BorderThickness="4,0,0,0">
-                <Grid RowDefinitions="Auto, *, Auto" IsVisible="{Binding CurrentVisibleQuestion, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <Grid RowDefinitions="Auto, Auto, *, Auto" IsVisible="{Binding CurrentVisibleQuestion, Converter={x:Static ObjectConverters.IsNotNull}}">
                     
                     <Grid Grid.Row="0" ColumnDefinitions="*, Auto, *" Margin="0,0,0,20">
                         <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -192,7 +192,7 @@
                         </StackPanel>
                     </Border>
 
-                    <ScrollViewer Grid.Row="1" Margin="0,10">
+                    <ScrollViewer Grid.Row="2" Margin="0,10">
                         <StackPanel>
                             <TextBlock Text="Question Navigation" FontWeight="Bold" FontSize="18" Margin="0,0,0,15" Foreground="Gray"/>
                             
@@ -233,7 +233,7 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <Button Grid.Row="2" Content="Finish Checking" Command="{Binding FinishCheckingCommand}" 
+                    <Button Grid.Row="3" Content="Finish Checking" Command="{Binding FinishCheckingCommand}" 
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
                             Background="White" BorderBrush="Black" BorderThickness="2" 
                             FontSize="18" FontWeight="Bold" Padding="0,15" Margin="0,20,0,0"/>
