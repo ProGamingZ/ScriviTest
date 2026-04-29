@@ -80,19 +80,29 @@ public partial class ExamineeTestViewModel : ViewModelBase
     [ObservableProperty] private StudentExamDto _examData;
     [ObservableProperty] private string _imageDirectory;
 
-    // --- NEW: Hardware Timer ---
+    // ---  Hardware Timer ---
     [ObservableProperty] private string _timeRemainingDisplay = string.Empty;
     private readonly Stopwatch _hardwareTimer = new();
     private readonly TimeSpan _totalTimeLimit;
     private DispatcherTimer? _uiPollTimer;
 
-    // --- NEW: Pagination & Grid State ---
+    // --- NEW: Anti-Cheat State ---
+    private DispatcherTimer? _gracePeriodTimer;
+    private int _focusLostSeconds = 0;
+    private int _strikeCount = 0;
+    private int _maxStrikes = 999;
+    public System.Collections.Generic.List<string> IncidentLog { get; } = new();
+
+    [ObservableProperty] private bool _isFocusWarningVisible = false;
+    [ObservableProperty] private string _focusWarningMessage = string.Empty;
+
+    // ---  Pagination & Grid State ---
     [ObservableProperty] private ObservableCollection<ExamineeQuestionWrapper> _allQuestions = new();
     [ObservableProperty] private ObservableCollection<ExamineeSectionWrapper> _navigationSections = new(); // <-- ADD THIS
     [ObservableProperty] private ExamineeQuestionWrapper? _currentQuestion;
     private int _currentIndex = 0;
 
-    // --- NEW: Lightbox State ---
+    // ---  Lightbox State ---
     [ObservableProperty] private bool _isLightboxOpen = false;
     [ObservableProperty] private Avalonia.Media.Imaging.Bitmap? _lightboxImage;
 
@@ -165,7 +175,63 @@ public partial class ExamineeTestViewModel : ViewModelBase
             CurrentQuestion.RefreshState();
             UpdateNavigationCommands();
         }
+
+        // Calculate Maximum Allowed Strikes based on Examiner's choice
+        _maxStrikes = ExamData.AntiCheatStrictness switch
+        {
+            "Strict" => 1,     // 1 strike = Auto-Submit
+            "Lenient" => 3,    // 3 strikes = Auto-Submit
+            _ => 999           // Log Only = Never auto-submits
+        };
+
+        // 2. Setup the 1-second interval grace period timer
+        _gracePeriodTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        _gracePeriodTimer.Tick += GracePeriodTimer_Tick;
     }
+
+    public void HandleFocusLost()
+    {
+        _focusLostSeconds = 0;
+        IsFocusWarningVisible = true;
+        FocusWarningMessage = "WARNING: Exam focus lost! Return immediately.";
+        _gracePeriodTimer?.Start();
+    }
+
+    public void HandleFocusRegained()
+    {
+        _gracePeriodTimer?.Stop();
+        IsFocusWarningVisible = false;
+
+        // Log suspicious minor infractions that were faster than the 3-second grace period
+        if (_focusLostSeconds > 0 && _focusLostSeconds < 3)
+        {
+            IncidentLog.Add($"[{DateTime.Now:hh:mm:ss tt}] Minor Infraction: Focus lost for {_focusLostSeconds}s (Under 3s grace period).");
+        }
+    }
+
+    private void GracePeriodTimer_Tick(object? sender, EventArgs e)
+    {
+        _focusLostSeconds++;
+
+        // The 3-Second Grace Period threshold
+        if (_focusLostSeconds == 3)
+        {
+            _strikeCount++;
+            string strikeMsg = $"[{DateTime.Now:hh:mm:ss tt}] STRIKE {_strikeCount}: Application lost OS focus for 3+ seconds.";
+            IncidentLog.Add(strikeMsg);
+            
+            FocusWarningMessage = $"STRIKE {_strikeCount} LOGGED! Return to the exam.";
+
+            // Threshold Check
+            if (_strikeCount >= _maxStrikes)
+            {
+                _gracePeriodTimer?.Stop();
+                IncidentLog.Add($"[{DateTime.Now:hh:mm:ss tt}] FATAL: Maximum strikes exceeded. Auto-submitting exam to server.");
+                SubmitExam(); // Force submit immediately!
+            }
+        }
+    }
+
 
     private void UiPollTimer_Tick(object? sender, EventArgs e)
     {
@@ -264,7 +330,8 @@ public partial class ExamineeTestViewModel : ViewModelBase
         var submission = new StudentSubmissionDto 
         { 
             FirstName = _firstName, MiddleName = _middleName, LastName = _lastName, Suffix = _suffix, StudentID = _studentID, 
-            ExamTitle = ExamData.Title, TimeTakenDisplay = $"{takenStr} / {totalStr}"
+            ExamTitle = ExamData.Title, TimeTakenDisplay = $"{takenStr} / {totalStr}",
+            IncidentLog = this.IncidentLog
         };
 
         foreach (var section in ExamData.Sections)

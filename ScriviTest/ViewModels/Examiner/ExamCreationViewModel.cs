@@ -18,6 +18,7 @@ public partial class ExamCreationViewModel : ViewModelBase
     [ObservableProperty] private string _subject = string.Empty;
     [ObservableProperty] private string _targetSection = string.Empty;
     [ObservableProperty] private int? _timeLimitMinutes = 60;
+    [ObservableProperty] private string _antiCheatStrictness = "Strict";
     private readonly Action<ViewModelBase> _navigateAction;
     private readonly Services.FileManagementService _fileService;
 
@@ -180,7 +181,8 @@ public partial class ExamCreationViewModel : ViewModelBase
             Teacher = TeacherName,
             Subject = Subject,
             Section = TargetSection,
-            TimeLimitMinutes = Math.Clamp(TimeLimitMinutes ?? 60, 1, 1440)
+            TimeLimitMinutes = Math.Clamp(TimeLimitMinutes ?? 60, 1, 1440),
+            AntiCheatStrictness = AntiCheatStrictness
         };
         
         // Copy our sections into it

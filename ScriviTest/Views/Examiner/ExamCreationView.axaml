@@ -40,19 +40,37 @@
                         </Grid>
                         <TextBox Text="{Binding ExamDescription}" TextWrapping="Wrap" MinHeight="60" Watermark="Exam Instructions or Description" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
 
-                        <Grid ColumnDefinitions="*, *" Margin="0,15,0,0">
-                            <StackPanel Grid.Column="0" Spacing="10" Margin="0,0,10,0">
-                                <TextBox Text="{Binding TeacherName}" Watermark="Teacher Name" Foreground="{DynamicResource AppForeground}"/>
-                                <TextBox Text="{Binding Subject}" Watermark="Subject" Foreground="{DynamicResource AppForeground}"/>
+                        <Grid Margin="0,20,0,0" RowDefinitions="Auto, Auto" ColumnDefinitions="*, *, *">
+                            <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,15">
+                                <TextBlock Text="Teacher Name" FontSize="12" FontWeight="SemiBold" Foreground="Gray" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding TeacherName}" Foreground="{DynamicResource AppForeground}"/>
                             </StackPanel>
-                            <StackPanel Grid.Column="1" Spacing="10" Margin="10,0,0,0">
-                                <TextBox Text="{Binding TargetSection}" Watermark="Section / Target Audience" Foreground="{DynamicResource AppForeground}"/>
-                                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                    <NumericUpDown Value="{Binding TimeLimitMinutes}" Minimum="1" Maximum="1440" FormatString="0" ParsingNumberStyle="Integer" Foreground="{DynamicResource AppForeground}"/>
-                                    <TextBlock Text="minutes" FontSize="12" Opacity="0.6" Foreground="{DynamicResource AppForeground}" VerticalAlignment="Center"/>
-                                </StackPanel>
+
+                            <StackPanel Grid.Row="0" Grid.Column="1" Margin="5,0,5,15">
+                                <TextBlock Text="Subject" FontSize="12" FontWeight="SemiBold" Foreground="Gray" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding Subject}" Foreground="{DynamicResource AppForeground}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="0" Grid.Column="2" Margin="10,0,0,15">
+                                <TextBlock Text="Section / Audience" FontSize="12" FontWeight="SemiBold" Foreground="Gray" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding TargetSection}" Foreground="{DynamicResource AppForeground}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Time Limit (Minutes)" FontSize="12" FontWeight="SemiBold" Foreground="Gray" Margin="0,0,0,5"/>
+                                <NumericUpDown Value="{Binding TimeLimitMinutes}" Minimum="1" Maximum="1440" FormatString="0" ParsingNumberStyle="Integer" Foreground="{DynamicResource AppForeground}" HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,5,0">
+                                <TextBlock Text="Anti-Cheat Strictness" FontSize="12" FontWeight="SemiBold" Foreground="Gray" Margin="0,0,0,5"/>
+                                <ComboBox SelectedItem="{Binding AntiCheatStrictness}" Background="White" HorizontalAlignment="Stretch">
+                                    <x:String>Strict</x:String>
+                                    <x:String>Lenient</x:String>
+                                    <x:String>Log Only</x:String>
+                                </ComboBox>
                             </StackPanel>
                         </Grid>
+
                     </StackPanel>
                 </Border>
 

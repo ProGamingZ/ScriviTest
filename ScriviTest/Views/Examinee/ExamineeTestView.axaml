@@ -16,7 +16,12 @@
                         Background="#F44336" Foreground="White" FontSize="18" FontWeight="Bold" Padding="15,10"/>
             </Grid>
         </Border>
-
+        <Border ZIndex="200" Background="#DDFF0000" IsVisible="{Binding IsFocusWarningVisible}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+                <TextBlock Text="⚠️ EXAM FOCUS LOST ⚠️" FontSize="48" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding FocusWarningMessage}" FontSize="24" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="600" TextAlignment="Center"/>
+            </StackPanel>
+        </Border>
         <Grid RowDefinitions="Auto, *">
             
             <Border Grid.Row="0" Background="{DynamicResource PrimaryActionBrush}" Padding="20" BoxShadow="0 2 10 0 Gray">
