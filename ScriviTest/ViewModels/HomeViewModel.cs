@@ -1,8 +1,12 @@
+using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScriviTest.ViewModels.Examiner; 
 using ScriviTest.ViewModels.Examinee;
+using ScriviTest.Views; 
+using ScriviTest.Services; 
 using System;
+using System.Threading.Tasks;
 
 namespace ScriviTest.ViewModels;
 
@@ -13,23 +17,38 @@ public partial class HomeViewModel : ViewModelBase
     public HomeViewModel(Action<ViewModelBase>? navigateAction = null)
     {
         _navigateAction = navigateAction;
+        IsActivated = LicenseManager.IsLicenseValid();
     }
 
-    // Tracks whether the hardware-locked RSA key has been provided
+    // We tell MVVM to update the IsNotActivated boolean whenever IsActivated changes!
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(NavigateToExaminerCommand))]
-    [NotifyCanExecuteChangedFor(nameof(NavigateToExamineeCommand))]
+    [NotifyPropertyChangedFor(nameof(IsNotActivated))] 
     private bool _isActivated = false; 
 
-    // Command to handle the Activation process
+    // This computed property acts as the reverse switch for your UI to hide the Activate button
+    public bool IsNotActivated => !IsActivated;
+
     [RelayCommand]
-    private void ActivateApp()
+    private async Task ActivateApp()
     {
-        // TODO: Implement RSA Key validation service here
-        IsActivated = true;
+        if (IsActivated) return;
+
+        if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var mainWindow = desktop.MainWindow;
+            if (mainWindow == null) return;
+
+            var dialog = new ActivationWindow();
+            var success = await dialog.ShowDialog<bool>(mainWindow);
+
+            if (success)
+            {
+                IsActivated = true; 
+            }
+        }
     }
 
-    // Navigation Commands (Only execute if IsActivated is true)
     [RelayCommand(CanExecute = nameof(IsActivated))]
     private void NavigateToExaminer()
     {
@@ -39,7 +58,8 @@ public partial class HomeViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand(CanExecute = nameof(IsActivated))]
+    // REMOVED the CanExecute restriction here. Examinees can ALWAYS click this!
+    [RelayCommand]
     private void NavigateToExaminee()
     {
         if (_navigateAction != null)

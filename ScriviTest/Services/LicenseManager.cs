@@ -3,14 +3,20 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace UniversityScheduler.Data
+namespace ScriviTest.Services
 {
    public static class LicenseManager
 {
         
       private static readonly string _publicKey = @"
       -----BEGIN PUBLIC KEY-----
-      
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAitCQpk/5IsTvnoHHaxdn
+      l2r9YEJGm1K74XzYCJ8PkTTKbpDl7DrQhPbc/XHkLidusX6FhjNHMpU48diEOFr7
+      hDeerF7TYhZWycuL3BxQj1mB3ITG+160UhOiagvF4CiBA0KxsYlZvmlFMgcR0sx0
+      HdV6HqkXO8MEBO69LWCQB6D3L2VFtDd+POxfXTuEHe7ZRUt6OChsYCsOYwBmUB7R
+      9ZIdF3x58XyYVPwm+8Tw+rBXDiRAqopI+oHU0kMygBUYl8PNcyEJJofJ6Yry5vkE
+      Ok7+Y0Nt3ekRC7tLnVVIseP9VEvlXQsRNEqsmLux5SbRlrfWxrtEPQI/VJKIDE6D
+      SwIDAQAB
       -----END PUBLIC KEY-----";
       private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
       private static readonly string _licenseFile = Path.Combine(_basePath, "license.dat");

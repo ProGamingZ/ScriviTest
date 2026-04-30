@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using UniversityScheduler.Data; // Ensure this points to your LicenseManager namespace
+using ScriviTest.Services; 
 
 namespace ScriviTest.Views;
 
