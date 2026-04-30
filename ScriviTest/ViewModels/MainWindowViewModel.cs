@@ -17,6 +17,8 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private bool _isTopmost = false;
     [ObservableProperty] private double _windowWidth = 800;
     [ObservableProperty] private double _windowHeight = 450;
+    [ObservableProperty] private double _minWidth = 1280;
+    [ObservableProperty] private double _minHeight = 720;
 
     public MainWindowViewModel()
     {
@@ -38,18 +40,23 @@ public partial class MainWindowViewModel : ViewModelBase
             WindowHeight = 450;
         }
         // Route: Examiner Hub & Creation (Resizable, Standard Window)
-        else if (viewModel is ExaminerHubViewModel || viewModel is ExamCreationViewModel)
+        else if (viewModel is ExaminerHubViewModel || viewModel is ExamCreationViewModel || viewModel is ExamHistoryViewModel)
         {
             CanResize = true;
             IsTopmost = false;
             CurrentWindowState = WindowState.Maximized;
+            MinWidth = 1280;
+            MinHeight = 720;
         }
+
         // NEW Route: Examinee Hub (Maximized but Resizable)
         else if (viewModel is ExamineeHubViewModel)
         {
             CanResize = true;
             IsTopmost = false;
             CurrentWindowState = WindowState.Maximized; // Fills the screen, but keeps the taskbar and window controls
+            MinWidth = 1280;
+            MinHeight = 720;
         }
         // NEW Route: Examinee Test Execution (Strict Fullscreen Lockdown)
         else if (viewModel is ExamineeTestViewModel)
@@ -57,6 +64,8 @@ public partial class MainWindowViewModel : ViewModelBase
             CanResize = false;
             IsTopmost = true; // Prevents other apps from opening on top of it
             CurrentWindowState = WindowState.FullScreen; // Completely hides the taskbar and locks the screen bounds
+            MinWidth = 1280;
+            MinHeight = 720;
         }
     }
 }
