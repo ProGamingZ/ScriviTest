@@ -4,22 +4,33 @@
              x:Class="ScriviTest.Views.HomeView"
              x:DataType="vm:HomeViewModel">
 
-    <Grid RowDefinitions="*, Auto, Auto, Auto, *" HorizontalAlignment="Center" VerticalAlignment="Center">
-        
-        <TextBlock Grid.Row="0" Text="ScriviTest" FontSize="36" FontWeight="Bold" Margin="0,0,0,40" HorizontalAlignment="Center"/>
+    <Grid>
+        <Border ZIndex="100" Background="#AA000000" IsVisible="{Binding IsExpirationWarningVisible}">
+            <Border Background="White" CornerRadius="8" Padding="30" HorizontalAlignment="Center" VerticalAlignment="Center" BoxShadow="0 10 30 0 Black" MaxWidth="450">
+                <StackPanel Spacing="15">
+                    <TextBlock Text="⚠️ Subscription Notice" Foreground="#D32F2F" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding ExpirationWarningMessage}" FontSize="16" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10"/>
+                    <Button Content="Acknowledge" Command="{Binding CloseWarningCommand}" Background="#2196F3" Foreground="White" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="10" FontWeight="Bold" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+        </Border>
 
-        <Button Grid.Row="1" Content="Examiner" Command="{Binding NavigateToExaminerCommand}" 
-                IsVisible="{Binding IsActivated}"
-                Width="200" Height="50" Margin="0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+        <Grid RowDefinitions="*, Auto, Auto, Auto, *" HorizontalAlignment="Center" VerticalAlignment="Center">
+            
+            <TextBlock Grid.Row="0" Text="ScriviTest" FontSize="36" FontWeight="Bold" Margin="0,0,0,40" HorizontalAlignment="Center"/>
 
-        <Button Grid.Row="2" Content="Examinee" Command="{Binding NavigateToExamineeCommand}" 
-                Width="200" Height="50" Margin="0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+            <Button Grid.Row="1" Content="Examiner" Command="{Binding NavigateToExaminerCommand}" 
+                    IsVisible="{Binding IsActivated}"
+                    Width="200" Height="50" Margin="0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
 
-        <Button Grid.Row="3" Content="Activate App" Command="{Binding ActivateAppCommand}" 
-                IsVisible="{Binding IsNotActivated}"
-                Width="200" Height="50" Margin="0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"
-                Background="{DynamicResource ActivateButtonBrush}" 
-                Foreground="{DynamicResource ActionTextBrush}"/>
-                
+            <Button Grid.Row="2" Content="Examinee" Command="{Binding NavigateToExamineeCommand}" 
+                    Width="200" Height="50" Margin="0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+
+            <Button Grid.Row="3" Content="Activate App" Command="{Binding ActivateAppCommand}" 
+                    IsVisible="{Binding IsNotActivated}"
+                    Width="200" Height="50" Margin="0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"
+                    Background="{DynamicResource ActivateButtonBrush}" 
+                    Foreground="{DynamicResource ActionTextBrush}"/>
         </Grid>
+    </Grid>
 </UserControl>

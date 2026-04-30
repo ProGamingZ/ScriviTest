@@ -1,4 +1,6 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia.Threading;
+using ScriviTest.Services;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using ScriviTest.ViewModels.Examinee;
@@ -24,6 +26,30 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         // Start on the Home Screen with strict dimensions
         _currentPage = new HomeViewModel(Navigate);
+
+        StartGlobalSecuritySweep();
+    }
+
+    private void StartGlobalSecuritySweep()
+    {
+        var securityTimer = new DispatcherTimer { Interval = System.TimeSpan.FromSeconds(2) };
+        securityTimer.Tick += (s, e) =>
+        {
+            // If they are on the Home screen or Examinee screens, we don't need to kick them.
+            // Examinees don't need an active license to take tests.
+            if (CurrentPage is HomeViewModel || CurrentPage is ExamineeHubViewModel || CurrentPage is ExamineeTestViewModel)
+            {
+                return;
+            }
+
+            // If they are anywhere else (Examiner Hub, History, Grading) and the license is invalid:
+            if (!LicenseManager.IsLicenseValid())
+            {
+                // Forcefully navigate them back to the Home Screen (which acts as the lock screen)
+                Navigate(new HomeViewModel(Navigate));
+            }
+        };
+        securityTimer.Start();
     }
 
     private void Navigate(ViewModelBase viewModel)

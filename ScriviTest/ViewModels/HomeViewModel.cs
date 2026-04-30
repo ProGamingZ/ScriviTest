@@ -6,18 +6,25 @@ using ScriviTest.ViewModels.Examinee;
 using ScriviTest.Views; 
 using ScriviTest.Services; 
 using System;
+using System.IO;
+using Avalonia.Threading;
 using System.Threading.Tasks;
+
 
 namespace ScriviTest.ViewModels;
 
 public partial class HomeViewModel : ViewModelBase
 {
     private readonly Action<ViewModelBase>? _navigateAction;
-
+    private readonly string _warningCacheFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "warning_cache.dat");
     public HomeViewModel(Action<ViewModelBase>? navigateAction = null)
     {
         _navigateAction = navigateAction;
         IsActivated = LicenseManager.IsLicenseValid();
+        if (IsActivated)
+        {
+            CheckSubscriptionAlerts();
+        }
     }
 
     // We tell MVVM to update the IsNotActivated boolean whenever IsActivated changes!
@@ -28,6 +35,103 @@ public partial class HomeViewModel : ViewModelBase
 
     // This computed property acts as the reverse switch for your UI to hide the Activate button
     public bool IsNotActivated => !IsActivated;
+
+    // --- WARNING UI PROPERTIES ---
+    [ObservableProperty] private bool _isExpirationWarningVisible = false;
+    [ObservableProperty] private string _expirationWarningMessage = string.Empty;
+
+    [RelayCommand]
+    private void CloseWarning()
+    {
+        IsExpirationWarningVisible = false;
+        _hasUserDismissedWarning = true;
+    }
+
+    private DispatcherTimer? _countdownTimer;
+    private bool _hasUserDismissedWarning = false;
+    private void CheckSubscriptionAlerts()
+    {
+        DateTime expirationDate = LicenseManager.GetExpirationDate();
+        if (expirationDate == DateTime.MinValue) return;
+
+        TimeSpan remaining = expirationDate - DateTime.Now;
+        int daysLeft = (int)remaining.TotalDays;
+        
+        // Condition 1: License is already dead
+        if (remaining.TotalSeconds <= 0)
+        {
+            IsActivated = false;
+            return;
+        }
+
+        // Condition 2: Less than 24 hours (Start the LIVE Countdown)
+        if (remaining.TotalHours <= 24)
+        {
+            StartCountdownTimer();
+            return; // Exit early so we don't trigger the daily/weekly alerts
+        }
+
+        // Condition 3: Standard Daily/Weekly warnings
+        if (daysLeft > 30) return;
+
+        DateTime lastWarningDate = GetLastWarningDate();
+
+        if (daysLeft <= 7 && lastWarningDate.Date < DateTime.Today)
+        {
+            ShowWarning($"URGENT: Your ScriviTest subscription expires in {daysLeft} days! Please renew soon to avoid losing access.");
+        }
+        else if (daysLeft <= 30 && (DateTime.Now - lastWarningDate).TotalDays >= 7)
+        {
+            ShowWarning($"Reminder: Your ScriviTest subscription will expire in {daysLeft} days.");
+        }
+    }
+    private void StartCountdownTimer()
+    {
+        _countdownTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        _countdownTimer.Tick += (s, e) =>
+        {
+            TimeSpan timeLeft = LicenseManager.GetExpirationDate() - DateTime.Now;
+
+            if (timeLeft.TotalSeconds <= 0)
+            {
+                // The clock hit zero! Stop the timer, hide the warning, and lock the app.
+                _countdownTimer.Stop();
+                IsExpirationWarningVisible = false;
+                IsActivated = false;
+            }
+            else
+            {
+                // Format the time as HH:MM:SS and update the string
+                string timeString = timeLeft.ToString(@"hh\:mm\:ss");
+                ExpirationWarningMessage = $"URGENT: Your ScriviTest subscription expires in {timeString}!\n\nPlease renew immediately.";
+                
+                // ONLY open the UI if the user hasn't clicked Acknowledge yet
+                if (!_hasUserDismissedWarning)
+                {
+                    IsExpirationWarningVisible = true;
+                }
+            }
+        };
+        _countdownTimer.Start();
+    }
+
+    private void ShowWarning(string message)
+    {
+        ExpirationWarningMessage = message;
+        IsExpirationWarningVisible = true;
+        try { File.WriteAllText(_warningCacheFile, DateTime.Now.ToString()); } catch { }
+    }
+
+    private DateTime GetLastWarningDate()
+    {
+        try
+        {
+            if (File.Exists(_warningCacheFile))
+                return DateTime.Parse(File.ReadAllText(_warningCacheFile));
+        }
+        catch { }
+        return DateTime.MinValue; 
+    }
 
     [RelayCommand]
     private async Task ActivateApp()
