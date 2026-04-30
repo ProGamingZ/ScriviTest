@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="ScriviTest.Views.ActivationWindow"
+        Title="Activate Subscription"
+        Width="450" Height="280"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="#F5F5F5">
+    
+    <StackPanel Margin="20" Spacing="10">
+        <TextBlock Text="Step 1: Send this Request Code to the Administrator:" FontWeight="Bold"/>
+        
+        <TextBox x:Name="RequestCodeBox" IsReadOnly="True" Background="#FFF9C4" 
+                 Height="30" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
+        
+        <TextBlock Text="Step 2: Enter the Activation Key you received:" FontWeight="Bold"/>
+        
+        <TextBox x:Name="InputKeyBox" Height="30" FontSize="14"/>
+        
+        <Button x:Name="ActivateButton" Content="Activate Now" Height="35" 
+                Margin="0,15,0,0" IsDefault="True" HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Center" Background="#2196F3" Foreground="White" FontWeight="Bold"/>
+        
+        <TextBlock x:Name="ErrorText" Foreground="Red" FontWeight="Bold" HorizontalAlignment="Center" IsVisible="False"/>
+    </StackPanel>
+</Window>
