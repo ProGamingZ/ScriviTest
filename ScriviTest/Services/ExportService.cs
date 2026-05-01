@@ -212,7 +212,7 @@ public class ExportService
         {
             ExamTitle = string.IsNullOrWhiteSpace(title) ? "Untitled Exam" : title,
             ExportDate = DateTime.Now.ToString("yyyy-MM-dd hh:mm tt"),
-            WhiteboardKey = key,
+            ExamKey = key,
             FilePath = path
         });
 

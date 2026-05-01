@@ -106,7 +106,7 @@
                             <DataGridTextColumn Header="Exam Title" Binding="{Binding Record.ExamTitle}" 
                                                 Width="*" MinWidth="150" MaxWidth="400" IsVisible="{Binding ShowTitle}"/>
                             
-                            <DataGridTextColumn Header="Exam Key" Binding="{Binding Record.WhiteboardKey}" 
+                            <DataGridTextColumn Header="Exam Key" Binding="{Binding Record.ExamKey}" 
                                                 Width="Auto" MinWidth="130" MaxWidth="250" IsVisible="{Binding ShowKey}"/>
                             
                             <DataGridTemplateColumn Header="Status" Width="Auto" MinWidth="100" MaxWidth="200" IsVisible="{Binding ShowStatus}">

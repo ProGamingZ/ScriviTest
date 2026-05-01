@@ -33,7 +33,7 @@ public partial class GradingHubViewModel : ViewModelBase
     [ObservableProperty] private string _answerKeyFileName = string.Empty;
     [ObservableProperty] private List<string> _studentSubmissionPaths = new();
     [ObservableProperty] private string _studentFilesSummary = string.Empty;
-    [ObservableProperty] private string _whiteboardKey = string.Empty;
+    [ObservableProperty] private string _examKey = string.Empty;
     [ObservableProperty] private string _errorMessage = string.Empty;
 
     [ObservableProperty] private double _currentTotalScore = 0;
@@ -83,11 +83,11 @@ public partial class GradingHubViewModel : ViewModelBase
     }
 
     // Validation for the Check button
-    private bool CanCheckAndUnlock => !string.IsNullOrEmpty(AnswerKeyPath) && StudentSubmissionPaths.Count > 0 && WhiteboardKey.Length >= 6;
+    private bool CanCheckAndUnlock => !string.IsNullOrEmpty(AnswerKeyPath) && StudentSubmissionPaths.Count > 0 && ExamKey.Length >= 6;
 
     partial void OnAnswerKeyPathChanged(string? value) => CheckAndUnlockCommand.NotifyCanExecuteChanged();
     partial void OnStudentSubmissionPathsChanged(List<string> value) => CheckAndUnlockCommand.NotifyCanExecuteChanged();
-    partial void OnWhiteboardKeyChanged(string value) => CheckAndUnlockCommand.NotifyCanExecuteChanged();
+    partial void OnExamKeyChanged(string value) => CheckAndUnlockCommand.NotifyCanExecuteChanged();
 
     [RelayCommand(CanExecute = nameof(CanCheckAndUnlock))]
     private void CheckAndUnlock()
@@ -139,7 +139,7 @@ public partial class GradingHubViewModel : ViewModelBase
         }
         foreach (var path in StudentSubmissionPaths)
         {
-            var studentSubmission = _cryptoService.DecryptStudentSubmission(path, WhiteboardKey.ToUpper());
+            var studentSubmission = _cryptoService.DecryptStudentSubmission(path, ExamKey.ToUpper());
             if (studentSubmission == null)
             {
                 ErrorMessage = $"Access Denied: Failed to decrypt {Path.GetFileName(path)}. Wrong Exam Key?";
@@ -366,9 +366,9 @@ public partial class GradingHubViewModel : ViewModelBase
         {
             string jsonContent = JsonSerializer.Serialize(SelectedStudent.SubmissionData, new JsonSerializerOptions { WriteIndented = true });
             
-            // Write the unencrypted JSON temporarily, then encrypt it in-place using the Whiteboard key!
+            // Write the unencrypted JSON temporarily, then encrypt it in-place using the Exam key!
             File.WriteAllText(SelectedStudent.FilePath, jsonContent);
-            _cryptoService.EncryptFile(SelectedStudent.FilePath, WhiteboardKey.ToUpper());
+            _cryptoService.EncryptFile(SelectedStudent.FilePath, ExamKey.ToUpper());
         }
         catch (Exception ex)
         {

@@ -58,7 +58,7 @@
                         <Button Grid.Column="1" Content="Browse..." Command="{Binding BrowseForExamCommand}" Margin="10,0,0,0"/>
                     </Grid>
 
-                    <TextBox Text="{Binding WhiteboardKey}" MaxLength="6" FontSize="18" FontWeight="Bold" HorizontalContentAlignment="Center" 
+                    <TextBox Text="{Binding ExamKey}" MaxLength="6" FontSize="18" FontWeight="Bold" HorizontalContentAlignment="Center" 
                              Watermark="6-Character Decryption Key" BorderThickness="1" Foreground="{DynamicResource AppForeground}"/>
                 </StackPanel>
 

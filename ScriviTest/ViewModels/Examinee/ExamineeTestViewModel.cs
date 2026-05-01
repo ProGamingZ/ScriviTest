@@ -74,7 +74,7 @@ public partial class ExamineeTestViewModel : ViewModelBase
     
     private readonly Action<ViewModelBase> _navigateAction;
     private readonly Services.CryptographyService _cryptoService;
-    private readonly string _whiteboardKey;
+    private readonly string _examKey;
     private readonly string _firstName, _middleName, _lastName, _suffix, _studentID;
     
     [ObservableProperty] private StudentExamDto _examData;
@@ -106,14 +106,14 @@ public partial class ExamineeTestViewModel : ViewModelBase
     [ObservableProperty] private bool _isLightboxOpen = false;
     [ObservableProperty] private Avalonia.Media.Imaging.Bitmap? _lightboxImage;
 
-    public ExamineeTestViewModel(Action<ViewModelBase> navigateAction, StudentExamDto decryptedExam, string tempDirectory, string whiteboardKey, string firstName, string middleName, string lastName, string suffix, string studentID)
+    public ExamineeTestViewModel(Action<ViewModelBase> navigateAction, StudentExamDto decryptedExam, string tempDirectory, string examKey, string firstName, string middleName, string lastName, string suffix, string studentID)
     {
         _navigateAction = navigateAction;
         _cryptoService = new Services.CryptographyService();
         
         ExamData = decryptedExam;
         ImageDirectory = tempDirectory;
-        _whiteboardKey = whiteboardKey;
+        _examKey = examKey;
         _firstName = firstName;
         _middleName = middleName;
         _lastName = lastName;
@@ -355,7 +355,7 @@ public partial class ExamineeTestViewModel : ViewModelBase
 
         string jsonContent = JsonSerializer.Serialize(submission, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(xansPath, jsonContent);
-        _cryptoService.EncryptFile(xansPath, _whiteboardKey);
+        _cryptoService.EncryptFile(xansPath, _examKey);
 
         if (Directory.Exists(ImageDirectory)) Directory.Delete(ImageDirectory, true);
 

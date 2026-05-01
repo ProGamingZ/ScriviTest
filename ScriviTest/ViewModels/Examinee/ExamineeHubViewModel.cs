@@ -14,7 +14,7 @@ public partial class ExamineeHubViewModel : ViewModelBase
 
     [ObservableProperty]private string? _selectedFilePath;
     [ObservableProperty]private string _selectedFileName = "No file selected.";
-    [ObservableProperty]private string _whiteboardKey = string.Empty;
+    [ObservableProperty]private string _examKey = string.Empty;
     [ObservableProperty]private string _errorMessage = string.Empty;
     [ObservableProperty] private string _firstName = string.Empty;
     [ObservableProperty] private string _middleName = string.Empty;
@@ -59,10 +59,10 @@ public partial class ExamineeHubViewModel : ViewModelBase
         !string.IsNullOrWhiteSpace(LastName) && 
         !string.IsNullOrWhiteSpace(StudentID) && 
         !string.IsNullOrEmpty(SelectedFilePath) && 
-        WhiteboardKey.Length >= 6;
+        ExamKey.Length >= 6;
 
     // We tell the UI to re-evaluate the Start button whenever the Key or File changes
-    partial void OnWhiteboardKeyChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
+    partial void OnExamKeyChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
     partial void OnSelectedFilePathChanged(string? value) => StartExamCommand.NotifyCanExecuteChanged();
 
     [RelayCommand(CanExecute = nameof(CanStartExam))]
@@ -75,7 +75,7 @@ public partial class ExamineeHubViewModel : ViewModelBase
         string tempImageFolder = Path.Combine(Path.GetTempPath(), "ScriviTest_Session", sessionGuid);
 
         // 2. Attempt Decryption
-        var decryptedExam = _cryptoService.DecryptAndExtractExam(SelectedFilePath!, WhiteboardKey.ToUpper(), tempImageFolder);
+        var decryptedExam = _cryptoService.DecryptAndExtractExam(SelectedFilePath!, ExamKey.ToUpper(), tempImageFolder);
 
         if (decryptedExam == null)
         {
@@ -87,7 +87,7 @@ public partial class ExamineeHubViewModel : ViewModelBase
         // 3. Success! Pass the decrypted data and the image folder to the actual Test UI
         ErrorMessage = string.Empty;   
         // We pass the DTO data directly to the test constructor!
-        _navigateAction(new ExamineeTestViewModel(_navigateAction, decryptedExam, tempImageFolder, WhiteboardKey.ToUpper(), FirstName, MiddleName, LastName, Suffix, StudentID));
+        _navigateAction(new ExamineeTestViewModel(_navigateAction, decryptedExam, tempImageFolder, ExamKey.ToUpper(), FirstName, MiddleName, LastName, Suffix, StudentID));
     }
         
     [ObservableProperty] 
