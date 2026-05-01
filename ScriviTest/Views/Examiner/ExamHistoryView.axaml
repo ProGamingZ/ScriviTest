@@ -31,98 +31,100 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Row="1" Margin="40" Background="White" BorderBrush="Black" BorderThickness="2" Padding="20">
-                <Grid RowDefinitions="Auto, Auto, *">
-                    <TextBlock Grid.Row="0" Text="Exported Questionnaires Log" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"/>
-                    
-                    <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
+            <Border Grid.Row="1" Padding="20" MinWidth="700">
+                <Border Background="White" BorderBrush="Black" BorderThickness="2" Padding="20">
+                    <Grid RowDefinitions="Auto, Auto, *">
+                        <TextBlock Grid.Row="0" Text="Exported Questionnaires Log" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"/>
                         
-                        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15">
-                            <Button Content="🔍 Check Locations" Command="{Binding CheckLocationsCommand}" Background="{DynamicResource SecondaryActionBrush}" Foreground="White" Padding="15,8" FontWeight="SemiBold"/>
-                            <Button Content="🔗 Relink Missing File" Command="{Binding PromptRelinkCommand}" Background="Transparent" BorderBrush="Gray" BorderThickness="1" Padding="15,8" ToolTip.Tip="Select a missing row first, then click this to find the file."/>
-                            <Button Content="🗑️ Delete Selected Logs" Command="{Binding AttemptDeleteCommand}" Background="Transparent" Foreground="#D32F2F" BorderBrush="#D32F2F" BorderThickness="1" Padding="15,8"/>
-                        </StackPanel>
+                        <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
+                            
+                            <WrapPanel Grid.Column="0" Orientation="Horizontal">
+                                <Button Content="🔍 Check Locations" Command="{Binding CheckLocationsCommand}" Background="{DynamicResource SecondaryActionBrush}" Foreground="White" Padding="15,8" FontWeight="SemiBold" Margin="0,0,15,10"/>
+                                <Button Content="🔗 Relink Missing File" Command="{Binding PromptRelinkCommand}" Background="Transparent" BorderBrush="Gray" BorderThickness="1" Padding="15,8" ToolTip.Tip="Select a missing row first, then click this to find the file." Margin="0,0,15,10"/>
+                                <Button Content="🗑️ Delete Selected Logs" Command="{Binding AttemptDeleteCommand}" Background="Transparent" Foreground="#D32F2F" BorderBrush="#D32F2F" BorderThickness="1" Padding="15,8" Margin="0,0,15,10"/>
+                            </WrapPanel>
 
-                        <Button Grid.Column="1" Content="⚙️ Columns" Background="Transparent" BorderBrush="Gray" BorderThickness="1" Padding="10,5">
-                            <Button.Flyout>
-                                <Flyout>
-                                    <StackPanel Spacing="10" MinWidth="150">
-                                        <TextBlock Text="Show/Hide Columns" FontWeight="Bold" Margin="0,0,0,5"/>
-                                        <CheckBox Content="Date Exported" IsChecked="{Binding ShowDate}"/>
-                                        <CheckBox Content="Exam Title" IsChecked="{Binding ShowTitle}"/>
-                                        <CheckBox Content="Exam Key" IsChecked="{Binding ShowKey}"/>
-                                        <CheckBox Content="Status" IsChecked="{Binding ShowStatus}"/>
-                                        <CheckBox Content="Save Location" IsChecked="{Binding ShowLocation}"/>
-                                    </StackPanel>
-                                </Flyout>
-                            </Button.Flyout>
-                        </Button>
+                            <Button Grid.Column="1" Content="⚙️ Columns" Background="Transparent" BorderBrush="Gray" BorderThickness="1" Padding="10,5" VerticalAlignment="Top">
+                                <Button.Flyout>
+                                    <Flyout>
+                                        <StackPanel Spacing="10" MinWidth="150">
+                                            <TextBlock Text="Show/Hide Columns" FontWeight="Bold" Margin="0,0,0,5"/>
+                                            <CheckBox Content="Date Exported" IsChecked="{Binding ShowDate}"/>
+                                            <CheckBox Content="Exam Title" IsChecked="{Binding ShowTitle}"/>
+                                            <CheckBox Content="Exam Key" IsChecked="{Binding ShowKey}"/>
+                                            <CheckBox Content="Status" IsChecked="{Binding ShowStatus}"/>
+                                            <CheckBox Content="Save Location" IsChecked="{Binding ShowLocation}"/>
+                                        </StackPanel>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                        </Grid>
+                        
+                        <DataGrid Grid.Row="2" ItemsSource="{Binding HistoryList}" SelectedItem="{Binding SelectedWrapper}"
+                                AutoGenerateColumns="False" IsReadOnly="True" 
+                                GridLinesVisibility="All" BorderBrush="Black" BorderThickness="1"
+                                CanUserSortColumns="True"
+                                CanUserResizeColumns="True"
+                                ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <DataGrid.Styles>
+                                <Style Selector="DataGridRow:nth-child(odd)">
+                                    <Setter Property="Background" Value="#F0F0F0"/> 
+                                </Style>
+
+                                <Style Selector="DataGridRow:pointerover, DataGridRow:selected">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Style>
+
+                                <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+                                    <Setter Property="Fill" Value="#e8e8e8"/>
+                                    <Setter Property="Opacity" Value="1"/>
+                                </Style>
+
+                                <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle, 
+                                                DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
+                                    <Setter Property="Fill" Value="#dddddd"/>
+                                    <Setter Property="Opacity" Value="1"/> 
+                                </Style>
+
+                                <Style Selector="DataGridCell:selected, DataGridCell:pointerover, DataGridCell:selected:pointerover">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Style>
+                            </DataGrid.Styles>
+
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="Auto" MinWidth="50" MaxWidth="80">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="vm:HistoryRecordWrapper">
+                                            <CheckBox IsChecked="{Binding IsSelected}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Header="Date Exported" Binding="{Binding Record.ExportDate}" 
+                                                    Width="Auto" MinWidth="120" MaxWidth="250" IsVisible="{Binding ShowDate}"/>
+                                
+                                <DataGridTextColumn Header="Exam Title" Binding="{Binding Record.ExamTitle}" 
+                                                    Width="*" MinWidth="150" MaxWidth="400" IsVisible="{Binding ShowTitle}"/>
+                                
+                                <DataGridTextColumn Header="Exam Key" Binding="{Binding Record.ExamKey}" 
+                                                    Width="Auto" MinWidth="130" MaxWidth="250" IsVisible="{Binding ShowKey}"/>
+                                
+                                <DataGridTemplateColumn Header="Status" Width="Auto" MinWidth="100" MaxWidth="200" IsVisible="{Binding ShowStatus}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="vm:HistoryRecordWrapper">
+                                            <TextBlock Text="{Binding FileStatus}" Foreground="{Binding StatusHexColor}" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Header="Save Location" Binding="{Binding Record.FilePath}" 
+                                                    Width="2*" MinWidth="200" MaxWidth="800" IsVisible="{Binding ShowLocation}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
-                    
-                    <DataGrid Grid.Row="2" ItemsSource="{Binding HistoryList}" SelectedItem="{Binding SelectedWrapper}"
-                              AutoGenerateColumns="False" IsReadOnly="True" 
-                              GridLinesVisibility="All" BorderBrush="Black" BorderThickness="1"
-                              CanUserSortColumns="True"
-                              CanUserResizeColumns="True"
-                              ScrollViewer.HorizontalScrollBarVisibility="Auto" 
-                              ScrollViewer.VerticalScrollBarVisibility="Auto">
-                        <DataGrid.Styles>
-                            <Style Selector="DataGridRow:nth-child(odd)">
-                                <Setter Property="Background" Value="#F0F0F0"/> 
-                            </Style>
 
-                            <Style Selector="DataGridRow:pointerover, DataGridRow:selected">
-                                <Setter Property="Background" Value="Transparent"/>
-                            </Style>
-
-                            <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
-                                <Setter Property="Fill" Value="#e8e8e8"/>
-                                <Setter Property="Opacity" Value="1"/>
-                            </Style>
-
-                            <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle, 
-                                            DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
-                                <Setter Property="Fill" Value="#dddddd"/>
-                                <Setter Property="Opacity" Value="1"/> 
-                            </Style>
-
-                            <Style Selector="DataGridCell:selected, DataGridCell:pointerover, DataGridCell:selected:pointerover">
-                                <Setter Property="Background" Value="Transparent"/>
-                            </Style>
-                        </DataGrid.Styles>
-
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Width="Auto" MinWidth="50" MaxWidth="80">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate x:DataType="vm:HistoryRecordWrapper">
-                                        <CheckBox IsChecked="{Binding IsSelected}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-
-                            <DataGridTextColumn Header="Date Exported" Binding="{Binding Record.ExportDate}" 
-                                                Width="Auto" MinWidth="120" MaxWidth="250" IsVisible="{Binding ShowDate}"/>
-                            
-                            <DataGridTextColumn Header="Exam Title" Binding="{Binding Record.ExamTitle}" 
-                                                Width="*" MinWidth="150" MaxWidth="400" IsVisible="{Binding ShowTitle}"/>
-                            
-                            <DataGridTextColumn Header="Exam Key" Binding="{Binding Record.ExamKey}" 
-                                                Width="Auto" MinWidth="130" MaxWidth="250" IsVisible="{Binding ShowKey}"/>
-                            
-                            <DataGridTemplateColumn Header="Status" Width="Auto" MinWidth="100" MaxWidth="200" IsVisible="{Binding ShowStatus}">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate x:DataType="vm:HistoryRecordWrapper">
-                                        <TextBlock Text="{Binding FileStatus}" Foreground="{Binding StatusHexColor}" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-
-                            <DataGridTextColumn Header="Save Location" Binding="{Binding Record.FilePath}" 
-                                                Width="2*" MinWidth="200" MaxWidth="800" IsVisible="{Binding ShowLocation}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-
+                </Border>
             </Border>
         </Grid>
     </Grid>

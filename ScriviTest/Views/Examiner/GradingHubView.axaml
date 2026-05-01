@@ -16,8 +16,12 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Row="1" ColumnDefinitions="2.5*, 5*, 2.5*">
-            
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" MinWidth="250"/>
+                <ColumnDefinition Width="2*" MinWidth="500"/>
+                <ColumnDefinition Width="1*" MinWidth="250"/>
+            </Grid.ColumnDefinitions>
             <Border Grid.Column="0" BorderBrush="Black" BorderThickness="0,0,4,0" Padding="15" Background="White">
                 <Grid RowDefinitions="Auto, Auto, Auto, Auto, *, Auto">
                     
@@ -54,12 +58,12 @@
                     </StackPanel>
 
                     <DataGrid Grid.Row="4" ItemsSource="{Binding StudentList}" SelectedItem="{Binding SelectedStudent}"
-                              AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="Black" BorderThickness="1"
-                              CanUserReorderColumns="True" CanUserSortColumns="True"
-                              CanUserResizeColumns="True"
-                              ScrollViewer.HorizontalScrollBarVisibility="Auto" 
-                              ScrollViewer.VerticalScrollBarVisibility="Auto"
-                              RowBackground="White">
+                            AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="Black" BorderThickness="1"
+                            CanUserReorderColumns="True" CanUserSortColumns="True"
+                            CanUserResizeColumns="True"
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            RowBackground="White">
                                 <DataGrid.Styles>
                                     <Style Selector="DataGridRow:nth-child(odd)">
                                         <Setter Property="Background" Value="#F0F0F0"/> 
@@ -113,13 +117,14 @@
                             FontSize="18" FontWeight="Bold" Padding="0,15" Margin="0,15,0,0"/>
 
                 </Grid>
+
             </Border>
 
             <Border Grid.Column="1" BorderBrush="Black" BorderThickness="0,0,4,0" Padding="30" Background="#FAFAFA">
                 <Panel>
                     <TextBlock Text="Select a student from the list to review their answers." 
-                               IsVisible="{Binding CurrentVisibleQuestion, Converter={x:Static ObjectConverters.IsNull}}"
-                               HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="Gray"/>
+                            IsVisible="{Binding CurrentVisibleQuestion, Converter={x:Static ObjectConverters.IsNull}}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="Gray"/>
 
                     <Grid RowDefinitions="*, Auto" IsVisible="{Binding CurrentVisibleQuestion, Converter={x:Static ObjectConverters.IsNotNull}}">
                         
@@ -176,16 +181,19 @@
             <Border Grid.Column="2" Padding="20" Background="White" BorderBrush="Black" BorderThickness="4,0,0,0">
                 <Grid RowDefinitions="Auto, Auto, *, Auto" IsVisible="{Binding CurrentVisibleQuestion, Converter={x:Static ObjectConverters.IsNotNull}}">
                     
-                    <Grid Grid.Row="0" ColumnDefinitions="*, Auto, *" Margin="0,0,0,20">
-                        <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <WrapPanel Grid.Row="0" Margin="0,0,0,20" Orientation="Horizontal" HorizontalAlignment="Center">
+                        
+                        <StackPanel Orientation="Horizontal" Margin="0,0,30,10">
                             <TextBlock Text="{Binding CurrentTotalScore}" FontSize="24" FontWeight="Bold"/>
                             <TextBlock Text="{Binding CurrentMaxScore, StringFormat='{} / {0}'}" FontSize="24" Foreground="Gray"/>
                         </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <TextBlock Text="⏱️ " FontSize="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="{Binding CurrentTimeTakenDisplay}" FontSize="20" VerticalAlignment="Center"/>
+                        </StackPanel>
                         
-                        <Border Grid.Column="1" Width="3" Background="Black" Margin="10,0"/>
-                        
-                        <TextBlock Grid.Column="2" Text="{Binding CurrentTimeTakenDisplay}" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Grid>
+                    </WrapPanel>
 
                     <Border Grid.Row="1" Background="#FFEBEE" BorderBrush="#F44336" BorderThickness="2" CornerRadius="4" Padding="10" Margin="0,0,0,15"
                             IsVisible="{Binding CurrentIncidentLog.Count}">
@@ -252,7 +260,6 @@
 
                 </Grid>
             </Border>
-
         </Grid>
     </Grid>
 </UserControl>

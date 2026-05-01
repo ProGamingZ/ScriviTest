@@ -4,28 +4,34 @@
              x:Class="ScriviTest.Views.Examiner.ExaminerHubView"
              x:DataType="vm:ExaminerHubViewModel">
 
-    <Grid RowDefinitions="Auto, *, Auto" Margin="40">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         
-        <TextBlock Grid.Row="0" Text="Examiner Workspace" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30"/>
+        <Border Padding="40" MinHeight="450">
+            <Grid RowDefinitions="Auto, *, Auto">
+                
+                <TextBlock Grid.Row="0" Text="Examiner Workspace" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30"/>
 
-        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
-            <Button Content="Create New Examination" Command="{Binding NavigateToCreationCommand}"
-                    Width="300" Height="60" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                    Background="{DynamicResource PrimaryActionBrush}" 
-                    Foreground="{DynamicResource ActionTextBrush}"/>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+                    <Button Content="Create New Examination" Command="{Binding NavigateToCreationCommand}"
+                            Width="300" Height="60" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            Background="{DynamicResource PrimaryActionBrush}" 
+                            Foreground="{DynamicResource ActionTextBrush}"/>
+                    
+                    <Button Content="Exam History" Command="{Binding NavigateToHistoryCommand}"
+                            Width="300" Height="60" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            Background="{DynamicResource PrimaryActionBrush}" 
+                            Foreground="{DynamicResource ActionTextBrush}"/>
+
+                    <Button Content="Grade Submitted Tests (.xans)" Command="{Binding NavigateToGradingCommand}"
+                            Width="300" Height="60" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            Background="{DynamicResource SecondaryActionBrush}" 
+                            Foreground="{DynamicResource ActionTextBrush}"/>
+                </StackPanel>
+
+                <Button Grid.Row="2" Content="← Back to Home" Command="{Binding GoBackCommand}" 
+                        HorizontalAlignment="Left" Background="Transparent" Foreground="Gray"/>
+            </Grid>
             
-            <Button Content="Exam History" Command="{Binding NavigateToHistoryCommand}"
-                    Width="300" Height="60" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                    Background="{DynamicResource PrimaryActionBrush}" 
-                    Foreground="{DynamicResource ActionTextBrush}"/>
-
-            <Button Content="Grade Submitted Tests (.xans)" Command="{Binding NavigateToGradingCommand}"
-                    Width="300" Height="60" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                    Background="{DynamicResource SecondaryActionBrush}" 
-                    Foreground="{DynamicResource ActionTextBrush}"/>
-        </StackPanel>
-
-        <Button Grid.Row="2" Content="← Back to Home" Command="{Binding GoBackCommand}" 
-                HorizontalAlignment="Left" Background="Transparent" Foreground="Gray"/>
-    </Grid>
+        </Border>
+    </ScrollViewer>
 </UserControl>
