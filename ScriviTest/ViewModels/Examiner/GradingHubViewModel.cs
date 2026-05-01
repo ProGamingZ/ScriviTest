@@ -142,7 +142,7 @@ public partial class GradingHubViewModel : ViewModelBase
             var studentSubmission = _cryptoService.DecryptStudentSubmission(path, WhiteboardKey.ToUpper());
             if (studentSubmission == null)
             {
-                ErrorMessage = $"Access Denied: Failed to decrypt {Path.GetFileName(path)}. Wrong Whiteboard Key?";
+                ErrorMessage = $"Access Denied: Failed to decrypt {Path.GetFileName(path)}. Wrong Exam Key?";
                 return; 
             }
 

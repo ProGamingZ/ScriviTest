@@ -50,7 +50,7 @@
                                         <TextBlock Text="Show/Hide Columns" FontWeight="Bold" Margin="0,0,0,5"/>
                                         <CheckBox Content="Date Exported" IsChecked="{Binding ShowDate}"/>
                                         <CheckBox Content="Exam Title" IsChecked="{Binding ShowTitle}"/>
-                                        <CheckBox Content="Whiteboard Key" IsChecked="{Binding ShowKey}"/>
+                                        <CheckBox Content="Exam Key" IsChecked="{Binding ShowKey}"/>
                                         <CheckBox Content="Status" IsChecked="{Binding ShowStatus}"/>
                                         <CheckBox Content="Save Location" IsChecked="{Binding ShowLocation}"/>
                                     </StackPanel>
@@ -106,7 +106,7 @@
                             <DataGridTextColumn Header="Exam Title" Binding="{Binding Record.ExamTitle}" 
                                                 Width="*" MinWidth="150" MaxWidth="400" IsVisible="{Binding ShowTitle}"/>
                             
-                            <DataGridTextColumn Header="Whiteboard Key" Binding="{Binding Record.WhiteboardKey}" 
+                            <DataGridTextColumn Header="Exam Key" Binding="{Binding Record.WhiteboardKey}" 
                                                 Width="Auto" MinWidth="130" MaxWidth="250" IsVisible="{Binding ShowKey}"/>
                             
                             <DataGridTemplateColumn Header="Status" Width="Auto" MinWidth="100" MaxWidth="200" IsVisible="{Binding ShowStatus}">

@@ -80,7 +80,7 @@ public partial class ExamineeHubViewModel : ViewModelBase
         if (decryptedExam == null)
         {
             // If it fails, the password was wrong or the file was tampered with.
-            ErrorMessage = "Access Denied. Invalid Whiteboard Key or corrupted file.";
+            ErrorMessage = "Access Denied. Invalid Exam Key or corrupted file.";
             return;
         }
 
@@ -90,4 +90,20 @@ public partial class ExamineeHubViewModel : ViewModelBase
         _navigateAction(new ExamineeTestViewModel(_navigateAction, decryptedExam, tempImageFolder, WhiteboardKey.ToUpper(), FirstName, MiddleName, LastName, Suffix, StudentID));
     }
         
+    [ObservableProperty] 
+    private string _saveLocation = string.Empty; 
+
+    // Event to tell the View to open the OS Folder Picker
+    public event EventHandler? OpenFolderPickerRequested;
+
+    [RelayCommand]
+    private void PromptSaveFolder()
+    {
+        OpenFolderPickerRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void UpdateSaveLocation(string newPath)
+    {
+        SaveLocation = newPath;
+    }    
 }

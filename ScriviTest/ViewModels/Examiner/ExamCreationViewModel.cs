@@ -172,7 +172,7 @@ public partial class ExamCreationViewModel : ViewModelBase
         Services.AppPaths.InitializeFolders();
 
         string safeTitle = string.IsNullOrWhiteSpace(ExamTitle) ? "Untitled_Exam" : ExamTitle.Replace(" ", "_");
-        string xamnPath = Path.Combine(Services.AppPaths.QuestionnairesDir, $"{safeTitle}.xamn");
+        string xamnPath = Path.Combine(Services.AppPaths.QuestionnairesDir, $"Ask_{safeTitle}.xamn");
         string xamkPath = Path.Combine(Services.AppPaths.AnswersDir, $"Ans_{safeTitle}.xamk");
         var examToExport = new Exam
         {

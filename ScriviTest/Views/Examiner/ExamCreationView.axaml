@@ -17,7 +17,7 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="15">
                     <Border IsVisible="{Binding HasExported}" Background="#E8F5E9" BorderBrush="#4CAF50" BorderThickness="1" CornerRadius="4" Padding="15,5">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <TextBlock Text="SUCCESS! Whiteboard Key:" VerticalAlignment="Center" Foreground="#2E7D32" FontWeight="SemiBold"/>
+                            <TextBlock Text="SUCCESS! Exam Key:" VerticalAlignment="Center" Foreground="#2E7D32" FontWeight="SemiBold"/>
                             <TextBlock Text="{Binding GeneratedExamKey}" VerticalAlignment="Center" Foreground="#1B5E20" FontWeight="Bold" FontSize="18"/>
                         </StackPanel>
                     </Border>
