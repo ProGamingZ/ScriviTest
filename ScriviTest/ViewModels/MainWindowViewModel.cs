@@ -24,9 +24,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        // Start on the Home Screen with strict dimensions
-        _currentPage = new HomeViewModel(Navigate);
-
+        var initialPage = new HomeViewModel(Navigate);
+        _currentPage = initialPage; 
+        Navigate(initialPage);
         StartGlobalSecuritySweep();
     }
 
@@ -64,34 +64,30 @@ public partial class MainWindowViewModel : ViewModelBase
             CurrentWindowState = WindowState.Normal;
             WindowWidth = 800;
             WindowHeight = 450;
-        }
-        // Route: Examiner Hub & Creation (Resizable, Standard Window)
-        else if (viewModel is ExaminerHubViewModel || viewModel is ExamCreationViewModel || viewModel is ExamHistoryViewModel)
-        {
-            CanResize = true;
-            IsTopmost = false;
-            CurrentWindowState = WindowState.Maximized;
-            MinWidth = 1280;
-            MinHeight = 720;
-        }
-
-        // NEW Route: Examinee Hub (Maximized but Resizable)
-        else if (viewModel is ExamineeHubViewModel)
-        {
-            CanResize = true;
-            IsTopmost = false;
-            CurrentWindowState = WindowState.Maximized; // Fills the screen, but keeps the taskbar and window controls
-            MinWidth = 1280;
-            MinHeight = 720;
+            MinWidth = 800;  // Lock minimums to match
+            MinHeight = 450;
         }
         // NEW Route: Examinee Test Execution (Strict Fullscreen Lockdown)
         else if (viewModel is ExamineeTestViewModel)
         {
             CanResize = false;
-            IsTopmost = true; // Prevents other apps from opening on top of it
-            CurrentWindowState = WindowState.FullScreen; // Completely hides the taskbar and locks the screen bounds
-            MinWidth = 1280;
-            MinHeight = 720;
+            IsTopmost = true; 
+            CurrentWindowState = WindowState.FullScreen; 
+            // MinWidth/Height don't matter in FullScreen, the OS takes over
+        }
+        // Route: ALL OTHER HUBS (Responsive, Resizable, 1024x768 Minimum)
+        else 
+        {
+            CanResize = true;
+            IsTopmost = false;
+            CurrentWindowState = WindowState.Maximized; 
+            
+            // Set the absolute minimum shrink size
+            MinWidth = 1024;
+            MinHeight = 768;
+            // Optional: Set a starting size just in case they Un-Maximize it
+            WindowWidth = 1280;
+            WindowHeight = 720;
         }
     }
 }

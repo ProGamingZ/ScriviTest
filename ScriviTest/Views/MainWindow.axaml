@@ -11,6 +11,8 @@
         
         Width="{Binding WindowWidth}" 
         Height="{Binding WindowHeight}"
+        MinWidth="{Binding MinWidth}"
+        MinHeight="{Binding MinHeight}"
         CanResize="{Binding CanResize}"
         WindowState="{Binding CurrentWindowState}"
         Topmost="{Binding IsTopmost}"
