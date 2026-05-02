@@ -40,23 +40,32 @@
             </Border>
         </Border>
 
+        <Border ZIndex="200" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,40"
+                Background="{Binding NotificationColor}" CornerRadius="25" Padding="15,8"
+                BoxShadow="0 8 15 0 #40000000" IsVisible="{Binding IsNotificationVisible}">
+            
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                
+                <TextBlock Grid.Column="0" Text="{Binding NotificationIcon}" FontSize="18" VerticalAlignment="Center" Margin="10,0,12,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" Foreground="White" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,25,0"/>
+                
+                <Button Grid.Column="2" Content="✕" Command="{Binding CloseToastCommand}" 
+                        Background="Transparent" Foreground="#B0FFFFFF" BorderThickness="0" 
+                        FontSize="16" FontWeight="Bold" VerticalAlignment="Center" 
+                        Padding="8,5" CornerRadius="15"/>
+            </Grid>
+        </Border>
+
         <Border Grid.Row="0" Background="White" Padding="15" BoxShadow="0 2 5 0 LightGray">
             <Grid ColumnDefinitions="Auto, *, Auto">
                 <Button Grid.Column="0" Content="← Back" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
                 <TextBlock Grid.Column="1" Text="Drafting Examination" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
 
-                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="15">
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="15" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <Button Content="📥 Import Exam" Command="{Binding OpenImportPopupCommand}" Background="Transparent" BorderBrush="Gray" BorderThickness="1" Padding="15,5" VerticalAlignment="Center"/>
-                    <Border IsVisible="{Binding HasExported}" Background="#E8F5E9" BorderBrush="#4CAF50" BorderThickness="1" CornerRadius="4" Padding="15,5">
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <TextBlock Text="SUCCESS! Exam Key:" VerticalAlignment="Center" Foreground="#2E7D32" FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding GeneratedExamKey}" VerticalAlignment="Center" Foreground="#1B5E20" FontWeight="Bold" FontSize="18"/>
-                        </StackPanel>
-                    </Border>
-                    
-                    <Button Content="Export" Command="{Binding ExportExamCommand}" Background="{DynamicResource PrimaryActionBrush}" Foreground="{DynamicResource ActionTextBrush}"/>
+                    <Button Content="💾 Overwrite" Command="{Binding OverwriteExamCommand}" Background="Transparent" BorderBrush="{DynamicResource PrimaryActionBrush}" Foreground="{DynamicResource PrimaryActionBrush}" BorderThickness="2" Padding="15,5" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <Button Content="Export" Command="{Binding ExportExamCommand}" Background="{DynamicResource PrimaryActionBrush}" Foreground="{DynamicResource ActionTextBrush}" Padding="15,5"/>
                 </StackPanel>
-
             </Grid>
         </Border>
 

@@ -30,14 +30,40 @@ public partial class ExamCreationViewModel : ViewModelBase
     private readonly Services.CryptographyService _cryptoService;
 
     [ObservableProperty] private string _generatedExamKey = string.Empty;
-    [ObservableProperty] private bool _hasExported = false;
 
     [ObservableProperty] private bool _isImportPopupVisible = false;
     [ObservableProperty] private string _importXamnPath = string.Empty;
     [ObservableProperty] private string _importXamkPath = string.Empty;
     [ObservableProperty] private string _importDecryptionKey = string.Empty;
     [ObservableProperty] private string _importErrorMessage = string.Empty;
-    
+    [ObservableProperty] private bool _isImportedExam = false;
+    private string _activeXamnPath = string.Empty;
+    private string _activeXamkPath = string.Empty;
+    private string _activeDecryptionKey = string.Empty;
+
+    [ObservableProperty] private bool _isNotificationVisible = false;
+    [ObservableProperty] private string _notificationMessage = string.Empty;
+    [ObservableProperty] private string _notificationIcon = string.Empty;
+    [ObservableProperty] private string _notificationColor = "#323232";
+    private int _currentToastId = 0;
+    [RelayCommand] private void CloseToast() => IsNotificationVisible = false;
+    private async void ShowToast(string message, string icon, string colorHex)
+    {
+        NotificationMessage = message;
+        NotificationIcon = icon;
+        NotificationColor = colorHex;
+        IsNotificationVisible = true;
+
+        int thisToastId = ++_currentToastId;
+
+        await Task.Delay(5000);
+
+        if (_currentToastId == thisToastId)
+        {
+            IsNotificationVisible = false;
+        }
+    }
+
     [RelayCommand]
     private void OpenImportPopup()
     {
@@ -220,6 +246,12 @@ public partial class ExamCreationViewModel : ViewModelBase
 
             Sections.Add(newSection);
         }
+        IsImportedExam = true;
+        _activeXamnPath = ImportXamnPath;
+        _activeXamkPath = ImportXamkPath;
+        _activeDecryptionKey = ImportDecryptionKey.ToUpper();
+        GeneratedExamKey = ImportDecryptionKey.ToUpper(); 
+        ShowToast("Exam loaded successfully! You may now edit and overwrite.", "📥", "#1976D2");
     }
 
     public ExamCreationViewModel(Action<ViewModelBase> navigateAction)
@@ -356,11 +388,28 @@ public partial class ExamCreationViewModel : ViewModelBase
     [RelayCommand]
     private async Task ExportExam()
     {
+        // 1. Block imported exams
+        if (IsImportedExam)
+        {
+            ShowToast("Export is only for new exams. Click 'Overwrite' instead.", "⚠️", "#D32F2F"); 
+            return;
+        }
+
         Services.AppPaths.InitializeFolders();
 
+        // 2. Calculate intended file names based on the title
         string safeTitle = string.IsNullOrWhiteSpace(ExamTitle) ? "Untitled_Exam" : ExamTitle.Replace(" ", "_");
         string xamnPath = Path.Combine(Services.AppPaths.QuestionnairesDir, $"Ask_{safeTitle}.xamn");
         string xamkPath = Path.Combine(Services.AppPaths.AnswersDir, $"Ans_{safeTitle}.xamk");
+
+        // 3. NEW GUARDRAIL: Block the export if the file name already exists!
+        if (File.Exists(xamnPath) || File.Exists(xamkPath))
+        {
+            ShowToast($"An exam named '{safeTitle}' already exists! Please change the Exam Title.", "🛑", "#D32F2F");
+            return;
+        }
+
+        // --- If it passes all checks, proceed with Export ---
         var examToExport = new Exam
         {
             Title = string.IsNullOrWhiteSpace(ExamTitle) ? "Untitled Exam" : ExamTitle,
@@ -372,7 +421,6 @@ public partial class ExamCreationViewModel : ViewModelBase
             AntiCheatStrictness = AntiCheatStrictness
         };
         
-        // Copy our sections into it
         foreach (var s in Sections)
         {
             examToExport.Sections.Add(s);
@@ -383,11 +431,69 @@ public partial class ExamCreationViewModel : ViewModelBase
 
         GeneratedExamKey = _cryptoService.GenerateExaminationKey();
         _cryptoService.EncryptFile(xamnPath, GeneratedExamKey);
+        
         exportService.SaveToHistoryLog(examToExport.Title, GeneratedExamKey, xamnPath);
-        HasExported = true;
 
-        Console.WriteLine($"Successfully saved exam to: {xamnPath}");
-        Console.WriteLine($"History Log Updated!");
+        ShowToast($"SUCCESS! Exam Key: {GeneratedExamKey}", "✅", "#2E7D32"); 
+    }
+
+    [RelayCommand]
+    private void OverwriteExam()
+    {
+        if (!IsImportedExam)
+        {
+            ShowToast("Overwrite is only for imported exams. Click 'Export' instead.", "⚠️", "#D32F2F"); 
+            return;
+        }
+
+        try
+        {
+            Services.AppPaths.InitializeFolders();
+
+            var examToExport = new Exam
+            {
+                Title = string.IsNullOrWhiteSpace(ExamTitle) ? "Untitled Exam" : ExamTitle,
+                Instructions = ExamDescription,
+                Teacher = TeacherName,
+                Subject = Subject,
+                Section = TargetSection,
+                TimeLimitMinutes = Math.Clamp(TimeLimitMinutes ?? 60, 1, 1440),
+                AntiCheatStrictness = AntiCheatStrictness
+            };
+            
+            foreach (var s in Sections) examToExport.Sections.Add(s);
+
+            // 1. Calculate the intended NEW paths based on the current title on the screen
+            string safeTitle = string.IsNullOrWhiteSpace(ExamTitle) ? "Untitled_Exam" : ExamTitle.Replace(" ", "_");
+            string newXamnPath = Path.Combine(Services.AppPaths.QuestionnairesDir, $"Ask_{safeTitle}.xamn");
+            string newXamkPath = Path.Combine(Services.AppPaths.AnswersDir, $"Ans_{safeTitle}.xamk");
+
+            var exportService = new Services.ExportService();
+            
+            // 2. Export using the NEW paths
+            exportService.ExportExamPackage(examToExport, newXamnPath, newXamkPath);
+            _cryptoService.EncryptFile(newXamnPath, _activeDecryptionKey);
+
+            // 3. Update the history log (passing both old and new paths so it can find and update the row)
+            exportService.UpdateHistoryLog(examToExport.Title, _activeDecryptionKey, _activeXamnPath, newXamnPath);
+
+            // 4. CLEANUP: If the title changed, delete the old leftover files!
+            if (!string.Equals(_activeXamnPath, newXamnPath, StringComparison.OrdinalIgnoreCase))
+            {
+                if (File.Exists(_activeXamnPath)) File.Delete(_activeXamnPath);
+                if (File.Exists(_activeXamkPath)) File.Delete(_activeXamkPath);
+            }
+
+            // 5. Update the active workspace to lock in the new names for the next time they hit Overwrite!
+            _activeXamnPath = newXamnPath;
+            _activeXamkPath = newXamkPath;
+
+            ShowToast("Successfully overwritten and saved!", "💾", "#1976D2"); 
+        }
+        catch (Exception ex)
+        {
+            ShowToast($"Overwrite Failed: {ex.Message}", "❌", "#D32F2F");
+        }
     }
 
 }

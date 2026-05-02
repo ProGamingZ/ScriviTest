@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Text.Json;
 using ScriviTest.Models;
 using ScriviTest.DTOs;
+using System.Linq;
 
 namespace ScriviTest.Services;
 
@@ -104,7 +105,7 @@ public class ExportService
 
         // 3. Serialize and save the Answer Key (.xamk)
         string keyJson = JsonSerializer.Serialize(answerKey, new JsonSerializerOptions { WriteIndented = true });
-        
+        if (File.Exists(xamkPath)) File.Delete(xamkPath);
         using (var archive = System.IO.Compression.ZipFile.Open(xamkPath, System.IO.Compression.ZipArchiveMode.Create))
         {
             var jsonEntry = archive.CreateEntry("answer_key.json");
@@ -129,7 +130,7 @@ public class ExportService
 
         // 4. Serialize and Package the Student Exam (.xamn)
         string studentJson = JsonSerializer.Serialize(studentExam, new JsonSerializerOptions { WriteIndented = true });
-        
+        if (File.Exists(xamnPath)) File.Delete(xamnPath);
         using (var archive = System.IO.Compression.ZipFile.Open(xamnPath, System.IO.Compression.ZipArchiveMode.Create))
         {
             var jsonEntry = archive.CreateEntry("exam_data.json");
@@ -221,5 +222,42 @@ public class ExportService
         File.WriteAllText(AppPaths.HistoryFile, newJson);
         
         // (Optional: You could encrypt this text with a master app key here if you want it heavily secured)
+    }
+
+    public void UpdateHistoryLog(string newTitle, string key, string oldPath, string newPath)
+    {
+        AppPaths.InitializeFolders();
+        var historyList = new List<HistoryRecord>();
+
+        if (File.Exists(AppPaths.HistoryFile))
+        {
+            try
+            {
+                string existingJson = File.ReadAllText(AppPaths.HistoryFile);
+                var parsed = JsonSerializer.Deserialize<List<HistoryRecord>>(existingJson);
+                if (parsed != null) historyList = parsed;
+            }
+            catch { /* File corrupted, start fresh */ }
+        }
+
+        var existingRecord = historyList.FirstOrDefault(h => 
+            string.Equals(h.FilePath.Replace("\\", "/"), oldPath.Replace("\\", "/"), StringComparison.OrdinalIgnoreCase));
+        
+        if (existingRecord != null)
+        {
+            // Update the existing row!
+            existingRecord.ExamTitle = string.IsNullOrWhiteSpace(newTitle) ? "Untitled Exam" : newTitle;
+            existingRecord.ExamKey = key.ToUpper();
+            existingRecord.ExportDate = DateTime.Now.ToString("yyyy-MM-dd hh:mm tt");
+            existingRecord.FilePath = newPath; // Update the path in case the file was renamed!
+        }
+        else
+        {
+            SaveToHistoryLog(newTitle, key.ToUpper(), newPath);
+            return;
+        }
+
+        string newJson = JsonSerializer.Serialize(historyList, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(AppPaths.HistoryFile, newJson);
     }
 }
