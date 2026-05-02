@@ -9,12 +9,44 @@
 
     <Grid RowDefinitions="Auto, *, Auto">
         
+        <Border ZIndex="100" Background="#DD000000" IsVisible="{Binding IsImportPopupVisible}" Grid.RowSpan="3">
+            <Border Background="White" CornerRadius="8" Padding="30" HorizontalAlignment="Center" VerticalAlignment="Center" BoxShadow="0 10 30 0 Black" MaxWidth="500">
+                <StackPanel Spacing="15">
+                    <TextBlock Text="📥 Import Existing Exam" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource PrimaryActionBrush}"/>
+                    <TextBlock Text="Select the matching .xamn and .xamk files, and provide the decryption key to unlock and edit the exam." TextWrapping="Wrap"/>
+
+                    <TextBlock Text="Student Exam File (.xamn)" FontWeight="Bold" Margin="0,10,0,0"/>
+                    <Grid ColumnDefinitions="*, Auto">
+                        <TextBox Grid.Column="0" Text="{Binding ImportXamnPath}" IsReadOnly="True" Watermark="Browse for .xamn..."/>
+                        <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseImportXamnCommand}" Margin="10,0,0,0"/>
+                    </Grid>
+
+                    <TextBlock Text="Answer Key File (.xamk)" FontWeight="Bold" Margin="0,5,0,0"/>
+                    <Grid ColumnDefinitions="*, Auto">
+                        <TextBox Grid.Column="0" Text="{Binding ImportXamkPath}" IsReadOnly="True" Watermark="Browse for .xamk..."/>
+                        <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseImportXamkCommand}" Margin="10,0,0,0"/>
+                    </Grid>
+
+                    <TextBlock Text="Decryption Key" FontWeight="Bold" Margin="0,5,0,0"/>
+                    <TextBox Text="{Binding ImportDecryptionKey}" MaxLength="6" Watermark="6-Character Key" FontWeight="Bold" FontSize="16" HorizontalContentAlignment="Center"/>
+
+                    <TextBlock Text="{Binding ImportErrorMessage}" Foreground="Red" FontWeight="SemiBold" IsVisible="{Binding ImportErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" TextWrapping="Wrap"/>
+
+                    <Grid ColumnDefinitions="*, *" Margin="0,20,0,0">
+                        <Button Grid.Column="0" Content="Cancel" Command="{Binding CloseImportPopupCommand}" Background="Transparent" BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,10,0" Padding="10"/>
+                        <Button Grid.Column="1" Content="Unlock &amp; Import" Command="{Binding ExecuteImportCommand}" Background="{DynamicResource PrimaryActionBrush}" Foreground="{DynamicResource ActionTextBrush}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10,0,0,0" Padding="10" FontWeight="Bold"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Border>
+
         <Border Grid.Row="0" Background="White" Padding="15" BoxShadow="0 2 5 0 LightGray">
             <Grid ColumnDefinitions="Auto, *, Auto">
                 <Button Grid.Column="0" Content="← Back" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
                 <TextBlock Grid.Column="1" Text="Drafting Examination" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="15">
+                    <Button Content="📥 Import Exam" Command="{Binding OpenImportPopupCommand}" Background="Transparent" BorderBrush="Gray" BorderThickness="1" Padding="15,5" VerticalAlignment="Center"/>
                     <Border IsVisible="{Binding HasExported}" Background="#E8F5E9" BorderBrush="#4CAF50" BorderThickness="1" CornerRadius="4" Padding="15,5">
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <TextBlock Text="SUCCESS! Exam Key:" VerticalAlignment="Center" Foreground="#2E7D32" FontWeight="SemiBold"/>
@@ -35,8 +67,7 @@
                     <StackPanel Spacing="15">
                         <Grid ColumnDefinitions="*, Auto">
                             <TextBox Grid.Column="0" FontSize="28" FontWeight="Bold" Text="{Binding ExamTitle}" Watermark="Untitled Exam" BorderThickness="0,0,0,1" Background="Transparent" Padding="0,5" Foreground="{DynamicResource AppForeground}"/>
-                            <TextBlock Grid.Column="1" Text="{Binding TotalExamPoints, StringFormat='Total Points: {0}'}" 
-                                       FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryActionBrush}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="{Binding TotalExamPoints, StringFormat='Total Points: {0}'}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryActionBrush}" VerticalAlignment="Center"/>
                         </Grid>
                         <TextBox Text="{Binding ExamDescription}" TextWrapping="Wrap" MinHeight="60" Watermark="Exam Instructions or Description" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
 

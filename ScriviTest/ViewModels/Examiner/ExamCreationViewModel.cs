@@ -29,12 +29,199 @@ public partial class ExamCreationViewModel : ViewModelBase
 
     private readonly Services.CryptographyService _cryptoService;
 
-    [ObservableProperty]
-    private string _generatedExamKey = string.Empty;
+    [ObservableProperty] private string _generatedExamKey = string.Empty;
+    [ObservableProperty] private bool _hasExported = false;
 
-    [ObservableProperty]
-    private bool _hasExported = false;
+    [ObservableProperty] private bool _isImportPopupVisible = false;
+    [ObservableProperty] private string _importXamnPath = string.Empty;
+    [ObservableProperty] private string _importXamkPath = string.Empty;
+    [ObservableProperty] private string _importDecryptionKey = string.Empty;
+    [ObservableProperty] private string _importErrorMessage = string.Empty;
     
+    [RelayCommand]
+    private void OpenImportPopup()
+    {
+        // Clear out any old text when they click the button
+        ImportXamnPath = string.Empty;
+        ImportXamkPath = string.Empty;
+        ImportDecryptionKey = string.Empty;
+        ImportErrorMessage = string.Empty;
+        IsImportPopupVisible = true;
+    }
+
+    [RelayCommand]
+    private void CloseImportPopup() => IsImportPopupVisible = false;
+
+    [RelayCommand]
+    private async Task BrowseImportXamn()
+    {
+        // We can reuse the exact same file picker you already built for the Examinee Hub!
+        var path = await _fileService.PickExamArchiveAsync(); 
+        if (!string.IsNullOrEmpty(path)) ImportXamnPath = path;
+    }
+
+    [RelayCommand]
+    private async Task BrowseImportXamk()
+    {
+        // We reuse the Answer Key picker you built!
+        var path = await _fileService.PickAnswerKeyAsync(); 
+        if (!string.IsNullOrEmpty(path)) ImportXamkPath = path;
+    }
+
+    [RelayCommand]
+    private void ExecuteImport()
+    {
+        // 1. Validate that they filled out everything
+        if (string.IsNullOrWhiteSpace(ImportXamnPath) || string.IsNullOrWhiteSpace(ImportXamkPath))
+        {
+            ImportErrorMessage = "Please select both the .xamn and .xamk files.";
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(ImportDecryptionKey) || ImportDecryptionKey.Length < 6)
+        {
+            ImportErrorMessage = "Please enter the full 6-character decryption key.";
+            return;
+        }
+
+        ImportErrorMessage = "Decrypting and loading...";
+
+        try
+        {
+            // 2. We will build this massive method in the next step!
+            ProcessImportLogic(); 
+            
+            // 3. If it succeeds without crashing, hide the popup
+            IsImportPopupVisible = false;
+        }
+        catch (Exception ex)
+        {
+            ImportErrorMessage = $"Import Failed: {ex.Message}. Check your decryption key and files.";
+        }
+    }
+
+    private void ProcessImportLogic()
+    {
+        // 1. Decrypt and Extract the Student Exam (.xamn)
+        string sessionGuid = Guid.NewGuid().ToString();
+        string tempImageFolder = Path.Combine(Path.GetTempPath(), "ScriviTest_Import", sessionGuid);
+        
+        // This leverages the service you already built to unlock the student file!
+        var studentExam = _cryptoService.DecryptAndExtractExam(ImportXamnPath, ImportDecryptionKey.ToUpper(), tempImageFolder);
+        
+        if (studentExam == null)
+        {
+            throw new Exception("Invalid decryption key or corrupted .xamn file.");
+        }
+
+        // 2. Unzip and read the Answer Key (.xamk)
+        DTOs.AnswerKeyExamDto? answerKey = null;
+        using (var archive = System.IO.Compression.ZipFile.OpenRead(ImportXamkPath))
+        {
+            var jsonEntry = archive.GetEntry("answer_key.json");
+            if (jsonEntry == null) throw new Exception("The .xamk file is corrupted or missing its data.");
+
+            using (var reader = new System.IO.StreamReader(jsonEntry.Open()))
+            {
+                string json = reader.ReadToEnd();
+                answerKey = System.Text.Json.JsonSerializer.Deserialize<DTOs.AnswerKeyExamDto>(json);
+            }
+        }
+
+        // Security Check: Ensure the Answer Key actually belongs to this Exam!
+        if (answerKey == null || studentExam.Sections.Count != answerKey.Sections.Count)
+        {
+            throw new Exception("The Answer Key does not match this Exam File.");
+        }
+
+        // 3. Populate Exam Metadata (Pulled from the .xamn file)
+        ExamTitle = studentExam.Title;
+        ExamDescription = studentExam.Instructions;
+        TeacherName = studentExam.Teacher;
+        Subject = studentExam.Subject;
+        TargetSection = studentExam.Section;
+        TimeLimitMinutes = studentExam.TimeLimitMinutes;
+        AntiCheatStrictness = studentExam.AntiCheatStrictness;
+
+        // 4. Clear the current workspace!
+        Sections.Clear();
+
+        // 5. The Stitching Loop: Merge the Student Questions with the Key Answers
+        for (int s = 0; s < studentExam.Sections.Count; s++)
+        {
+            var stuSection = studentExam.Sections[s];
+            var keySection = answerKey.Sections[s];
+
+            var newSection = new TestSection
+            {
+                Title = stuSection.Title,
+                ShuffleQuestions = stuSection.ShuffleQuestions
+            };
+
+            for (int q = 0; q < stuSection.Questions.Count; q++)
+            {
+                var stuQ = stuSection.Questions[q];
+                var keyQ = keySection.Questions[q];
+
+                var newQuestion = new Question
+                {
+                    Prompt = stuQ.Prompt,
+                    Points = keyQ.Points,
+                    Type = Enum.Parse<QuestionType>(stuQ.Type),
+                    MaxWordCount = stuQ.MaxWordCount,
+                    AttachedImageFileName = stuQ.AttachedImageFileName
+                };
+
+                // Link attached question images to the extracted Temp folder
+                if (!string.IsNullOrEmpty(newQuestion.AttachedImageFileName))
+                {
+                    newQuestion.AttachedImageFullPath = Path.Combine(tempImageFolder, newQuestion.AttachedImageFileName);
+                }
+
+                if (newQuestion.Type == QuestionType.MultipleAnswer && Enum.TryParse<ScoringRubric>(keyQ.MultipleAnswerRubric, out var parsedRubric))
+                {
+                    newQuestion.MultipleAnswerRubric = parsedRubric;
+                }
+
+                newQuestion.Choices.Clear();
+
+                // Reconstruct True/False Data
+                if (newQuestion.Type == QuestionType.TrueFalse)
+                {
+                    if (keyQ.CorrectChoiceIndices.Count > 0)
+                    {
+                        newQuestion.IsTrueFalseAnswerTrue = (keyQ.CorrectChoiceIndices[0] == 0);
+                    }
+                }
+                // Reconstruct Multiple Choice / Multiple Answer Data
+                else if (newQuestion.Type != QuestionType.Essay)
+                {
+                    for (int c = 0; c < stuQ.Choices.Count; c++)
+                    {
+                        var stuChoice = stuQ.Choices[c];
+                        var newChoice = new Choice
+                        {
+                            Text = stuChoice.Text,
+                            AttachedImageFileName = stuChoice.AttachedImageFileName,
+                            IsCorrect = keyQ.CorrectChoiceIndices.Contains(c) // Marries the answer back to the UI!
+                        };
+
+                        // Link attached choice images
+                        if (!string.IsNullOrEmpty(newChoice.AttachedImageFileName))
+                        {
+                            newChoice.AttachedImageFullPath = Path.Combine(tempImageFolder, newChoice.AttachedImageFileName);
+                        }
+
+                        newQuestion.Choices.Add(newChoice);
+                    }
+                }
+
+                newSection.Questions.Add(newQuestion);
+            }
+
+            Sections.Add(newSection);
+        }
+    }
+
     public ExamCreationViewModel(Action<ViewModelBase> navigateAction)
     {
         _navigateAction = navigateAction;
