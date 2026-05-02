@@ -59,16 +59,18 @@ public partial class ExamineeHubViewModel : ViewModelBase
         !string.IsNullOrWhiteSpace(LastName) && 
         !string.IsNullOrWhiteSpace(StudentID) && 
         !string.IsNullOrEmpty(SelectedFilePath) && 
+        !string.IsNullOrWhiteSpace(SaveLocation) &&
         ExamKey.Length >= 6;
 
     // We tell the UI to re-evaluate the Start button whenever the Key or File changes
     partial void OnExamKeyChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
     partial void OnSelectedFilePathChanged(string? value) => StartExamCommand.NotifyCanExecuteChanged();
+    partial void OnSaveLocationChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
 
     [RelayCommand(CanExecute = nameof(CanStartExam))]
     private void StartExam()
     {
-        ErrorMessage = "Decrypting...";
+        ErrorMessage = string.Empty;
 
         // 1. Create a secure temporary folder in the OS's temp directory
         string sessionGuid = Guid.NewGuid().ToString();
@@ -87,7 +89,7 @@ public partial class ExamineeHubViewModel : ViewModelBase
         // 3. Success! Pass the decrypted data and the image folder to the actual Test UI
         ErrorMessage = string.Empty;   
         // We pass the DTO data directly to the test constructor!
-        _navigateAction(new ExamineeTestViewModel(_navigateAction, decryptedExam, tempImageFolder, ExamKey.ToUpper(), FirstName, MiddleName, LastName, Suffix, StudentID));
+        _navigateAction(new ExamineeTestViewModel(_navigateAction, decryptedExam, tempImageFolder, ExamKey.ToUpper(), FirstName, MiddleName, LastName, Suffix, StudentID, SaveLocation));
     }
         
     [ObservableProperty] 

@@ -76,6 +76,7 @@ public partial class ExamineeTestViewModel : ViewModelBase
     private readonly Services.CryptographyService _cryptoService;
     private readonly string _examKey;
     private readonly string _firstName, _middleName, _lastName, _suffix, _studentID;
+    private readonly string _targetSaveDirectory;
     
     [ObservableProperty] private StudentExamDto _examData;
     [ObservableProperty] private string _imageDirectory;
@@ -106,7 +107,7 @@ public partial class ExamineeTestViewModel : ViewModelBase
     [ObservableProperty] private bool _isLightboxOpen = false;
     [ObservableProperty] private Avalonia.Media.Imaging.Bitmap? _lightboxImage;
 
-    public ExamineeTestViewModel(Action<ViewModelBase> navigateAction, StudentExamDto decryptedExam, string tempDirectory, string examKey, string firstName, string middleName, string lastName, string suffix, string studentID)
+    public ExamineeTestViewModel(Action<ViewModelBase> navigateAction, StudentExamDto decryptedExam, string tempDirectory, string examKey, string firstName, string middleName, string lastName, string suffix, string studentID, string saveLocation)
     {
         _navigateAction = navigateAction;
         _cryptoService = new Services.CryptographyService();
@@ -119,6 +120,8 @@ public partial class ExamineeTestViewModel : ViewModelBase
         _lastName = lastName;
         _suffix = suffix;
         _studentID = studentID;
+        _targetSaveDirectory = saveLocation;
+
 
         // Hardware Timer Setup
         _totalTimeLimit = TimeSpan.FromMinutes(ExamData.TimeLimitMinutes);
@@ -349,9 +352,11 @@ public partial class ExamineeTestViewModel : ViewModelBase
             submission.Sections.Add(subSection);
         }
 
-        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         string safeName = $"{_studentID}_{_lastName}".Replace(" ", "_");
-        string xansPath = Path.Combine(desktopPath, $"{safeName}_Submission.xans");
+        string finalDirectory = string.IsNullOrWhiteSpace(_targetSaveDirectory) 
+            ? Environment.GetFolderPath(Environment.SpecialFolder.Desktop) 
+            : _targetSaveDirectory;
+        string xansPath = Path.Combine(finalDirectory, $"{safeName}_.xans");
 
         string jsonContent = JsonSerializer.Serialize(submission, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(xansPath, jsonContent);
