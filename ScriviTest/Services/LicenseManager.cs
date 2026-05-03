@@ -18,11 +18,16 @@ namespace ScriviTest.Services
       Ok7+Y0Nt3ekRC7tLnVVIseP9VEvlXQsRNEqsmLux5SbRlrfWxrtEPQI/VJKIDE6D
       SwIDAQAB
       -----END PUBLIC KEY-----";
-      private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
+      private static readonly string _basePath = AppPaths.RootAppFolder;
       private static readonly string _licenseFile = Path.Combine(_basePath, "license.dat");
       private static readonly string _idFile = Path.Combine(_basePath, "device_id.dat");
-      private static readonly string _sysCacheFile = Path.Combine(_basePath, "sys_cache.dat"); 
+      private static readonly string _sysCacheFile = Path.Combine(_basePath, "sys_cache.dat");
 
+      static LicenseManager()
+      {
+          // Guarantees the folder exists before any activation logic runs
+          Services.AppPaths.InitializeFolders();
+      }
       private static void UpdateLastRunDate()
       {
       try 

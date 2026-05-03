@@ -16,10 +16,12 @@ namespace ScriviTest.ViewModels;
 public partial class HomeViewModel : ViewModelBase
 {
     private readonly Action<ViewModelBase>? _navigateAction;
-    private readonly string _warningCacheFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "warning_cache.dat");
+
+    private readonly string _warningCacheFile = Path.Combine(Services.AppPaths.RootAppFolder, "warning_cache.dat");
     public HomeViewModel(Action<ViewModelBase>? navigateAction = null)
     {
         _navigateAction = navigateAction;
+        Services.AppPaths.InitializeFolders();
         IsActivated = LicenseManager.IsLicenseValid();
         if (IsActivated)
         {

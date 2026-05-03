@@ -5,10 +5,14 @@ namespace ScriviTest.Services;
 
 public static class AppPaths
 {
-    // Gets the directory exactly where the .exe is running (or the bin/Debug folder in VS Code)
-    public static string BaseDirectory => AppContext.BaseDirectory;
+    // 1. Ask the OS for the safe AppData (Windows) or Application Support (Mac) folder
+    private static readonly string BaseAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
     
-    public static string DataDir => Path.Combine(BaseDirectory, "Data");
+    // 2. Create a dedicated root folder for your app (e.g., AppData/Roaming/ScriviTest)
+    public static string RootAppFolder => Path.Combine(BaseAppDataPath, "ScriviTest");
+
+    // 3. Define the sub-folders inside the safe root directory
+    public static string DataDir => Path.Combine(RootAppFolder, "Data");
     public static string QuestionnairesDir => Path.Combine(DataDir, "Questionnaires");
     public static string AnswersDir => Path.Combine(DataDir, "Answers");
     
@@ -17,6 +21,8 @@ public static class AppPaths
 
     public static void InitializeFolders()
     {
+        // Make sure all levels of the directory tree exist!
+        if (!Directory.Exists(RootAppFolder)) Directory.CreateDirectory(RootAppFolder);
         if (!Directory.Exists(DataDir)) Directory.CreateDirectory(DataDir);
         if (!Directory.Exists(QuestionnairesDir)) Directory.CreateDirectory(QuestionnairesDir);
         if (!Directory.Exists(AnswersDir)) Directory.CreateDirectory(AnswersDir);

@@ -88,9 +88,8 @@ public partial class ExamHistoryViewModel : ViewModelBase
         }
 
         // 2. Auto-Scan the Data Folders
-        string baseDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
-        string qFolder = Path.Combine(baseDataPath, "Questionnaires");
-        string aFolder = Path.Combine(baseDataPath, "Answers");
+        string qFolder = Services.AppPaths.QuestionnairesDir;
+        string aFolder = Services.AppPaths.AnswersDir;
 
         Directory.CreateDirectory(qFolder);
         Directory.CreateDirectory(aFolder);
