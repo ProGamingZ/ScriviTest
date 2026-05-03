@@ -29,12 +29,35 @@ public partial class GradingHubViewModel : ViewModelBase
     #endregion
 
     #region UI Toggles & Global State
-        [ObservableProperty] private string _errorMessage = string.Empty;
         [ObservableProperty] private bool _showFirstName = true;
         [ObservableProperty] private bool _showMiddleName = true;
         [ObservableProperty] private bool _showLastName = true;
         [ObservableProperty] private bool _showID = true;
         [ObservableProperty] private bool _showScores = true;
+    #endregion
+
+    #region Toast Notification System
+        private int _currentToastId;
+        [ObservableProperty] private bool _isNotificationVisible;
+        [ObservableProperty] private string _notificationMessage = string.Empty;
+        [ObservableProperty] private string _notificationIcon = "ℹ️";
+        [ObservableProperty] private string _notificationColor = "#323232";
+
+        public async void ShowToast(string message, string icon = "ℹ️", string hexColor = "#323232")
+        {
+            NotificationMessage = message;
+            NotificationIcon = icon;
+            NotificationColor = hexColor;
+            IsNotificationVisible = true;
+
+            // Auto-hide after 3.5 seconds
+            int toastId = ++_currentToastId;
+            await Task.Delay(3500);
+            if (_currentToastId == toastId) IsNotificationVisible = false;
+        }
+
+        [RelayCommand]
+        private void CloseToast() => IsNotificationVisible = false;
     #endregion
 
     #region File Ingestion & Decryption
@@ -54,7 +77,6 @@ public partial class GradingHubViewModel : ViewModelBase
         [RelayCommand]
         private async Task BrowseForAnswerKey()
         {
-            ErrorMessage = string.Empty;
             var path = await _fileService.PickAnswerKeyAsync();
             if (!string.IsNullOrEmpty(path))
             {
@@ -65,7 +87,6 @@ public partial class GradingHubViewModel : ViewModelBase
         [RelayCommand]
         private async Task BrowseForStudentFiles()
         {
-            ErrorMessage = string.Empty;
             var paths = await _fileService.PickStudentSubmissionsAsync();
             if (paths.Count > 0)
             {
@@ -77,7 +98,6 @@ public partial class GradingHubViewModel : ViewModelBase
         [RelayCommand(CanExecute = nameof(CanCheckAndUnlock))]
         private void CheckAndUnlock()
         {
-            ErrorMessage = string.Empty;
             StudentList.Clear(); // Clear old list if they click it twice
 
             try
@@ -89,7 +109,7 @@ public partial class GradingHubViewModel : ViewModelBase
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Unlocking Failed: {ex.Message}";
+                ShowToast($"Unlocking Failed: {ex.Message}", "🛑", "#D32F2F");
             }
         }
 
@@ -384,7 +404,7 @@ public partial class GradingHubViewModel : ViewModelBase
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Failed to save grades: {ex.Message}";
+                ShowToast($"Failed to save grades: {ex.Message}", "🛑", "#D32F2F");
                 return;
             }
             // 3. Update the Left Panel DataGrid
@@ -460,7 +480,7 @@ public partial class GradingHubViewModel : ViewModelBase
         {
             if (StudentList.Count == 0)
             {
-                ErrorMessage = "No graded students to export.";
+                ShowToast("No graded students to export.", "⚠️", "#F57C00");
                 return;
             }
 
@@ -486,11 +506,11 @@ public partial class GradingHubViewModel : ViewModelBase
                     }
                 }
 
-                ErrorMessage = $"Successfully exported to: {Path.GetFileName(customPath)}";
+                ShowToast($"Successfully exported to: {Path.GetFileName(customPath)}", "✅", "#388E3C");
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Export failed: {ex.Message}";
+                ShowToast($"Export failed: {ex.Message}", "🛑", "#D32F2F");
             }
         }
     #endregion

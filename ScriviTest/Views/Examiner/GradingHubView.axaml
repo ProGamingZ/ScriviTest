@@ -271,5 +271,28 @@
                 </Grid>
             </Border>
         </Grid>
+
+        <Border Grid.Row="0" Grid.RowSpan="2" 
+                VerticalAlignment="Bottom" HorizontalAlignment="Center" 
+                Margin="0,0,0,40" Padding="20,12" 
+                Background="{Binding NotificationColor}" 
+                CornerRadius="8" IsVisible="{Binding IsNotificationVisible}" 
+                BoxShadow="0 4 15 0 #40000000" ZIndex="100">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <TextBlock Grid.Column="0" Text="{Binding NotificationIcon}" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                
+                <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="500"/>
+                
+                <Button Grid.Column="2" Content="✕" Command="{Binding CloseToastCommand}" 
+                        Background="Transparent" Foreground="White" FontSize="18" FontWeight="Bold" 
+                        Margin="15,0,0,0" Padding="8,4" Cursor="Hand">
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#40FFFFFF"/>
+                        </Style>
+                    </Button.Styles>
+                </Button>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
