@@ -1,29 +1,40 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:ScriviTest.ViewModels.Examiner"
+             xmlns:models="using:ScriviTest.Models"
              x:Class="ScriviTest.Views.Examiner.ExamHistoryView"
-             x:Name="RootView"
              x:DataType="vm:ExamHistoryViewModel"
              Background="{DynamicResource AppBackground}">
+    <UserControl.Styles>
+        <Style Selector="DataGridRow:nth-child(odd)">
+            <Setter Property="Background" Value="#F0F0F0"/> 
+        </Style>
+
+        <Style Selector="DataGridRow:pointerover, DataGridRow:selected">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="#e8e8e8"/>
+            <Setter Property="Opacity" Value="1"/>
+        </Style>
+
+        <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle, 
+                         DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="#dddddd"/>
+            <Setter Property="Opacity" Value="1"/> 
+        </Style>
+
+        <Style Selector="DataGridCell:selected, DataGridCell:pointerover, DataGridCell:selected:pointerover">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+    </UserControl.Styles>
 
     <Grid>
-        <Border ZIndex="100" Background="#DD000000" IsVisible="{Binding IsDeleteWarningVisible}">
-            <Border Background="White" CornerRadius="8" Padding="30" HorizontalAlignment="Center" VerticalAlignment="Center" BoxShadow="0 10 30 0 Black" MaxWidth="600">
-                <StackPanel Spacing="20">
-                    <TextBlock Text="⚠️ Warning: Files Still Exist!" Foreground="#D32F2F" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding DeleteWarningMessage}" FontSize="16" TextWrapping="Wrap" TextAlignment="Center"/>
-                    <TextBlock Text="Are you sure you want to delete these logs? This action cannot be undone." FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10,0,0"/>
-                    
-                    <Grid ColumnDefinitions="*, *" Margin="0,20,0,0">
-                        <Button Grid.Column="0" Content="Cancel" Command="{Binding CancelDeleteCommand}" Background="Transparent" BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,10,0" Padding="10"/>
-                        <Button Grid.Column="1" Content="Yes, Delete Logs" Command="{Binding ConfirmDeleteCommand}" Background="#D32F2F" Foreground="White" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10,0,0,0" Padding="10" FontWeight="Bold"/>
-                    </Grid>
-                </StackPanel>
-            </Border>
-        </Border>
-
+        <!-- MASTER LAYOUT GRID -->
         <Grid RowDefinitions="Auto, *">
             
+            <!-- HEADER -->
             <Border Grid.Row="0" Background="White" Padding="15" BoxShadow="0 2 5 0 LightGray" ZIndex="10">
                 <Grid ColumnDefinitions="Auto, *">
                     <Button Grid.Column="0" Content="← back to hub" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
@@ -31,101 +42,138 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Row="1" Padding="20" MinWidth="700">
-                <Border Background="White" BorderBrush="Black" BorderThickness="2" Padding="20">
-                    <Grid RowDefinitions="Auto, Auto, *">
-                        <TextBlock Grid.Row="0" Text="Exported Questionnaires Log" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"/>
+            <!-- MAIN CONTENT -->
+            <Grid Grid.Row="1" ColumnDefinitions="Auto, *">
+                
+                <!-- LEFT PANEL: ACTION BUTTONS -->
+                <Border Grid.Column="0" Width="250" BorderBrush="Black" BorderThickness="0,0,4,0" Padding="15" Background="White">
+                    <Grid RowDefinitions="Auto, Auto, Auto, *, Auto">
                         
-                        <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
-                            
-                            <WrapPanel Grid.Column="0" Orientation="Horizontal">
-                                <Button Content="🔍 Check Locations" Command="{Binding CheckLocationsCommand}" Background="{DynamicResource SecondaryActionBrush}" Foreground="White" Padding="15,8" FontWeight="SemiBold" Margin="0,0,15,10"/>
-                                <Button Content="🔗 Relink Missing File" Command="{Binding PromptRelinkCommand}" Background="Transparent" BorderBrush="Gray" BorderThickness="1" Padding="15,8" ToolTip.Tip="Select a missing row first, then click this to find the file." Margin="0,0,15,10"/>
-                                <Button Content="🗑️ Delete Selected Logs" Command="{Binding AttemptDeleteCommand}" Background="Transparent" Foreground="#D32F2F" BorderBrush="#D32F2F" BorderThickness="1" Padding="15,8" Margin="0,0,15,10"/>
-                            </WrapPanel>
+                        <Button Grid.Row="0" Content="Check Locations" Command="{Binding CheckLocationsCommand}" 
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Background="White" BorderBrush="Black" BorderThickness="2" Margin="0,0,0,15" Padding="10"/>
 
-                            <Button Grid.Column="1" Content="⚙️ Columns" Background="Transparent" BorderBrush="Gray" BorderThickness="1" Padding="10,5" VerticalAlignment="Top">
+                        <Button Grid.Row="1" Content="Relink Missing File" Command="{Binding PromptRelinkCommand}" 
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Background="White" BorderBrush="Black" BorderThickness="2" Margin="0,0,0,15" Padding="10"/>
+
+                        <Button Grid.Row="2" Content="Delete Selected File" Command="{Binding AttemptDeleteCommand}" 
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Background="#FFEBEE" Foreground="#D32F2F" BorderBrush="#D32F2F" BorderThickness="2" FontWeight="Bold" Margin="0,0,0,15" Padding="10"/>
+
+                        <!-- COLUMN TOGGLES -->
+                        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                            <Button Content="⚙️ Toggle Columns" Background="Transparent" BorderBrush="Gray" BorderThickness="1" Padding="10,5">
                                 <Button.Flyout>
                                     <Flyout>
                                         <StackPanel Spacing="10" MinWidth="150">
                                             <TextBlock Text="Show/Hide Columns" FontWeight="Bold" Margin="0,0,0,5"/>
-                                            <CheckBox Content="Date Exported" IsChecked="{Binding ShowDate}"/>
+                                            <CheckBox Content="Date Created" IsChecked="{Binding ShowDate}"/>
                                             <CheckBox Content="Exam Title" IsChecked="{Binding ShowTitle}"/>
-                                            <CheckBox Content="Exam Key" IsChecked="{Binding ShowKey}"/>
-                                            <CheckBox Content="Status" IsChecked="{Binding ShowStatus}"/>
-                                            <CheckBox Content="Save Location" IsChecked="{Binding ShowLocation}"/>
+                                            <CheckBox Content="Decryption Key" IsChecked="{Binding ShowKey}"/>
+                                            <CheckBox Content="File Status" IsChecked="{Binding ShowStatus}"/>
+                                            <CheckBox Content="File Path" IsChecked="{Binding ShowLocation}"/>
                                         </StackPanel>
                                     </Flyout>
                                 </Button.Flyout>
                             </Button>
-                        </Grid>
-                        
-                        <DataGrid Grid.Row="2" ItemsSource="{Binding HistoryList}" SelectedItem="{Binding SelectedWrapper}"
-                                AutoGenerateColumns="False" IsReadOnly="True" 
-                                GridLinesVisibility="All" BorderBrush="Black" BorderThickness="1"
-                                CanUserSortColumns="True"
-                                CanUserResizeColumns="True"
-                                ScrollViewer.HorizontalScrollBarVisibility="Auto" 
-                                ScrollViewer.VerticalScrollBarVisibility="Auto">
-                            <DataGrid.Styles>
-                                <Style Selector="DataGridRow:nth-child(odd)">
-                                    <Setter Property="Background" Value="#F0F0F0"/> 
-                                </Style>
-
-                                <Style Selector="DataGridRow:pointerover, DataGridRow:selected">
-                                    <Setter Property="Background" Value="Transparent"/>
-                                </Style>
-
-                                <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
-                                    <Setter Property="Fill" Value="#e8e8e8"/>
-                                    <Setter Property="Opacity" Value="1"/>
-                                </Style>
-
-                                <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle, 
-                                                DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
-                                    <Setter Property="Fill" Value="#dddddd"/>
-                                    <Setter Property="Opacity" Value="1"/> 
-                                </Style>
-
-                                <Style Selector="DataGridCell:selected, DataGridCell:pointerover, DataGridCell:selected:pointerover">
-                                    <Setter Property="Background" Value="Transparent"/>
-                                </Style>
-                            </DataGrid.Styles>
-
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="Auto" MinWidth="50" MaxWidth="80">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate x:DataType="vm:HistoryRecordWrapper">
-                                            <CheckBox IsChecked="{Binding IsSelected}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTextColumn Header="Date Exported" Binding="{Binding Record.ExportDate}" 
-                                                    Width="Auto" MinWidth="120" MaxWidth="250" IsVisible="{Binding ShowDate}"/>
-                                
-                                <DataGridTextColumn Header="Exam Title" Binding="{Binding Record.ExamTitle}" 
-                                                    Width="*" MinWidth="150" MaxWidth="400" IsVisible="{Binding ShowTitle}"/>
-                                
-                                <DataGridTextColumn Header="Exam Key" Binding="{Binding Record.ExamKey}" 
-                                                    Width="Auto" MinWidth="130" MaxWidth="250" IsVisible="{Binding ShowKey}"/>
-                                
-                                <DataGridTemplateColumn Header="Status" Width="Auto" MinWidth="100" MaxWidth="200" IsVisible="{Binding ShowStatus}">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate x:DataType="vm:HistoryRecordWrapper">
-                                            <TextBlock Text="{Binding FileStatus}" Foreground="{Binding StatusHexColor}" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTextColumn Header="Save Location" Binding="{Binding Record.FilePath}" 
-                                                    Width="2*" MinWidth="200" MaxWidth="800" IsVisible="{Binding ShowLocation}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        </StackPanel>
                     </Grid>
-
                 </Border>
-            </Border>
+
+                <Grid Grid.Column="1" RowDefinitions="*, 4, *" Background="#FAFAFA">
+                    <Border Grid.Row="0" Padding="20">
+                        <Grid RowDefinitions="Auto, *">
+                            <TextBlock Grid.Row="0" Text="📄 Exported Questionnaires (.xamn)" FontSize="18" FontWeight="Bold" Foreground="#333" Margin="0,0,0,10"/>
+                            
+                            <DataGrid Grid.Row="1" ItemsSource="{Binding QuestionnaireList}" SelectedItem="{Binding SelectedQuestionnaire}"
+                                      AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="Black" BorderThickness="1"
+                                      RowBackground="White" CanUserReorderColumns="True" CanUserResizeColumns="True">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Date" Binding="{Binding Record.ExportDate}" IsVisible="{Binding ShowDate}" MinWidth="90" MaxWidth="150" Width="Auto"/>
+                                    <DataGridTextColumn Header="Exam Title" Binding="{Binding Record.ExamTitle}" IsVisible="{Binding ShowTitle}" MinWidth="150" MaxWidth="500" Width="*"/>
+                                    <DataGridTextColumn Header="Key" Binding="{Binding DisplayKey}" IsVisible="{Binding ShowKey}" MinWidth="80" MaxWidth="150" Width="Auto"/>
+                                    <DataGridTemplateColumn Header="Status" IsVisible="{Binding ShowStatus}" MinWidth="110" MaxWidth="200" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate x:DataType="vm:HistoryRecordWrapper">
+                                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="10,0">
+                                                    <Ellipse Width="10" Height="10" Fill="{Binding StatusHexColor}"/>
+                                                    <TextBlock Text="{Binding FileStatus}" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    
+                                    <DataGridTextColumn Header="Location" Binding="{Binding Record.FilePath}" IsVisible="{Binding ShowLocation}" MinWidth="200" MaxWidth="800" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                        </Grid>
+                    </Border>
+
+                    <!-- DIVIDER -->
+                    <GridSplitter Grid.Row="1" Background="#E0E0E0" ResizeDirection="Rows" HorizontalAlignment="Stretch" Height="4"/>
+
+                    <Border Grid.Row="2" Padding="20">
+                        <Grid RowDefinitions="Auto, *">
+                            <TextBlock Grid.Row="0" Text="🔑 Exported Answer Keys (.xamk)" FontSize="18" FontWeight="Bold" Foreground="#333" Margin="0,0,0,10"/>
+                            
+                            <DataGrid Grid.Row="1" ItemsSource="{Binding AnswerKeyList}" SelectedItem="{Binding SelectedAnswerKey}"
+                                      AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="Black" BorderThickness="1"
+                                      RowBackground="White"
+                                      CanUserReorderColumns="True" 
+                                      CanUserResizeColumns="True">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Date" Binding="{Binding Record.ExportDate}" IsVisible="{Binding ShowDate}" MinWidth="90" MaxWidth="150" Width="Auto"/>
+                                    
+                                    <DataGridTextColumn Header="Exam Title" Binding="{Binding Record.ExamTitle}" IsVisible="{Binding ShowTitle}" MinWidth="150" MaxWidth="500" Width="*"/>
+                                    <DataGridTextColumn Header="Key" Binding="{Binding DisplayKey}" IsVisible="{Binding ShowKey}" MinWidth="80" MaxWidth="150" Width="Auto"/>
+                                    <DataGridTemplateColumn Header="Status" IsVisible="{Binding ShowStatus}" MinWidth="110" MaxWidth="200" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate x:DataType="vm:HistoryRecordWrapper">
+                                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="10,0">
+                                                    <Ellipse Width="10" Height="10" Fill="{Binding StatusHexColor}"/>
+                                                    <TextBlock Text="{Binding FileStatus}" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    
+                                    <DataGridTextColumn Header="Location" Binding="{Binding Record.FilePath}" IsVisible="{Binding ShowLocation}" MinWidth="200" MaxWidth="800" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                        </Grid>
+                    </Border>
+                    
+                </Grid>
+            </Grid>
         </Grid>
+
+        <!-- DELETE WARNING MODAL -->
+        <Border Background="#80000000" IsVisible="{Binding IsDeleteWarningVisible}" ZIndex="50">
+            <Border Background="White" Width="400" Padding="30" CornerRadius="8" HorizontalAlignment="Center" VerticalAlignment="Center" BoxShadow="0 10 25 0 #80000000">
+                <StackPanel Spacing="15">
+                    <TextBlock Text="⚠️ Permanent Delete Warning" FontSize="20" FontWeight="Bold" Foreground="#D32F2F" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding DeleteWarningMessage}" TextWrapping="Wrap" FontSize="16" TextAlignment="Center" Margin="0,10"/>
+                    <Grid ColumnDefinitions="*, *">
+                        <Button Grid.Column="0" Content="Cancel" Command="{Binding CancelDeleteCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,5,0" Padding="10"/>
+                        <Button Grid.Column="1" Content="DELETE" Command="{Binding ConfirmDeleteCommand}" Background="#D32F2F" Foreground="White" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5,0,0,0" Padding="10"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Border>
+
+        <!-- TOAST NOTIFICATION -->
+        <Border VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,40" Padding="20,12" 
+                Background="{Binding NotificationColor}" CornerRadius="8" IsVisible="{Binding IsNotificationVisible}" 
+                BoxShadow="0 4 15 0 #40000000" ZIndex="100">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <TextBlock Grid.Column="0" Text="{Binding NotificationIcon}" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="500"/>
+                <Button Grid.Column="2" Content="✕" Command="{Binding CloseToastCommand}" Background="Transparent" Foreground="White" FontSize="18" FontWeight="Bold" Margin="15,0,0,0" Padding="8,4" Cursor="Hand"/>
+            </Grid>
+        </Border>
+
     </Grid>
 </UserControl>
