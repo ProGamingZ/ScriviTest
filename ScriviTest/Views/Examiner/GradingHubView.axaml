@@ -111,7 +111,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Button Grid.Row="5" Content="Export to Excel" Command="{Binding ExportToExcelCommand}" 
+                    <Button Grid.Row="5" Content="Export Grades &amp; Reports" Command="{Binding ExportReportsCommand}" 
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
                             Background="White" BorderBrush="Black" BorderThickness="2" 
                             FontSize="18" FontWeight="Bold" Padding="0,15" Margin="0,15,0,0"/>

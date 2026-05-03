@@ -476,7 +476,7 @@ public partial class GradingHubViewModel : ViewModelBase
 
     #region Export Engine
         [RelayCommand]
-        private async Task ExportToExcel() 
+        private async Task ExportReports() 
         {
             if (StudentList.Count == 0)
             {
@@ -484,19 +484,32 @@ public partial class GradingHubViewModel : ViewModelBase
                 return;
             }
 
+            if (_loadedAnswerKey == null)
+            {
+                ShowToast("Critical Error: Answer key is missing from memory.", "🛑", "#D32F2F");
+                return;
+            }
+
             try
             {
-                // 1. Generate the suggested file name
-                string suggestedName = $"Class_Roster_Export_{DateTime.Now:yyyyMMdd_HHmm}.csv";
+                // 1. Ask the user where to save the Master Folder
+                string? targetDirectory = await _fileService.PickExportDirectoryAsync();
+                
+                // If they hit "Cancel" or "X" on the popup, stop safely
+                if (string.IsNullOrEmpty(targetDirectory)) return; 
 
-                // 2. Open the OS Folder Explorer and wait for the user to pick a spot
-                string? customPath = await _fileService.SaveCsvFileAsync(suggestedName);
+                // 2. Create a dedicated folder for this specific export session
+                string sessionFolderName = $"ScriviTest_Export_{DateTime.Now:yyyyMMdd_HHmm}";
+                string masterExportPath = Path.Combine(targetDirectory, sessionFolderName);
+                Directory.CreateDirectory(masterExportPath);
 
-                // 3. If the user clicks "Cancel" or "X" on the folder popup, just stop safely.
-                if (string.IsNullOrEmpty(customPath)) return;
+                // 3. Create the Sub-Folder for the HTML Reports
+                string htmlFolderPath = Path.Combine(masterExportPath, "Detailed_Student_Reports");
+                Directory.CreateDirectory(htmlFolderPath);
 
-                // 4. Save the file exactly where they asked!
-                using (var writer = new StreamWriter(customPath))
+                // 4. Generate the Master CSV File
+                string csvPath = Path.Combine(masterExportPath, "Class_Roster_Summary.csv");
+                using (var writer = new StreamWriter(csvPath))
                 {
                     writer.WriteLine("First Name,Middle Name,Last Name,Student ID,Final Score,Needs Review");
 
@@ -506,7 +519,23 @@ public partial class GradingHubViewModel : ViewModelBase
                     }
                 }
 
-                ShowToast($"Successfully exported to: {Path.GetFileName(customPath)}", "✅", "#388E3C");
+                // 5. Generate the individual HTML files!
+                foreach (var student in StudentList)
+                {
+                    // Create a safe file name (e.g., "Doe_John_Report.html")
+                    string safeName = $"{student.LastName}_{student.FirstName}".Replace(" ", "_");
+                    // Remove any weird characters that Windows/Mac hate in file names
+                    foreach (char c in Path.GetInvalidFileNameChars()) { safeName = safeName.Replace(c.ToString(), ""); }
+
+                    string htmlFilePath = Path.Combine(htmlFolderPath, $"{safeName}_Report.html");
+
+                    // Use the tool we just built!
+                    string htmlContent = Services.HtmlReportGenerator.GenerateStudentReport(student, _loadedAnswerKey);
+                    
+                    File.WriteAllText(htmlFilePath, htmlContent);
+                }
+
+                ShowToast($"SUCCESS! Saved to {sessionFolderName}", "✅", "#388E3C");
             }
             catch (Exception ex)
             {

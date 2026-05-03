@@ -132,4 +132,33 @@ public class FileManagementService
         }
         return null;
     }
+
+    public async Task<string?> PickExportDirectoryAsync()
+    {
+        try
+        {
+            var topLevel = Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+                ? Avalonia.Controls.TopLevel.GetTopLevel(desktop.MainWindow)
+                : null;
+
+            if (topLevel == null) return null;
+
+            var result = await topLevel.StorageProvider.OpenFolderPickerAsync(new Avalonia.Platform.Storage.FolderPickerOpenOptions
+            {
+                Title = "Select Export Destination Folder",
+                AllowMultiple = false
+            });
+
+            if (result != null && result.Count > 0)
+            {
+                return result[0].Path.LocalPath;
+            }
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
 }
