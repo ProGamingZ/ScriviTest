@@ -296,7 +296,8 @@ public partial class GradingHubViewModel : ViewModelBase
                 Type = keyQ.Type,
                 MaxPoints = keyQ.Points,
                 EssayResponse = studentQ.EssayResponse ?? string.Empty,
-                PointsAwarded = earnedPoints 
+                PointsAwarded = earnedPoints,
+                Remarks = studentQ.Remarks ?? string.Empty
             };
 
             // Attach event to live-update the score if the teacher edits points manually
@@ -368,6 +369,7 @@ public partial class GradingHubViewModel : ViewModelBase
                     if (flatIndex < CurrentStudentQuestions.Count)
                     {
                         studentQ.AwardedPoints = CurrentStudentQuestions[flatIndex].PointsAwarded;
+                        studentQ.Remarks = CurrentStudentQuestions[flatIndex].Remarks;
                         flatIndex++;
                     }
                 }

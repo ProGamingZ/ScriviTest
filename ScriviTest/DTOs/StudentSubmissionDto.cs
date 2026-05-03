@@ -29,4 +29,6 @@ public class SubmissionQuestionDto
     public string EssayResponse { get; set; } = string.Empty;
     //Save grades to be edited by examiner
     public double? AwardedPoints { get; set; }
+    // remarks to be edited by examiner
+    public string Remarks { get; set; } = string.Empty;
 }

@@ -17,7 +17,7 @@ public partial class ReviewQuestion : ObservableObject
     public string EssayResponse { get; set; } = string.Empty;
     public Avalonia.Media.Imaging.Bitmap? ImageBitmap { get; set; }
     public List<ReviewChoice> Choices { get; set; } = new();
-
+    [ObservableProperty] private string _remarks = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(GridIcon))]
