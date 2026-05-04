@@ -8,46 +8,50 @@
 
     <Grid RowDefinitions="Auto, *">
         
-        <Border Grid.Row="0" Background="White" Padding="15" BoxShadow="0 2 5 0 LightGray">
-            <Button Content="← Cancel &amp; Return" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
+        <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="15" BoxShadow="{DynamicResource TopBarShadow}">
+            <Button Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="{DynamicResource IconBack}"/>
+                    <TextBlock Text="Cancel &amp; Return"/>
+                </StackPanel>
+            </Button>
         </Border>
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
     
-            <Border Background="White" CornerRadius="12" Padding="40" BoxShadow="0 8 20 0 LightGray" 
-                    HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="600" Margin="20">
+            <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="12" Padding="40" BoxShadow="{DynamicResource PortalShadow}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="600" Margin="20">
                 
                 <StackPanel Spacing="25">
                     <TextBlock Text="Examinee Portal" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryActionBrush}"/>
                     <TextBlock Text="Please enter your details and load your examination file." 
                             TextWrapping="Wrap" TextAlignment="Center" Foreground="{DynamicResource AppForeground}" Opacity="0.7"/>
 
-                    <Separator Background="LightGray" Margin="0,5"/>
+                    <Separator Background="{DynamicResource BorderLightBrush}" Margin="0,5"/>
 
                     <TextBlock Text="Student Information" FontWeight="Bold" Foreground="{DynamicResource PrimaryActionBrush}"/>
                     
                     <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, *" Margin="0,0,0,10">
                         
                         <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
-                            <TextBlock Text="First Name *" FontSize="12" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="First Name *" FontSize="12" Foreground="{DynamicResource BorderDarkBrush}" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding FirstName}" Watermark="First Name"/>
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,0,0,10">
-                            <TextBlock Text="Middle Name" FontSize="12" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="Middle Name" FontSize="12" Foreground="{DynamicResource BorderDarkBrush}" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding MiddleName}" Watermark="Middle Name"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,10,10">
-                            <TextBlock Text="Last Name *" FontSize="12" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="Last Name *" FontSize="12" Foreground="{DynamicResource BorderDarkBrush}" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding LastName}" Watermark="Last Name"/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,0,0,10">
-                            <TextBlock Text="Suffix (e.g., Jr.)" FontSize="12" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="Suffix (e.g., Jr.)" FontSize="12" Foreground="{DynamicResource BorderDarkBrush}" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding Suffix}" Watermark="Suffix"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
-                            <TextBlock Text="Student ID *" FontSize="12" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="Student ID *" FontSize="12" Foreground="{DynamicResource BorderDarkBrush}" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding StudentID}" Watermark="Student Identification Number"/>
                         </StackPanel>
                     </Grid>
@@ -64,7 +68,7 @@
                                 Watermark="6-Character Decryption Key" BorderThickness="1" Foreground="{DynamicResource AppForeground}"/>
                     </StackPanel>
 
-                    <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="SemiBold" HorizontalAlignment="Center" IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                    <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ErrorTextBrush}" FontWeight="SemiBold" HorizontalAlignment="Center" IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
                     <StackPanel Margin="0,20,0,0">
                         <TextBlock Text="Save Location:" FontWeight="Bold" Margin="0,0,0,5"/>
