@@ -13,14 +13,52 @@
     </Application.Styles>
 
     <Application.Resources>
+        <!-- BASE APP BRUSHES -->
         <SolidColorBrush x:Key="AppBackground">#F5F5F5</SolidColorBrush>
         <SolidColorBrush x:Key="AppForeground">#1A1A1A</SolidColorBrush>
+        <SolidColorBrush x:Key="SurfaceBrush">#FFFFFF</SolidColorBrush>
+        <SolidColorBrush x:Key="SurfaceAltBrush">#FAFAFA</SolidColorBrush>
 
+        <!-- ACTION BRUSHES -->
         <SolidColorBrush x:Key="PrimaryActionBrush">#1e88e5</SolidColorBrush>   
         <SolidColorBrush x:Key="SecondaryActionBrush">#43a047</SolidColorBrush> 
+        <SolidColorBrush x:Key="DangerActionBrush">#D32F2F</SolidColorBrush>
         <SolidColorBrush x:Key="ActionTextBrush">#FFFFFF</SolidColorBrush>      
         <SolidColorBrush x:Key="StandardButtonBrush">#E0E0E0</SolidColorBrush>
         <SolidColorBrush x:Key="ActivateButtonBrush">#2b2b2b</SolidColorBrush>
+
+        <!-- SEMANTIC & STATE BRUSHES -->
+        <SolidColorBrush x:Key="BorderLightBrush">LightGray</SolidColorBrush>
+        <SolidColorBrush x:Key="BorderDarkBrush">Gray</SolidColorBrush>
+        <SolidColorBrush x:Key="ErrorTextBrush">Red</SolidColorBrush>
+        <SolidColorBrush x:Key="ErrorBackgroundBrush">#FFEBEE</SolidColorBrush>
+        <SolidColorBrush x:Key="WarningTextBrush">#F57F17</SolidColorBrush>
+        <SolidColorBrush x:Key="HighlightBackgroundBrush">#FFF9C4</SolidColorBrush>
+        <SolidColorBrush x:Key="InfoBackgroundBrush">#E3F2FD</SolidColorBrush>
+        
+        <!-- OVERLAYS (For Dialogs and Toasts) -->
+        <SolidColorBrush x:Key="OverlayBackgroundBrush">#AA000000</SolidColorBrush>
+        <SolidColorBrush x:Key="OverlayDarkBackgroundBrush">#DD000000</SolidColorBrush>
+        <SolidColorBrush x:Key="DangerOverlayBrush">#DDFF0000</SolidColorBrush>
+
+        <!-- SHADOW RESOURCES -->
+        <BoxShadows x:Key="HeaderShadow">0 2 10 0 Gray</BoxShadows>
+        <BoxShadows x:Key="CardShadow">0 4 15 0 LightGray</BoxShadows>
+
+        <!-- CENTRALIZED ICONS (Strings) -->
+        <x:String x:Key="IconBack">←</x:String>
+        <x:String x:Key="IconNext">→</x:String>
+        <x:String x:Key="IconClose">✕</x:String>
+        <x:String x:Key="IconWarning">⚠️</x:String>
+        <x:String x:Key="IconDelete">🗑️</x:String>
+        <x:String x:Key="IconSettings">⚙️</x:String>
+        <x:String x:Key="IconImage">🖼️</x:String>
+        <x:String x:Key="IconTimer">⏱️</x:String>
+        <x:String x:Key="IconImport">📥</x:String>
+        <x:String x:Key="IconSave">💾</x:String>
+        <x:String x:Key="IconFlag">⚑</x:String>
+        <x:String x:Key="IconDoc">📄</x:String>
+        <x:String x:Key="IconKey">🔑</x:String>
     </Application.Resources>
 
 </Application>

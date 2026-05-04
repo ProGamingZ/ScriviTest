@@ -8,23 +8,28 @@
              Background="{DynamicResource AppBackground}">
 
     <Grid>
-        <Border ZIndex="100" Background="#DD000000" IsVisible="{Binding IsLightboxOpen}">
+        <Border ZIndex="100" Background="{DynamicResource OverlayDarkBackgroundBrush}" IsVisible="{Binding IsLightboxOpen}">
             <Grid>
                 <Image Source="{Binding LightboxImage}" Margin="50" Stretch="Uniform"/>
-                <Button Content="✕ Close Image" Command="{Binding CloseLightboxCommand}" 
+                <Button Content="{DynamicResource IconClose}" Command="{Binding CloseLightboxCommand}" 
                         HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20"
-                        Background="#F44336" Foreground="White" FontSize="18" FontWeight="Bold" Padding="15,10"/>
+                        Background="{DynamicResource DangerActionBrush}" Foreground="{DynamicResource ActionTextBrush}" FontSize="18" FontWeight="Bold" Padding="15,10"/>
             </Grid>
         </Border>
-        <Border ZIndex="200" Background="#DDFF0000" IsVisible="{Binding IsFocusWarningVisible}">
+        <Border ZIndex="200" Background="{DynamicResource DangerOverlayBrush}" IsVisible="{Binding IsFocusWarningVisible}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
-                <TextBlock Text="⚠️ EXAM FOCUS LOST ⚠️" FontSize="48" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding FocusWarningMessage}" FontSize="24" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="600" TextAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
+                    <TextBlock Text="{DynamicResource IconWarning}" FontSize="48"/>
+                    <TextBlock Text="EXAM FOCUS LOST" FontSize="48" FontWeight="Bold" Foreground="{DynamicResource ActionTextBrush}"/>
+                    <TextBlock Text="{DynamicResource IconWarning}" FontSize="48"/>
+                </StackPanel>
+
+                <TextBlock Text="{Binding FocusWarningMessage}" FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource SurfaceBrush}" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="600" TextAlignment="Center"/>
             </StackPanel>
         </Border>
         <Grid RowDefinitions="Auto, *">
             
-            <Border Grid.Row="0" Background="{DynamicResource PrimaryActionBrush}" Padding="20" BoxShadow="0 2 10 0 Gray">
+            <Border Grid.Row="0" Background="{DynamicResource PrimaryActionBrush}" Padding="20" BoxShadow="{DynamicResource HeaderShadow}">
                 <StackPanel>
                     <TextBlock Text="{Binding ExamData.Title}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource ActionTextBrush}"/>
                     <TextBlock Text="{Binding ExamData.Teacher, StringFormat='Instructor: {0}'}" FontSize="14" Foreground="{DynamicResource ActionTextBrush}" Opacity="0.8"/>
@@ -33,7 +38,7 @@
 
             <Grid Grid.Row="1" ColumnDefinitions="3*, 1*">
                 
-                <Border Grid.Column="0" Background="White" Padding="40" Margin="20" CornerRadius="10" BoxShadow="0 4 15 0 LightGray">
+                <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}" Padding="40" Margin="20" CornerRadius="10" BoxShadow="{DynamicResource CardShadow}">
                     <Grid RowDefinitions="*, Auto">
                         
                         <ScrollViewer Grid.Row="0">
@@ -44,25 +49,24 @@
                                     <TextBlock Grid.Column="1" Text="{Binding Question.Prompt}" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource AppForeground}"/>
                                 </Grid>
 
-                                <TextBlock Text="{Binding Question.Points, StringFormat='[{0} pts]'}" FontWeight="Bold" Foreground="Gray" Margin="0,-10,0,10"/>
+                                <TextBlock Text="{Binding Question.Points, StringFormat='[{0} pts]'}" FontWeight="Bold" Foreground="{DynamicResource BorderDarkBrush}" Margin="0,-10,0,10"/>
 
                                 <Button Command="{Binding #RootView.DataContext.OpenLightboxCommand}" CommandParameter="{Binding Question.ImageBitmap}"
                                         IsVisible="{Binding Question.ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}"
                                         Background="Transparent" HorizontalAlignment="Left" Padding="0" Cursor="Hand" ToolTip.Tip="Click to enlarge image">
-                                    <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Padding="5">
+                                    <Border BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" CornerRadius="4" Padding="5">
                                         <Image Source="{Binding Question.ImageBitmap}" MaxHeight="300"/>
                                     </Border>
                                 </Button>
 
                                 <TextBox IsVisible="{Binding Question.IsEssay}" 
                                          Text="{Binding Question.StudentEssayResponse}" 
-                                         AcceptsReturn="True" TextWrapping="Wrap" MinHeight="250" FontSize="18"
-                                         Watermark="Type your essay response here..."/>
+                                         AcceptsReturn="True" TextWrapping="Wrap" MinHeight="250" FontSize="18" Watermark="Type your essay response here..."/>
                                 
                                 <ItemsControl ItemsSource="{Binding Question.Choices}" IsVisible="{Binding Question.IsObjective}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="dto:StudentChoiceDto">
-                                            <Border Background="#FAFAFA" CornerRadius="8" Padding="15" Margin="0,5" BorderBrush="#EEEEEE" BorderThickness="1">
+                                            <Border Background="{DynamicResource SurfaceAltBrush}" CornerRadius="8" Padding="15" Margin="0,5" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1">
                                                 <Grid ColumnDefinitions="Auto, *">
                                                     
                                                     <RadioButton Grid.Column="0" IsVisible="{Binding $parent[ItemsControl].((vm:ExamineeQuestionWrapper)DataContext).Question.IsSingleSelection}" 
@@ -91,38 +95,53 @@
                             </StackPanel>
                         </ScrollViewer>
 
-                        <Border Grid.Row="1" Margin="0,20,0,0" Padding="0,20,0,0" BorderThickness="0,2,0,0" BorderBrush="LightGray">
+                        <Border Grid.Row="1" Margin="0,20,0,0" Padding="0,20,0,0" BorderThickness="0,2,0,0" BorderBrush="{DynamicResource BorderLightBrush}">
                             <Grid ColumnDefinitions="Auto, *, Auto">
-                                <Button Grid.Column="0" Content="← Previous" Command="{Binding PrevQuestionCommand}" FontSize="18" Padding="20,10" Background="Transparent" BorderBrush="Gray" BorderThickness="1"/>
+                                <Button Grid.Column="0" Command="{Binding PrevQuestionCommand}" Padding="20,10" Background="Transparent" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="1" Foreground="{DynamicResource AppForeground}">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="{DynamicResource IconBack}" FontSize="18"/>
+                                        <TextBlock Text="Previous" FontSize="18"/>
+                                    </StackPanel>
+                                </Button>
                                 
-                                <Button Grid.Column="1" Content="⚑ Flag for Review" Command="{Binding ToggleFlagCommand}" HorizontalAlignment="Center" FontSize="16" Padding="20,10" Background="Transparent" Foreground="#F57F17" BorderBrush="#F57F17" BorderThickness="1"/>
+                                <Button Grid.Column="1" Command="{Binding ToggleFlagCommand}" HorizontalAlignment="Center" Padding="20,10" Background="Transparent" Foreground="{DynamicResource WarningTextBrush}" BorderBrush="{DynamicResource WarningTextBrush}" BorderThickness="1">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="{DynamicResource IconFlag}" FontSize="20"/>
+                                        <TextBlock Text="Flag for Review" FontSize="20"/>
+                                    </StackPanel>
+                                </Button>
                                 
-                                <Button Grid.Column="2" Content="Next →" Command="{Binding NextQuestionCommand}" FontSize="18" FontWeight="Bold" Padding="30,10" Background="{DynamicResource PrimaryActionBrush}" Foreground="White"/>
+                                <Button Grid.Column="2" Command="{Binding NextQuestionCommand}" Padding="30,10" Background="{DynamicResource PrimaryActionBrush}" Foreground="{DynamicResource ActionTextBrush}">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="Next" FontSize="18" FontWeight="Bold"/>
+                                        <TextBlock Text="{DynamicResource IconNext}" FontSize="18" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </Button>
                             </Grid>
                         </Border>
                     </Grid>
                 </Border>
 
-                <Border Grid.Column="1" Background="#FAFAFA" BorderBrush="LightGray" BorderThickness="2,0,0,0" Padding="20">
+                <Border Grid.Column="1" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="2,0,0,0" Padding="20">
                     <Grid RowDefinitions="Auto, *, Auto">
                         
-                        <Border Grid.Row="0" Background="#333333" CornerRadius="8" Padding="15" Margin="0,0,0,20" HorizontalAlignment="Stretch">
+                        <Border Grid.Row="0" Background="{DynamicResource PrimaryActionBrush}" CornerRadius="8" Padding="15" Margin="0,0,0,20" HorizontalAlignment="Stretch">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10">
-                                <TextBlock Text="⏱️" FontSize="24" VerticalAlignment="Center"/>
-                                <TextBlock Text="{Binding TimeRemainingDisplay}" FontSize="28" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource IconTimer}" FontSize="24" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding TimeRemainingDisplay}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource ActionTextBrush}" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Border>
 
                         <ScrollViewer Grid.Row="1" Margin="0,0,0,20">
                             <StackPanel>
-                                <TextBlock Text="Question Navigation" FontWeight="Bold" FontSize="18" Margin="0,0,0,15" Foreground="Gray"/>
+                                <TextBlock Text="Question Navigation" FontWeight="Bold" FontSize="18" Margin="0,0,0,15" Foreground="{DynamicResource BorderDarkBrush}"/>
                                 
                                 <ItemsControl ItemsSource="{Binding NavigationSections}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="vm:ExamineeSectionWrapper">
                                             <StackPanel Margin="0,0,0,15">
                                                 
-                                                <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="14" Foreground="Gray" Margin="0,0,0,5" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BorderDarkBrush}" Margin="0,0,0,5" TextWrapping="Wrap"/>
                                                 
                                                 <ItemsControl ItemsSource="{Binding Questions}">
                                                     <ItemsControl.ItemsPanel>
@@ -136,11 +155,11 @@
                                                             <Button Command="{Binding #RootView.DataContext.JumpToQuestionCommand}" 
                                                                     CommandParameter="{Binding}"
                                                                     Background="{Binding GridBackgroundColor}" 
-                                                                    BorderBrush="Black" 
+                                                                    BorderBrush="{DynamicResource AppForeground}" 
                                                                     BorderThickness="{Binding GridBorderThickness}" 
                                                                     Width="60" Height="50" Margin="5" Padding="5">
                                                                 <Grid ColumnDefinitions="Auto, *">
-                                                                    <TextBlock Grid.Column="0" Text="{Binding GridIcon}" Foreground="White" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                                                                    <TextBlock Grid.Column="0" Text="{Binding GridIcon}" Foreground="{DynamicResource SurfaceBrush}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
                                                                     <TextBlock Grid.Column="1" Text="{Binding DisplayNumber}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                                                 </Grid>
                                                             </Button>
@@ -158,7 +177,7 @@
 
                         <Button Grid.Row="2" Content="SUBMIT EXAM" Command="{Binding SubmitExamCommand}" 
                                 HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
-                                Background="#4CAF50" Foreground="White" 
+                                Background="{DynamicResource SecondaryActionBrush}" Foreground="{DynamicResource ActionTextBrush}" 
                                 Padding="0,20" FontSize="20" FontWeight="Bold"/>
 
                     </Grid>
