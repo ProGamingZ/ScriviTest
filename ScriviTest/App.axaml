@@ -44,6 +44,7 @@
         <!-- SHADOW RESOURCES -->
         <BoxShadows x:Key="HeaderShadow">0 2 10 0 Gray</BoxShadows>
         <BoxShadows x:Key="CardShadow">0 4 15 0 LightGray</BoxShadows>
+        <BoxShadows x:Key="DialogShadow">0 10 30 0 Black</BoxShadows>
 
         <!-- CENTRALIZED ICONS (Strings) -->
         <x:String x:Key="IconBack">←</x:String>
