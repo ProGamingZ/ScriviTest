@@ -8,7 +8,7 @@
 
     <UserControl.Styles>
         <Style Selector="DataGridRow:nth-child(odd)">
-            <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}"/> 
+            <Setter Property="Background" Value="{DynamicResource nth-child}"/> 
         </Style>
 
         <Style Selector="DataGridRow:pointerover, DataGridRow:selected">
@@ -16,13 +16,13 @@
         </Style>
 
         <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
-            <Setter Property="Fill" Value="{DynamicResource StandardButtonBrush}"/>
+            <Setter Property="Fill" Value="{DynamicResource pointerover}"/>
             <Setter Property="Opacity" Value="1"/>
         </Style>
 
         <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle, 
                          DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
-            <Setter Property="Fill" Value="{DynamicResource BorderLightBrush}"/>
+            <Setter Property="Fill" Value="{DynamicResource selected:pointerover}"/>
             <Setter Property="Opacity" Value="1"/> 
         </Style>
 
@@ -38,7 +38,12 @@
             <!-- HEADER -->
             <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="15" BoxShadow="{DynamicResource TopBarShadow}" ZIndex="10">
                 <Grid ColumnDefinitions="Auto, *">
-                    <Button Grid.Column="0" Content="← back to hub" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
+                    <Button Grid.Column="0" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="{DynamicResource IconBack}"/>
+                            <TextBlock Text="Back to Hub"/>
+                        </StackPanel>
+                    </Button>
                     <TextBlock Grid.Column="1" Text="EXAM HISTORY" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryActionBrush}"/>
                 </Grid>
             </Border>

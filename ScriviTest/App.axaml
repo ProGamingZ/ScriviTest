@@ -50,7 +50,6 @@
         <BoxShadows x:Key="PortalShadow">0 8 20 0 LightGray</BoxShadows>
         <BoxShadows x:Key="ToastShadow">0 4 15 0 #40000000</BoxShadows>    
 
-
         <!-- CENTRALIZED ICONS (Strings) -->
         <x:String x:Key="IconBack">←</x:String>
         <x:String x:Key="IconNext">→</x:String>
@@ -65,6 +64,11 @@
         <x:String x:Key="IconFlag">⚑</x:String>
         <x:String x:Key="IconDoc">📄</x:String>
         <x:String x:Key="IconKey">🔑</x:String>
+
+        <!-- DATA GRID STYLES -->
+        <SolidColorBrush x:Key="nth-child">#F0F0F0</SolidColorBrush>
+        <SolidColorBrush x:Key="pointerover">#e8e8e8</SolidColorBrush>
+        <SolidColorBrush x:Key="selected:pointerover">#dddddd</SolidColorBrush>
     </Application.Resources>
 
 </Application>

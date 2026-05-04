@@ -10,8 +10,12 @@
         <Border Grid.Row="0" Background="White" Padding="15" BoxShadow="0 2 5 0 LightGray" ZIndex="10">
             <Grid ColumnDefinitions="Auto, *">
                 
-                <Button Grid.Column="0" Content="← back to home" Command="{Binding GoBackCommand}" 
-                        Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
+                <Button Grid.Column="0" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{DynamicResource IconBack}"/>
+                        <TextBlock Text="Back to Hub"/>
+                    </StackPanel>
+                </Button>
                 
                 <TextBlock Grid.Column="1" Text="EXAMINER WORKSPACE" FontSize="28" FontWeight="Bold" 
                            HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryActionBrush}"/>

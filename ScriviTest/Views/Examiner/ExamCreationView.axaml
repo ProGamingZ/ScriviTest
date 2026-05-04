@@ -60,7 +60,12 @@
 
             <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="15" BoxShadow="{DynamicResource TopBarShadow}">
                 <Grid ColumnDefinitions="Auto, *, Auto">
-                    <Button Grid.Column="0" Content="← Back" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}"/>
+                    <Button Grid.Column="0" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="{DynamicResource IconBack}"/>
+                            <TextBlock Text="Back to Hub"/>
+                        </StackPanel>
+                    </Button>
                     <TextBlock Grid.Column="1" Text="Drafting Examination" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource AppForeground}"/>
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="15" HorizontalAlignment="Right" VerticalAlignment="Center"> 
