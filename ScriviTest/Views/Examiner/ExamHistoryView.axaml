@@ -52,7 +52,7 @@
             <Grid Grid.Row="1" ColumnDefinitions="Auto, *">
                 
                 <!-- LEFT PANEL: ACTION BUTTONS -->
-                <Border Grid.Column="0" Width="250" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="0,0,4,0" Padding="15" Background="White">
+                <Border Grid.Column="0" Width="250" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="0,0,4,0" Padding="15" Background="{DynamicResource SurfaceBrush}">
                     <Grid RowDefinitions="Auto, Auto, Auto, *, Auto">
                         
                         <Button Grid.Row="0" Content="Check Locations" Command="{Binding CheckLocationsCommand}" 
@@ -193,8 +193,8 @@
                 BoxShadow="{DynamicResource ToastShadow}" ZIndex="100">
             <Grid ColumnDefinitions="Auto, *, Auto">
                 <TextBlock Grid.Column="0" Text="{Binding NotificationIcon}" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="500"/>
-                <Button Grid.Column="2" Content="{DynamicResource IconClose}" Command="{Binding CloseToastCommand}" Background="Transparent" Foreground="White" FontSize="18" FontWeight="Bold" Margin="15,0,0,0" Padding="8,4" Cursor="Hand"/>
+                <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" Foreground="{DynamicResource SurfaceBrush}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="500"/>
+                <Button Grid.Column="2" Content="{DynamicResource IconClose}" Command="{Binding CloseToastCommand}" Background="Transparent" Foreground="{DynamicResource SurfaceBrush}" FontSize="18" FontWeight="Bold" Margin="15,0,0,0" Padding="8,4" Cursor="Hand"/>
             </Grid>
         </Border>
 
