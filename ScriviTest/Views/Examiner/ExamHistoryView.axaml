@@ -36,15 +36,15 @@
         <Grid RowDefinitions="Auto, *">
             
             <!-- HEADER -->
-            <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="15" BoxShadow="{DynamicResource TopBarShadow}" ZIndex="10">
+            <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="15" BoxShadow="{DynamicResource ElevationLow}" ZIndex="10">
                 <Grid ColumnDefinitions="Auto, *">
-                    <Button Grid.Column="0" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource AppForeground}">
+                    <Button Grid.Column="0" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource TextMainBrush}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Text="{DynamicResource IconBack}"/>
                             <TextBlock Text="Back to Hub"/>
                         </StackPanel>
                     </Button>
-                    <TextBlock Grid.Column="1" Text="EXAM HISTORY" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryActionBrush}"/>
+                    <TextBlock Grid.Column="1" Text="EXAM HISTORY" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
                 </Grid>
             </Border>
 
@@ -52,28 +52,28 @@
             <Grid Grid.Row="1" ColumnDefinitions="Auto, *">
                 
                 <!-- LEFT PANEL: ACTION BUTTONS -->
-                <Border Grid.Column="0" Width="250" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="0,0,4,0" Padding="15" Background="{DynamicResource SurfaceBrush}">
+                <Border Grid.Column="0" Width="250" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,4,0" Padding="15" Background="{DynamicResource SurfaceBrush}">
                     <Grid RowDefinitions="Auto, Auto, Auto, *, Auto">
                         
                         <Button Grid.Row="0" Content="Check Locations" Command="{Binding CheckLocationsCommand}" 
                                 HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                                Foreground="{DynamicResource AppForeground}" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="2" Margin="0,0,0,15" Padding="10"/>
+                                Foreground="{DynamicResource TextMainBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" Margin="0,0,0,15" Padding="10"/>
 
                         <Button Grid.Row="1" Content="Relink Missing File" Command="{Binding PromptRelinkCommand}" 
                                 HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                                Foreground="{DynamicResource AppForeground}" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="2" Margin="0,0,0,15" Padding="10"/>
+                                Foreground="{DynamicResource TextMainBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" Margin="0,0,0,15" Padding="10"/>
 
                         <Button Grid.Row="2" Content="Delete Selected File" Command="{Binding AttemptDeleteCommand}" 
                                 HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                                Background="{DynamicResource ErrorBackgroundBrush}" Foreground="{DynamicResource DangerActionBrush}" BorderBrush="{DynamicResource DangerActionBrush}" BorderThickness="2" FontWeight="Bold" Margin="0,0,0,15" Padding="10"/>
+                                Background="{DynamicResource SurfaceVariantBrush}" Foreground="{DynamicResource DangerBrush}" BorderBrush="{DynamicResource DangerBrush}" BorderThickness="2" FontWeight="Bold" Margin="0,0,0,15" Padding="10"/>
 
                         <!-- COLUMN TOGGLES -->
                         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
                             
-                            <Button Background="Transparent" BorderBrush="{DynamicResource BorderDarkBrush}" Padding="10,5">
+                            <Button Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" Padding="10,5">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <TextBlock Text="{DynamicResource IconSettings}"/>
-                                    <TextBlock Text="Toggle Columns" Foreground="{DynamicResource AppForeground}"/>
+                                    <TextBlock Text="Toggle Columns" Foreground="{DynamicResource TextMainBrush}"/>
                                 </StackPanel>
                                 
                                 <Button.Flyout>
@@ -93,16 +93,16 @@
                     </Grid>
                 </Border>
 
-                <Grid Grid.Column="1" RowDefinitions="*, 4, *" Background="{DynamicResource SurfaceAltBrush}#FAFAFA">
+                <Grid Grid.Column="1" RowDefinitions="*, 4, *" Background="{DynamicResource SurfaceVariantBrush}#FAFAFA">
                     <Border Grid.Row="0" Padding="20">
                         <Grid RowDefinitions="Auto, *">
                             <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,10">
                                 <TextBlock Text="{DynamicResource IconDoc}" FontSize="18"/>
-                                <TextBlock Text="Exported Questionnaires (.xamn)" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource AppForeground}"/>
+                                <TextBlock Text="Exported Questionnaires (.xamn)" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextMainBrush}"/>
                             </StackPanel>
                             
                             <DataGrid Grid.Row="1" ItemsSource="{Binding QuestionnaireList}" SelectedItem="{Binding SelectedQuestionnaire}"
-                                      AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="1"
+                                      AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                       RowBackground="{DynamicResource SurfaceBrush}" CanUserReorderColumns="True" CanUserResizeColumns="True">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Date" Binding="{Binding Record.ExportDate}" IsVisible="{Binding ShowDate}" MinWidth="90" MaxWidth="150" Width="Auto"/>
@@ -127,17 +127,17 @@
                     </Border>
 
                     <!-- DIVIDER -->
-                    <GridSplitter Grid.Row="1" Background="{DynamicResource StandardButtonBrush}" ResizeDirection="Rows" HorizontalAlignment="Stretch" Height="4"/>
+                    <GridSplitter Grid.Row="1" Background="{DynamicResource SurfaceVariantBrush}" ResizeDirection="Rows" HorizontalAlignment="Stretch" Height="4"/>
 
                     <Border Grid.Row="2" Padding="20">
                         <Grid RowDefinitions="Auto, *">
                             <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,10">
                                 <TextBlock Text="{DynamicResource IconKey}" FontSize="18"/>
-                                <TextBlock Text="Exported Questionnaires (.xamn)" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource AppForeground}"/>
+                                <TextBlock Text="Exported Questionnaires (.xamn)" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextMainBrush}"/>
                             </StackPanel>
                             
                             <DataGrid Grid.Row="1" ItemsSource="{Binding AnswerKeyList}" SelectedItem="{Binding SelectedAnswerKey}"
-                                      AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="1"
+                                      AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                       RowBackground="{DynamicResource SurfaceBrush}"
                                       CanUserReorderColumns="True" 
                                       CanUserResizeColumns="True">
@@ -169,18 +169,18 @@
         </Grid>
 
         <!-- DELETE WARNING MODAL -->
-        <Border Background="{DynamicResource OverlayBackgroundBrush}" IsVisible="{Binding IsDeleteWarningVisible}" ZIndex="50">
-            <Border Background="{DynamicResource SurfaceBrush}" Width="400" Padding="30" CornerRadius="8" HorizontalAlignment="Center" VerticalAlignment="Center" BoxShadow="{DynamicResource DialogShadow}">
+        <Border Background="{DynamicResource OverlayBrush}" IsVisible="{Binding IsDeleteWarningVisible}" ZIndex="50">
+            <Border Background="{DynamicResource SurfaceBrush}" Width="400" Padding="30" CornerRadius="8" HorizontalAlignment="Center" VerticalAlignment="Center" BoxShadow="{DynamicResource ElevationHigh}">
                 <StackPanel Spacing="15">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
                         <TextBlock Text="{DynamicResource IconWarning}" FontSize="20"/>
-                        <TextBlock Text="Permanent Delete Warning" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource DangerActionBrush}"/>
+                        <TextBlock Text="Permanent Delete Warning" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource DangerBrush}"/>
                     </StackPanel>
                     <TextBlock Text="{Binding DeleteWarningMessage}" TextWrapping="Wrap" FontSize="16" TextAlignment="Center" Margin="0,10"/>
                     <Grid ColumnDefinitions="*, *">
                         <Button Grid.Column="0" Content="Cancel" Command="{Binding CancelDeleteCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,5,0" Padding="10"/>
 
-                        <Button Grid.Column="1" Content="DELETE" Command="{Binding ConfirmDeleteCommand}" Background="{DynamicResource DangerActionBrush}" Foreground="{DynamicResource ActionTextBrush}" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5,0,0,0" Padding="10"/>
+                        <Button Grid.Column="1" Content="DELETE" Command="{Binding ConfirmDeleteCommand}" Background="{DynamicResource DangerBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5,0,0,0" Padding="10"/>
 
                     </Grid>
                 </StackPanel>
@@ -190,7 +190,7 @@
         <!-- TOAST NOTIFICATION -->
         <Border VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,40" Padding="20,12" 
                 Background="{Binding NotificationColor}" CornerRadius="8" IsVisible="{Binding IsNotificationVisible}" 
-                BoxShadow="{DynamicResource ToastShadow}" ZIndex="100">
+                BoxShadow="{DynamicResource ElevationHigh}" ZIndex="100">
             <Grid ColumnDefinitions="Auto, *, Auto">
                 <TextBlock Grid.Column="0" Text="{Binding NotificationIcon}" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
                 <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" Foreground="{DynamicResource SurfaceBrush}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="500"/>

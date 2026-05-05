@@ -7,35 +7,35 @@
 
     <Grid>
     
-        <Border ZIndex="100" Background="{DynamicResource OverlayBackgroundBrush}" IsVisible="{Binding IsExpirationWarningVisible}">
-            <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="8" Padding="30" HorizontalAlignment="Center" VerticalAlignment="Center" BoxShadow="{DynamicResource DialogShadow}" MaxWidth="450">
+        <Border ZIndex="100" Background="{DynamicResource OverlayBrush}" IsVisible="{Binding IsExpirationWarningVisible}">
+            <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="8" Padding="30" HorizontalAlignment="Center" VerticalAlignment="Center" BoxShadow="{DynamicResource ElevationHigh}" MaxWidth="450">
                 <StackPanel Spacing="15">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
                         <TextBlock Text="{DynamicResource IconWarning}" FontSize="22"/>
-                        <TextBlock Text="Subscription Notice" Foreground="{DynamicResource DangerActionBrush}" FontSize="22" FontWeight="Bold"/>
+                        <TextBlock Text="Subscription Notice" Foreground="{DynamicResource DangerBrush}" FontSize="22" FontWeight="Bold"/>
                     </StackPanel>
-                    <TextBlock Text="{Binding ExpirationWarningMessage}" Foreground="{DynamicResource AppForeground}" FontSize="16" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10"/>
-                    <Button Content="Acknowledge" Command="{Binding CloseWarningCommand}" Background="{DynamicResource PrimaryActionBrush}" Foreground="{DynamicResource ActionTextBrush}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="10" FontWeight="Bold" Margin="0,10,0,0"/>
+                    <TextBlock Text="{Binding ExpirationWarningMessage}" Foreground="{DynamicResource TextMainBrush}" FontSize="16" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10"/>
+                    <Button Content="Acknowledge" Command="{Binding CloseWarningCommand}" Background="{DynamicResource PrimaryBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="10" FontWeight="Bold" Margin="0,10,0,0"/>
                 </StackPanel>
             </Border>
         </Border>
 
         <Grid RowDefinitions="*, Auto, Auto, Auto, *" HorizontalAlignment="Center" VerticalAlignment="Center">
             
-            <TextBlock Grid.Row="0" Text="ScriviTest" Foreground="{DynamicResource AppForeground}" FontSize="36" FontWeight="Bold" Margin="0,0,0,40" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="0" Text="ScriviTest" Foreground="{DynamicResource TextMainBrush}" FontSize="36" FontWeight="Bold" Margin="0,0,0,40" HorizontalAlignment="Center"/>
 
             <Button Grid.Row="1" Content="Examiner" Command="{Binding NavigateToExaminerCommand}" 
                     IsVisible="{Binding IsActivated}"
-                    Width="200" Height="50" Margin="0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+                    Width="200" Height="50" Margin="0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Background="{DynamicResource PrimaryBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}"/>
 
             <Button Grid.Row="2" Content="Examinee" Command="{Binding NavigateToExamineeCommand}" 
-                    Width="200" Height="50" Margin="0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+                    Width="200" Height="50" Margin="0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Background="{DynamicResource PrimaryBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}"/>
 
             <Button Grid.Row="3" Content="Activate App" Command="{Binding ActivateAppCommand}" 
                     IsVisible="{Binding IsNotActivated}"
                     Width="200" Height="50" Margin="0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"
-                    Background="{DynamicResource ActivateButtonBrush}" 
-                    Foreground="{DynamicResource ActionTextBrush}"/>
+                    Background="{DynamicResource TextMainBrush}" 
+                    Foreground="{DynamicResource SurfaceBrush}"/>
         </Grid>
     </Grid>
 </UserControl>

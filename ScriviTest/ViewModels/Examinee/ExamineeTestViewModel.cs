@@ -1,3 +1,6 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -22,7 +25,8 @@ public partial class ExamineeQuestionWrapper : ObservableObject
     
     // UI Bindings for the Grid
     [ObservableProperty] private string _gridIcon = "";
-    [ObservableProperty] private string _gridBackgroundColor = "#E0E0E0"; // Default Gray
+
+    
     [ObservableProperty] private Avalonia.Thickness _gridBorderThickness = new(1);
 
     public ExamineeQuestionWrapper(StudentQuestionDto question, int num)
@@ -32,6 +36,13 @@ public partial class ExamineeQuestionWrapper : ObservableObject
         RefreshState();
     }
 
+    private IBrush GetBrush(string resourceKey)
+    {
+        if (Application.Current!.TryFindResource(resourceKey, Application.Current.ActualThemeVariant, out var resource) && resource is IBrush brush)
+            return brush;
+        return Brushes.Transparent; // fallback
+    } 
+    [ObservableProperty] private IBrush _gridBackgroundColor = Brushes.Transparent;
     public void RefreshState()
     {
         bool isAnswered = Question.IsEssay 
@@ -41,17 +52,17 @@ public partial class ExamineeQuestionWrapper : ObservableObject
         if (IsFlagged)
         {
             GridIcon = "⚑";
-            GridBackgroundColor = "#FFC107"; // Yellow
+            GridBackgroundColor = GetBrush("WarningBrush"); // Yellow
         }
         else if (isAnswered)
         {
             GridIcon = "✓";
-            GridBackgroundColor = "#4CAF50"; // Green
+            GridBackgroundColor = GetBrush("SuccessBrush"); // Green
         }
         else
         {
             GridIcon = "";
-            GridBackgroundColor = "#E0E0E0"; // Gray
+            GridBackgroundColor = GetBrush("AppBackground"); // Gray
         }
 
         // Active question gets a thick black border
@@ -234,7 +245,6 @@ public partial class ExamineeTestViewModel : ViewModelBase
             }
         }
     }
-
 
     private void UiPollTimer_Tick(object? sender, EventArgs e)
     {

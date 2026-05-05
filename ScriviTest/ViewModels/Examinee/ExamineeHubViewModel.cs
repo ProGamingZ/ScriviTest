@@ -23,8 +23,10 @@ public partial class ExamineeHubViewModel : ViewModelBase
     [ObservableProperty] private string _studentID = string.Empty;
 
     partial void OnFirstNameChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
+    partial void OnMiddleNameChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
     partial void OnLastNameChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
     partial void OnStudentIDChanged(string value) => StartExamCommand.NotifyCanExecuteChanged();
+
 
     public ExamineeHubViewModel(Action<ViewModelBase> navigateAction)
     {
@@ -56,6 +58,7 @@ public partial class ExamineeHubViewModel : ViewModelBase
     // This button only becomes clickable when the file is loaded and the key is typed!
     private bool CanStartExam => 
         !string.IsNullOrWhiteSpace(FirstName) && 
+        !string.IsNullOrWhiteSpace(MiddleName) &&
         !string.IsNullOrWhiteSpace(LastName) && 
         !string.IsNullOrWhiteSpace(StudentID) && 
         !string.IsNullOrEmpty(SelectedFilePath) && 

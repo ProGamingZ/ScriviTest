@@ -8,19 +8,19 @@
         Background="{DynamicResource AppBackground}">
     
     <StackPanel Margin="20" Spacing="10">
-        <TextBlock Text="Step 1: Send this Request Code to the Administrator:" Foreground="{DynamicResource AppForeground}" FontWeight="Bold"/>
+        <TextBlock Text="Step 1: Send this Request Code to the Administrator:" Foreground="{DynamicResource TextMainBrush}" FontWeight="Bold"/>
         
-        <TextBox x:Name="RequestCodeBox" IsReadOnly="True" Background="{DynamicResource HighlightBackgroundBrush}" 
+        <TextBox x:Name="RequestCodeBox" IsReadOnly="True" Background="{DynamicResource SurfaceVariantBrush}" 
                  Height="30" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
         
-        <TextBlock Text="Step 2: Enter the Activation Key you received:" Foreground="{DynamicResource AppForeground}" FontWeight="Bold"/>
+        <TextBlock Text="Step 2: Enter the Activation Key you received:" Foreground="{DynamicResource TextMainBrush}" FontWeight="Bold"/>
         
         <TextBox x:Name="InputKeyBox" Height="30" FontSize="14"/>
         
         <Button x:Name="ActivateButton" Content="Activate Now" Height="35" 
                 Margin="0,15,0,0" IsDefault="True" HorizontalAlignment="Stretch" 
-                HorizontalContentAlignment="Center" Background="{DynamicResource PrimaryActionBrush}" Foreground="{DynamicResource ActionTextBrush}" FontWeight="Bold"/>
+                HorizontalContentAlignment="Center" Background="{DynamicResource PrimaryBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}" FontWeight="Bold"/>
         
-        <TextBlock x:Name="ErrorText" Foreground="{DynamicResource ErrorTextBrush}" FontWeight="Bold" HorizontalAlignment="Center" IsVisible="False"/>
+        <TextBlock x:Name="ErrorText" Foreground="{DynamicResource DangerBrush}" FontWeight="Bold" HorizontalAlignment="Center" IsVisible="False"/>
     </StackPanel>
 </Window>

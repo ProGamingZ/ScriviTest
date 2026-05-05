@@ -19,38 +19,35 @@
             
             <!-- ====== LIGHT MODE BRUSHES ====== -->
             <ResourceDictionary x:Key="Light">
-                <SolidColorBrush x:Key="AppBackground">#F5F5F5</SolidColorBrush>
-                <SolidColorBrush x:Key="AppForeground">#1A1A1A</SolidColorBrush>
-                <SolidColorBrush x:Key="SurfaceBrush">#FFFFFF</SolidColorBrush>
-                <SolidColorBrush x:Key="SurfaceAltBrush">#FAFAFA</SolidColorBrush>
+                <!-- SURFACES -->
+                <SolidColorBrush x:Key="AppBackground">#F5F5F5</SolidColorBrush> <!-- Base window color -->
+                <SolidColorBrush x:Key="SurfaceBrush">#FFFFFF</SolidColorBrush>  <!-- Main panels, cards, headers -->
+                <SolidColorBrush x:Key="SurfaceVariantBrush">#FAFAFA</SolidColorBrush> <!-- Disabled states, alternate rows -->
                 
-                <SolidColorBrush x:Key="PrimaryActionBrush">#1e88e5</SolidColorBrush>   
-                <SolidColorBrush x:Key="SecondaryActionBrush">#43a047</SolidColorBrush> 
-                <SolidColorBrush x:Key="DangerActionBrush">#D32F2F</SolidColorBrush>
-                <SolidColorBrush x:Key="ActionTextBrush">#FFFFFF</SolidColorBrush>      
-                <SolidColorBrush x:Key="StandardButtonBrush">#E0E0E0</SolidColorBrush>
-                <SolidColorBrush x:Key="ActivateButtonBrush">#2b2b2b</SolidColorBrush>
+                <!-- TEXT AND LINES -->
+                <SolidColorBrush x:Key="TextMainBrush">#1A1A1A</SolidColorBrush>   <!-- Standard readable text -->
+                <SolidColorBrush x:Key="TextMutedBrush">#666666</SolidColorBrush>   <!-- Subtitles, placeholders -->
+                <SolidColorBrush x:Key="BorderBrush">#CCCCCC</SolidColorBrush>      <!-- Universal divider/outline -->
 
-                <SolidColorBrush x:Key="BorderLightBrush">LightGray</SolidColorBrush>
-                <SolidColorBrush x:Key="BorderDarkBrush">Gray</SolidColorBrush>
-                <SolidColorBrush x:Key="ErrorTextBrush">Red</SolidColorBrush>
-                <SolidColorBrush x:Key="ErrorBackgroundBrush">#FFEBEE</SolidColorBrush>
-                <SolidColorBrush x:Key="WarningTextBrush">#F57F17</SolidColorBrush>
-                <SolidColorBrush x:Key="HighlightBackgroundBrush">#FFF9C4</SolidColorBrush>
-                <SolidColorBrush x:Key="InfoBackgroundBrush">#E3F2FD</SolidColorBrush>
+                <!-- BRAND & ACTIONS (Buttons) -->
+                <SolidColorBrush x:Key="PrimaryBrush">#1e88e5</SolidColorBrush>     <!-- Main brand color (Blue) -->
+                <SolidColorBrush x:Key="PrimaryForegroundBrush">#FFFFFF</SolidColorBrush>   <!-- Text ON primary buttons -->
 
-                <SolidColorBrush x:Key="OverlayBackgroundBrush">#AA000000</SolidColorBrush>
-                <SolidColorBrush x:Key="OverlayDarkBackgroundBrush">#DD000000</SolidColorBrush>
-                <SolidColorBrush x:Key="DangerOverlayBrush">#DDFF0000</SolidColorBrush>
+                <!-- STATUS & FEEDBACK (Alerts) -->
+                <SolidColorBrush x:Key="SuccessBrush">#43a047</SolidColorBrush> <!-- Saving, correct answers (Green) -->
+                <SolidColorBrush x:Key="WarningBrush">#F57F17</SolidColorBrush> <!-- Focus lost, warnings (Orange) -->
+                <SolidColorBrush x:Key="DangerBrush">#D32F2F</SolidColorBrush> <!-- Errors, deleting (Red) -->
+                <SolidColorBrush x:Key="InfoBrush">#E3F2FD</SolidColorBrush> <!-- Highlights, image backdrops (Light Blue) -->
 
-                <BoxShadows x:Key="HeaderShadow">0 2 10 0 Gray</BoxShadows>
-                <BoxShadows x:Key="CardShadow">0 4 15 0 LightGray</BoxShadows>
-                <BoxShadows x:Key="DialogShadow">0 10 30 0 Black</BoxShadows>
-                <BoxShadows x:Key="TopBarShadow">0 2 5 0 LightGray</BoxShadows>
-                <BoxShadows x:Key="BottomBarShadow">0 -2 5 0 LightGray</BoxShadows>
-                <BoxShadows x:Key="PortalShadow">0 8 20 0 LightGray</BoxShadows>
-                <BoxShadows x:Key="ToastShadow">0 4 15 0 #40000000</BoxShadows>   
+                <!--  OVERLAYS (Modals) -->
+                <SolidColorBrush x:Key="OverlayBrush">#AA000000</SolidColorBrush> <!-- 66% Black for dialog backdrops -->
 
+                <!-- ELEVATIONS (SHADOWS) -->
+                <BoxShadows x:Key="ElevationLow">0 2 10 0 Gray</BoxShadows> <!-- Nav bars, sticky headers -->
+                <BoxShadows x:Key="ElevationMid">0 4 15 0 LightGray</BoxShadows> <!-- Main content cards -->
+                <BoxShadows x:Key="ElevationHigh">0 10 30 0 Black</BoxShadows> <!-- Popups, Modals, Toasts -->
+
+                <!-- TABLES -->
                 <SolidColorBrush x:Key="nth-child">#F0F0F0</SolidColorBrush>
                 <SolidColorBrush x:Key="pointerover">#e8e8e8</SolidColorBrush>
                 <SolidColorBrush x:Key="selected:pointerover">#dddddd</SolidColorBrush> 
@@ -58,42 +55,33 @@
 
             <!-- ====== DARK MODE BRUSHES ====== -->
             <ResourceDictionary x:Key="Dark">
-                <SolidColorBrush x:Key="AppBackground">#121212</SolidColorBrush>
-                <SolidColorBrush x:Key="AppForeground">#E0E0E0</SolidColorBrush>
-                <SolidColorBrush x:Key="SurfaceBrush">#1E1E1E</SolidColorBrush>
-                <SolidColorBrush x:Key="SurfaceAltBrush">#252525</SolidColorBrush>
+                <!-- 1. SURFACES -->
+                <SolidColorBrush x:Key="AppBackground">#0A0F1C</SolidColorBrush>
+                <SolidColorBrush x:Key="SurfaceBrush">#151A28</SolidColorBrush>
+                <SolidColorBrush x:Key="SurfaceVariantBrush">#1E2536</SolidColorBrush>
+                
+                <!-- 2. INK -->
+                <SolidColorBrush x:Key="TextMainBrush">#FFFFFF</SolidColorBrush>
+                <SolidColorBrush x:Key="TextMutedBrush">#8A94A6</SolidColorBrush>
+                <SolidColorBrush x:Key="BorderBrush">#2A3245</SolidColorBrush>
 
-                <!-- Action colors are slightly lighter/desaturated for better readability on dark backgrounds -->
-                <SolidColorBrush x:Key="PrimaryActionBrush">#64B5F6</SolidColorBrush>   
-                <SolidColorBrush x:Key="SecondaryActionBrush">#81C784</SolidColorBrush> 
-                <SolidColorBrush x:Key="DangerActionBrush">#E57373</SolidColorBrush>
-                <!-- Dark text provides the best contrast against the lighter action brushes above -->
-                <SolidColorBrush x:Key="ActionTextBrush">#121212</SolidColorBrush>      
-                <SolidColorBrush x:Key="StandardButtonBrush">#333333</SolidColorBrush>
-                <SolidColorBrush x:Key="ActivateButtonBrush">#E0E0E0</SolidColorBrush>
+                <!-- 3. BRAND -->
+                <SolidColorBrush x:Key="PrimaryBrush">#2B6BFF</SolidColorBrush>      
+                <SolidColorBrush x:Key="PrimaryForegroundBrush">#FFFFFF</SolidColorBrush>
 
-                <SolidColorBrush x:Key="BorderLightBrush">#424242</SolidColorBrush>
-                <SolidColorBrush x:Key="BorderDarkBrush">#616161</SolidColorBrush>
-                <SolidColorBrush x:Key="ErrorTextBrush">#EF5350</SolidColorBrush>
-                <!-- Info/Warning/Error backgrounds shifted to dark, tinted grays to prevent blinding contrast -->
-                <SolidColorBrush x:Key="ErrorBackgroundBrush">#3B1D1D</SolidColorBrush>
-                <SolidColorBrush x:Key="WarningTextBrush">#FFB300</SolidColorBrush>
-                <SolidColorBrush x:Key="HighlightBackgroundBrush">#332B00</SolidColorBrush>
-                <SolidColorBrush x:Key="InfoBackgroundBrush">#0D2233</SolidColorBrush>
+                <!-- 4. STATUS -->
+                <SolidColorBrush x:Key="SuccessBrush">#00E676</SolidColorBrush>
+                <SolidColorBrush x:Key="WarningBrush">#FFCA28</SolidColorBrush>
+                <SolidColorBrush x:Key="DangerBrush">#FF4D4F</SolidColorBrush>
+                <SolidColorBrush x:Key="InfoBrush">#2B6BFF</SolidColorBrush>
 
-                <SolidColorBrush x:Key="OverlayBackgroundBrush">#AA000000</SolidColorBrush>
-                <SolidColorBrush x:Key="OverlayDarkBackgroundBrush">#E6000000</SolidColorBrush>
-                <!-- Danger overlay opacity reduced slightly so it isn't too jarring -->
-                <SolidColorBrush x:Key="DangerOverlayBrush">#66FF0000</SolidColorBrush>
+                <!-- 5. OVERLAYS -->
+                <SolidColorBrush x:Key="OverlayBrush">#D9000000</SolidColorBrush>    
 
-                <!-- Shadows must be black or near-black in dark mode, otherwise they look like outer glows -->
-                <BoxShadows x:Key="HeaderShadow">0 2 10 0 #000000</BoxShadows>
-                <BoxShadows x:Key="CardShadow">0 4 15 0 #000000</BoxShadows>
-                <BoxShadows x:Key="DialogShadow">0 10 30 0 #000000</BoxShadows>
-                <BoxShadows x:Key="TopBarShadow">0 2 5 0 #000000</BoxShadows>
-                <BoxShadows x:Key="BottomBarShadow">0 -2 5 0 #000000</BoxShadows>
-                <BoxShadows x:Key="PortalShadow">0 8 20 0 #000000</BoxShadows>
-                <BoxShadows x:Key="ToastShadow">0 4 15 0 #80000000</BoxShadows>   
+                <!-- 6. ELEVATIONS  -->
+                <BoxShadows x:Key="ElevationLow">0 2 5 0 #05080F</BoxShadows>
+                <BoxShadows x:Key="ElevationMid">0 4 15 0 #05080F</BoxShadows>
+                <BoxShadows x:Key="ElevationHigh">0 10 30 0 #05080F</BoxShadows>   
 
                 <!-- Subtle hover and list states building up from the SurfaceBrush (#1E1E1E) -->
                 <SolidColorBrush x:Key="nth-child">#222222</SolidColorBrush>
