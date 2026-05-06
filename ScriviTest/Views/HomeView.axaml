@@ -6,7 +6,12 @@
              Background="{DynamicResource AppBackground}">
 
     <Grid>
-    
+        <ToggleSwitch HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20"
+                  OffContent="☀️ Light" OnContent="🌙 Dark"
+                  IsChecked="{Binding IsDarkMode}"
+                  Foreground="{DynamicResource TextMainBrush}"
+                  ZIndex="50"/>
+
         <Border ZIndex="100" Background="{DynamicResource OverlayBrush}" IsVisible="{Binding IsExpirationWarningVisible}">
             <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="8" Padding="30" HorizontalAlignment="Center" VerticalAlignment="Center" BoxShadow="{DynamicResource ElevationHigh}" MaxWidth="450">
                 <StackPanel Spacing="15">

@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:ScriviTest"
              x:Class="ScriviTest.App"
-             RequestedThemeVariant="Dark">
+             RequestedThemeVariant="Light">
              <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
@@ -35,7 +35,7 @@
 
                 <!-- STATUS & FEEDBACK (Alerts) -->
                 <SolidColorBrush x:Key="SuccessBrush">#43a047</SolidColorBrush> <!-- Saving, correct answers (Green) -->
-                <SolidColorBrush x:Key="WarningBrush">#F57F17</SolidColorBrush> <!-- Focus lost, warnings (Orange) -->
+                <SolidColorBrush x:Key="WarningBrush">#FFD518</SolidColorBrush> <!-- Focus lost, warnings (Orange) -->
                 <SolidColorBrush x:Key="DangerBrush">#D32F2F</SolidColorBrush> <!-- Errors, deleting (Red) -->
                 <SolidColorBrush x:Key="InfoBrush">#E3F2FD</SolidColorBrush> <!-- Highlights, image backdrops (Light Blue) -->
 
@@ -70,10 +70,10 @@
                 <SolidColorBrush x:Key="PrimaryForegroundBrush">#FFFFFF</SolidColorBrush>
 
                 <!-- 4. STATUS -->
-                <SolidColorBrush x:Key="SuccessBrush">#00E676</SolidColorBrush>
-                <SolidColorBrush x:Key="WarningBrush">#FFCA28</SolidColorBrush>
-                <SolidColorBrush x:Key="DangerBrush">#FF4D4F</SolidColorBrush>
-                <SolidColorBrush x:Key="InfoBrush">#2B6BFF</SolidColorBrush>
+                <SolidColorBrush x:Key="SuccessBrush">#377b3c</SolidColorBrush>
+                <SolidColorBrush x:Key="WarningBrush">#ff9900</SolidColorBrush>
+                <SolidColorBrush x:Key="DangerBrush">#D32F2F</SolidColorBrush>
+                <SolidColorBrush x:Key="InfoBrush">#64B5F6</SolidColorBrush>
 
                 <!-- 5. OVERLAYS -->
                 <SolidColorBrush x:Key="OverlayBrush">#D9000000</SolidColorBrush>    

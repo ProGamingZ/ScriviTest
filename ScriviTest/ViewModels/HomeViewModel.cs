@@ -5,24 +5,121 @@ using ScriviTest.ViewModels.Examiner;
 using ScriviTest.ViewModels.Examinee;
 using ScriviTest.Views; 
 using ScriviTest.Services; 
+using System.Text.Json;
 using System;
 using System.IO;
+using Avalonia;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using System.Threading.Tasks;
 
 
 namespace ScriviTest.ViewModels;
 
+// A tiny class to hold our saved settings
+public class AppSettings
+{
+    public bool IsDarkMode { get; set; }
+}
+
 public partial class HomeViewModel : ViewModelBase
 {
-    private readonly Action<ViewModelBase>? _navigateAction;
+    [ObservableProperty]
+    private bool _isDarkMode;
 
+    #region --- THEME PERSISTENCE LOGIC ---
+    
+    // --- Helper to get the save file path ---
+    private string GetSettingsFilePath()
+    {
+        // Saves to: C:\Users\YourName\AppData\Roaming\ScriviTest\settings.json
+        var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        var appFolder = Path.Combine(appData, "ScriviTest");
+        Directory.CreateDirectory(appFolder); // Ensures the folder exists
+        return Path.Combine(appFolder, "settings.json");
+    }
+
+    // --- LOAD LOGIC ---
+    private void LoadThemeState()
+    {
+        string path = GetSettingsFilePath();
+        
+        if (File.Exists(path))
+        {
+            // If the user saved a preference previously, load it!
+            try 
+            {
+                string json = File.ReadAllText(path);
+                var settings = JsonSerializer.Deserialize<AppSettings>(json);
+                _isDarkMode = settings?.IsDarkMode ?? false;
+            } 
+            catch 
+            { 
+                _isDarkMode = false; // Fallback if file is corrupted
+            }
+        }
+        else
+        {
+            // BUG FIX: If no save file exists, check the actual OS system theme so the toggle matches!
+            var app = Application.Current;
+            if (app != null)
+            {
+                _isDarkMode = app.ActualThemeVariant == ThemeVariant.Dark;
+            }
+        }
+
+        // Apply the loaded/detected theme immediately
+        ApplyTheme(_isDarkMode);
+    }
+
+    // --- SAVE LOGIC ---
+    private void SaveThemeState(bool isDark)
+    {
+        try 
+        {
+            var settings = new AppSettings { IsDarkMode = isDark };
+            string json = JsonSerializer.Serialize(settings);
+            File.WriteAllText(GetSettingsFilePath(), json);
+        } 
+        catch 
+        { 
+            // Silently ignore save errors (e.g., file locked by OS)
+        }
+    }
+
+    // --- TOGGLE EVENT LOGIC ---
+    // This runs automatically whenever the user clicks the ToggleSwitch
+    partial void OnIsDarkModeChanged(bool value)
+    {
+        ApplyTheme(value);
+        SaveThemeState(value); // Save it to the hard drive!
+    }
+
+    // --- THEME APPLIER ---
+    private void ApplyTheme(bool isDark)
+    {
+        var app = Application.Current;
+        if (app != null)
+        {
+            app.RequestedThemeVariant = isDark ? ThemeVariant.Dark : ThemeVariant.Light;
+        }
+    }
+    
+    #endregion
+
+    private readonly Action<ViewModelBase>? _navigateAction;
     private readonly string _warningCacheFile = Path.Combine(Services.AppPaths.RootAppFolder, "warning_cache.dat");
+
     public HomeViewModel(Action<ViewModelBase>? navigateAction = null)
     {
+        // 1. RUN THE THEME LOADER FIRST!
+        // This ensures the UI renders with the correct colors instantly on boot.
+        LoadThemeState();
+
         _navigateAction = navigateAction;
         Services.AppPaths.InitializeFolders();
         IsActivated = LicenseManager.IsLicenseValid();
+        
         if (IsActivated)
         {
             CheckSubscriptionAlerts();
