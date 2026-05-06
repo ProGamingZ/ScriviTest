@@ -62,64 +62,64 @@
                 <Grid ColumnDefinitions="Auto, *, Auto">
                     <Button Grid.Column="0" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource TextMainBrush}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="{DynamicResource IconBack}"/>
-                            <TextBlock Text="Back to Hub"/>
+                            <TextBlock Text="{DynamicResource IconBack}" FontSize="20" FontWeight="Bold"/>
+                            <TextBlock Text="BACK" VerticalAlignment="Center" FontSize="15" FontWeight="Bold"/>
                         </StackPanel>
                     </Button>
-                    <TextBlock Grid.Column="1" Text="Drafting Examination" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextMainBrush}"/>
+                    <TextBlock Grid.Column="1" Text="CREATING EXAM" FontWeight="Bold" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="15" HorizontalAlignment="Right" VerticalAlignment="Center"> 
-                        <Button Command="{Binding OpenImportPopupCommand}" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" Foreground="{DynamicResource TextMainBrush}" BorderThickness="1" Padding="15,5" VerticalAlignment="Center">
+                        <Button Command="{Binding OpenImportPopupCommand}" Background="Transparent" BorderBrush="{DynamicResource TextMainBrush}" Foreground="{DynamicResource TextMainBrush}" BorderThickness="2" Padding="15,5" VerticalAlignment="Center" FontWeight="Bold">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <TextBlock Text="{DynamicResource IconImport}"/>
-                                <TextBlock Text="Import Exam"/>
+                                <TextBlock Text="Import"/>
                             </StackPanel>
                         </Button>
-                        <Button Command="{Binding OverwriteExamCommand}" Background="Transparent" BorderBrush="{DynamicResource PrimaryBrush}" Foreground="{DynamicResource PrimaryBrush}" BorderThickness="2" Padding="15,5" VerticalAlignment="Center" FontWeight="Bold">
+                        <Button Command="{Binding OverwriteExamCommand}" Background="Transparent" BorderBrush="{DynamicResource TextMainBrush}" Foreground="{DynamicResource TextMainBrush}" BorderThickness="2" Padding="15,5" VerticalAlignment="Center" FontWeight="Bold">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <TextBlock Text="{DynamicResource IconSave}"/>
                                 <TextBlock Text="Overwrite"/>
                             </StackPanel>
                         </Button>
-                        <Button Content="Export" Command="{Binding ExportExamCommand}" Background="{DynamicResource PrimaryBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}" Padding="15,5"/>
+                        <Button Content="Export" FontWeight="Bold" Command="{Binding ExportExamCommand}" Background="Transparent" BorderBrush="{DynamicResource TextMainBrush}" Foreground="{DynamicResource TextMainBrush}" BorderThickness="2" Padding="15,5"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
             <ScrollViewer Grid.Row="1" Padding="20">
-                <StackPanel Spacing="20" MaxWidth="800" HorizontalAlignment="Center">
+                <StackPanel Spacing="20" MaxWidth="800" HorizontalAlignment="Center" >  
                     
-                    <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="8" Padding="25" BoxShadow="{DynamicResource ElevationMid}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="0,8,0,0">
+                    <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="8" Padding="25" BoxShadow="{DynamicResource ElevationMid}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1,8,1,3">
                         <StackPanel Spacing="15">
                             <Grid ColumnDefinitions="*, Auto">
                                 <TextBox Grid.Column="0" FontSize="28" FontWeight="Bold" Text="{Binding ExamTitle}" Watermark="Untitled Exam" BorderThickness="0,0,0,1" Background="Transparent" Padding="0,5" Foreground="{DynamicResource TextMainBrush}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding TotalExamPoints, StringFormat='Total Points: {0}'}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="{Binding TotalExamPoints, StringFormat='Total Points: {0}'}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextMainBrush}" VerticalAlignment="Center"/>
                             </Grid>
                             <TextBox Text="{Binding ExamDescription}" TextWrapping="Wrap" MinHeight="60" Watermark="Exam Instructions or Description" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource TextMainBrush}"/>
 
                             <WrapPanel Margin="0,20,0,0" Orientation="Horizontal">
                                 <StackPanel Width="230" Margin="0,0,15,15">
-                                    <TextBlock Text="Teacher Name" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource BorderBrush}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="Teacher Name" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,0,5"/>
                                     <TextBox Text="{Binding TeacherName}" Foreground="{DynamicResource TextMainBrush}"/>
                                 </StackPanel>
 
                                 <StackPanel Width="230" Margin="0,0,15,15">
-                                    <TextBlock Text="Subject" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource BorderBrush}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="Subject" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,0,5"/>
                                     <TextBox Text="{Binding Subject}" Foreground="{DynamicResource TextMainBrush}"/>
                                 </StackPanel>
 
                                 <StackPanel Width="230" Margin="0,0,15,15">
-                                    <TextBlock Text="Section / Audience" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource BorderBrush}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="Section / Audience" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,0,5"/>
                                     <TextBox Text="{Binding TargetSection}" Foreground="{DynamicResource TextMainBrush}"/>
                                 </StackPanel>
 
                                 <StackPanel Width="230" Margin="0,0,15,15">
-                                    <TextBlock Text="Time Limit (Minutes)" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource BorderBrush}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="Time Limit (Minutes)" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,0,5"/>
                                     <NumericUpDown Value="{Binding TimeLimitMinutes}" Minimum="1" Maximum="1440" FormatString="0" ParsingNumberStyle="Integer" Foreground="{DynamicResource TextMainBrush}" HorizontalAlignment="Stretch"/>
                                 </StackPanel>
 
                                 <StackPanel Width="230" Margin="0,0,15,15">
-                                    <TextBlock Text="Anti-Cheat Strictness" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource BorderBrush}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="Anti-Cheat Strictness" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,0,5"/>
                                     <ComboBox SelectedItem="{Binding AntiCheatStrictness}" Background="{DynamicResource SurfaceVariantBrush}" HorizontalAlignment="Stretch">
                                         <x:String>Strict</x:String>
                                         <x:String>Lenient</x:String>
@@ -135,7 +135,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="models:TestSection">
                                 
-                                <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="8" Padding="25" BoxShadow="{DynamicResource ElevationMid}" Margin="0,0,0,80">
+                                <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="8" Padding="25" BoxShadow="{DynamicResource ElevationMid}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1,8,1,3" Margin="0,0,0,80">
                                     <StackPanel Spacing="15">
                                         
                                         <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -143,7 +143,7 @@
                                             <TextBox Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" Watermark="Section Title" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource TextMainBrush}" MinWidth="250" Margin="0,0,20,10"/>
                                             
                                             <TextBlock Text="{Binding SectionTotalPoints, StringFormat='Section Points: {0}'}" 
-                                                    VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource TextMainBrush}" Opacity="0.6" Margin="0,0,20,10"/>
+                                                    VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,20,10"/>
 
                                             <ToggleSwitch IsChecked="{Binding ShuffleQuestions}" OnContent="Shuffle Questions" OffContent="Do Not Shuffle" Margin="0,0,20,10"/>
                                             
@@ -160,7 +160,7 @@
                                                         <Grid RowDefinitions="Auto, Auto">
                                                             
                                                             <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto, Auto">
-                                                                <TextBlock Grid.Column="0" Text="{Binding Type}" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource TextMainBrush}" Opacity="0.5"/>
+                                                                <TextBlock Grid.Column="0" Text="{Binding Type}" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource TextMainBrush}" />
                                                                 <TextBox Grid.Column="1" Text="{Binding Prompt}" Watermark="Type your question here..." Background="Transparent" BorderThickness="0,0,0,1" Foreground="{DynamicResource TextMainBrush}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="40"/>
                                                                 <Button Grid.Column="2" Content="{Binding ExpandCollapseIcon}" Command="{Binding ToggleExpandCommand}" Width="30" Height="30" CornerRadius="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Margin="10,0,0,0" Foreground="{DynamicResource TextMainBrush}" FontWeight="Bold"/>
                                                                 <Button Grid.Column="3" Content="{DynamicResource IconDelete}" Command="{Binding #RootView.DataContext.RemoveQuestionCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="{DynamicResource DangerBrush}" FontSize="18" Margin="10,0,0,0" ToolTip.Tip="Delete Question"/>
@@ -269,7 +269,7 @@
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
 
-                                        <Button Content="+ Add Question to Section" HorizontalAlignment="Center" Margin="0,10,0,0" Background="{DynamicResource SurfaceVariantBrush}" Foreground="{DynamicResource TextMainBrush}">
+                                        <Button Content="+ Add Question to Section" HorizontalAlignment="Center" Margin="0,10,0,0" Background="Transparent" Foreground="{DynamicResource PrimaryBrush}">
                                             <Button.Flyout>
                                                 <MenuFlyout Placement="BottomEdgeAlignedLeft">
                                                     <MenuItem Header="Multiple Choice" Command="{Binding #RootView.DataContext.AddMultipleChoiceCommand}" CommandParameter="{Binding}" />
@@ -291,11 +291,8 @@
             </ScrollViewer>
 
             <Border Grid.Row="2" Background="{DynamicResource SurfaceBrush}" Padding="15" BoxShadow="{DynamicResource ElevationLow}" ZIndex="10">
-                <Button Content="+ Add New Section" 
-                        Command="{Binding AddSectionCommand}" 
-                        HorizontalAlignment="Center" 
-                        Background="{DynamicResource TextMainBrush}" 
-                        Foreground="{DynamicResource AppBackground}" 
+                <Button Content="+ Add New Section"  Command="{Binding AddSectionCommand}" HorizontalAlignment="Center" 
+                        Background="Transparent" Foreground="{DynamicResource PrimaryBrush}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="2" 
                         Padding="30,10" FontSize="16" FontWeight="Bold"/>
             </Border>
         </Grid>
