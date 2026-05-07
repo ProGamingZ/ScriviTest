@@ -29,30 +29,30 @@
                     <StackPanel Spacing="15">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Text="{DynamicResource IconImport}" FontSize="24"/>
-                            <TextBlock Text="Import Existing Exam" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}"/>
+                            <TextBlock Text="Import Existing Exam" FontSize="20.31" FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}"/>
                         </StackPanel>
-                        <TextBlock Text="Select the matching .xamn and .xamk files, and provide the decryption key to unlock and edit the exam." TextWrapping="Wrap"/>
+                        <TextBlock Text="Select the matching .xamn and .xamk files, and provide the decryption key to unlock and edit the exam." FontSize="16.25" TextWrapping="Wrap"/>
 
-                        <TextBlock Text="Student Exam File (.xamn)" FontWeight="Bold" Margin="0,10,0,0"/>
+                        <TextBlock Text="Student Exam File (.xamn)" FontSize="16.25" FontWeight="Bold" Margin="0,10,0,0"/>
                         <Grid ColumnDefinitions="*, Auto">
-                            <TextBox Grid.Column="0" Text="{Binding ImportXamnPath}" IsReadOnly="True" Watermark="Browse for .xamn..."/>
-                            <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseImportXamnCommand}" Margin="10,0,0,0"/>
+                            <TextBox Grid.Column="0" Text="{Binding ImportXamnPath}" FontSize="16.25" IsReadOnly="True" Watermark="Browse for .xamn..."/>
+                            <Button Grid.Column="1" Content="Browse" FontSize="16.25" Command="{Binding BrowseImportXamnCommand}" Margin="10,0,0,0"/>
                         </Grid>
 
-                        <TextBlock Text="Answer Key File (.xamk)" FontWeight="Bold" Margin="0,5,0,0"/>
+                        <TextBlock Text="Answer Key File (.xamk)" FontSize="16.25" FontWeight="Bold" Margin="0,5,0,0"/>
                         <Grid ColumnDefinitions="*, Auto">
-                            <TextBox Grid.Column="0" Text="{Binding ImportXamkPath}" IsReadOnly="True" Watermark="Browse for .xamk..."/>
-                            <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseImportXamkCommand}" Margin="10,0,0,0"/>
+                            <TextBox Grid.Column="0" Text="{Binding ImportXamkPath}" FontSize="16.25" IsReadOnly="True" Watermark="Browse for .xamk..."/>
+                            <Button Grid.Column="1" Content="Browse" FontSize="16.25" Command="{Binding BrowseImportXamkCommand}" Margin="10,0,0,0"/>
                         </Grid>
 
-                        <TextBlock Text="Decryption Key" FontWeight="Bold" Margin="0,5,0,0"/>
-                        <TextBox Text="{Binding ImportDecryptionKey}" MaxLength="6" Watermark="6-Character Key" FontWeight="Bold" FontSize="16" HorizontalContentAlignment="Center"/>
+                        <TextBlock Text="Decryption Key" FontSize="16.25" FontWeight="Bold" Margin="0,5,0,0"/>
+                        <TextBox Text="{Binding ImportDecryptionKey}" FontSize="16.25" MaxLength="6" Watermark="6-Character Key" FontWeight="Bold" HorizontalContentAlignment="Center"/>
 
-                        <TextBlock Text="{Binding ImportErrorMessage}" Foreground="{DynamicResource DangerBrush}" FontWeight="SemiBold" IsVisible="{Binding ImportErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding ImportErrorMessage}" FontSize="16.25" Foreground="{DynamicResource DangerBrush}" FontWeight="SemiBold" IsVisible="{Binding ImportErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" TextWrapping="Wrap"/>
 
                         <Grid ColumnDefinitions="*, *" Margin="0,20,0,0">
-                            <Button Grid.Column="0" Content="Cancel" Command="{Binding CloseImportPopupCommand}" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,10,0" Padding="10"/>
-                            <Button Grid.Column="1" Content="Unlock &amp; Import" Command="{Binding ExecuteImportCommand}" Background="{DynamicResource PrimaryBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10,0,0,0" Padding="10" FontWeight="Bold"/>
+                            <Button Grid.Column="0" Content="Cancel" FontSize="20.31" Command="{Binding CloseImportPopupCommand}" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,10,0" Padding="10"/>
+                            <Button Grid.Column="1" Content="Unlock &amp; Import" FontSize="20.31" Command="{Binding ExecuteImportCommand}" Background="{DynamicResource PrimaryBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10,0,0,0" Padding="10" FontWeight="Bold"/>
                         </Grid>
                     </StackPanel>
                 </Border>
