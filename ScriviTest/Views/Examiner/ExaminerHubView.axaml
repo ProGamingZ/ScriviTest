@@ -34,7 +34,7 @@
                             Background="{DynamicResource PrimaryBrush}" 
                             Foreground="{DynamicResource PrimaryForegroundBrush}"/>
 
-                    <Button Content="Grade Submitted Tests" Command="{Binding NavigateToGradingCommand}"
+                    <Button Content="Score Submitted Tests" Command="{Binding NavigateToGradingCommand}"
                             Width="300" Height="60" FontSize="20.31" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                             Background="{DynamicResource PrimaryBrush}" 
                             Foreground="{DynamicResource PrimaryForegroundBrush}"/>

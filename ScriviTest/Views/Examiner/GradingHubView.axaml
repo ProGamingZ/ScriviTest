@@ -10,14 +10,14 @@
     <Grid RowDefinitions="Auto, *">
         
         <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="15" BoxShadow="{DynamicResource ElevationLow}" ZIndex="10">
-            <Grid ColumnDefinitions="Auto, *">
+            <Grid>
                 <Button Grid.Column="0" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource TextMainBrush}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <TextBlock Text="{DynamicResource IconBack}"/>
-                        <TextBlock Text="Back to Hub"/>
+                        <TextBlock Text="{DynamicResource IconBack}" FontSize="16.25"/>
+                        <TextBlock Text="BACK" FontSize="16.25"/>
                     </StackPanel>
                 </Button>
-                <TextBlock Grid.Column="1" Text="GRADING DASHBOARD" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
+                <TextBlock Grid.Column="1" Text="SCORING DASHBOARD" FontSize="31.74" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
             </Grid>
         </Border>
 
@@ -31,35 +31,35 @@
                 <Grid RowDefinitions="Auto, Auto, Auto, Auto, *, Auto">
                     
                     <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
-                        <TextBox Grid.Column="0" Text="{Binding AnswerKeyFileName}" Watermark="Load Answer Key (.xamk)" IsReadOnly="True" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="0"/>
-                        <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseForAnswerKeyCommand}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,1,1,1" CornerRadius="0" Margin="5,0,0,0" Background="{DynamicResource SurfaceBrush}"/>
+                        <TextBox Grid.Column="0" Text="{Binding AnswerKeyFileName}" FontSize="16.25" Watermark="Load Answer Key (.xamk)" IsReadOnly="True" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        <Button Grid.Column="1" Content="Browse" FontSize="16.25" Command="{Binding BrowseForAnswerKeyCommand}" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1"  Margin="5,0,0,0" Background="{DynamicResource SurfaceBrush}"/>
                     </Grid>
 
                     <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
-                        <TextBox Grid.Column="0" Text="{Binding ExamKey}" Watermark="Decryption Key" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="0"/>
-                        <Button Grid.Column="1" Content="Check" Command="{Binding CheckAndUnlockCommand}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,1,1,1" CornerRadius="0" Margin="5,0,0,0" Background="{DynamicResource SurfaceBrush}"/>
+                        <TextBox Grid.Column="0" Text="{Binding ExamKey}" FontSize="16.25" Watermark="Decryption Key" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        <Button Grid.Column="1" Content="Check" FontSize="16.25" Command="{Binding CheckAndUnlockCommand}" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Margin="5,0,0,0" Background="{DynamicResource SurfaceBrush}"/>
                     </Grid>
 
                     <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
-                        <TextBox Grid.Column="0" Text="{Binding StudentFilesSummary}" Watermark="Load Student Submissions (.xans)"  IsReadOnly="True" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="0"/>
-                        <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseForStudentFilesCommand}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,1,1,1" CornerRadius="0" Margin="5,0,0,0" Background="{DynamicResource SurfaceBrush}"/>
+                        <TextBox Grid.Column="0" Text="{Binding StudentFilesSummary}" FontSize="16.25" Watermark="Load Student Submissions (.xans)"  IsReadOnly="True" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        <Button Grid.Column="1" Content="Browse" FontSize="16.25" Command="{Binding BrowseForStudentFilesCommand}" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Margin="5,0,0,0" Background="{DynamicResource SurfaceBrush}"/>
                     </Grid>
 
                     <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,5">
-                        <Button Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10,5">
+                        <Button Background="Transparent" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Padding="10,5">
                             <StackPanel Orientation="Horizontal" Spacing="8">
-                                <TextBlock Text="{DynamicResource IconSettings}"/>
-                                <TextBlock Text="Columns" Foreground="{DynamicResource TextMainBrush}"/>
+                                <TextBlock Text="{DynamicResource IconSettings}" FontSize="16.25"/>
+                                <TextBlock Text="Columns" FontSize="16.25" Foreground="{DynamicResource TextMainBrush}"/>
                             </StackPanel>   
                             <Button.Flyout>
                                 <Flyout>
                                     <StackPanel Spacing="10" MinWidth="150">
-                                        <TextBlock Text="Show/Hide Columns" FontWeight="Bold" Margin="0,0,0,5"/>
-                                        <CheckBox Content="First Name" IsChecked="{Binding ShowFirstName}"/>
-                                        <CheckBox Content="Middle Name" IsChecked="{Binding ShowMiddleName}"/>
-                                        <CheckBox Content="Last Name" IsChecked="{Binding ShowLastName}"/>
-                                        <CheckBox Content="Student ID" IsChecked="{Binding ShowID}"/>
-                                        <CheckBox Content="Scores" IsChecked="{Binding ShowScores}"/>
+                                        <TextBlock Text="Show/Hide Columns" FontSize="16.25" FontWeight="Bold" Margin="0,0,0,5"/>
+                                        <CheckBox Content="First Name" FontSize="16.25" IsChecked="{Binding ShowFirstName}"/>
+                                        <CheckBox Content="Middle Name" FontSize="16.25" IsChecked="{Binding ShowMiddleName}"/>
+                                        <CheckBox Content="Last Name" FontSize="16.25" IsChecked="{Binding ShowLastName}"/>
+                                        <CheckBox Content="Student ID" FontSize="16.25" IsChecked="{Binding ShowID}"/>
+                                        <CheckBox Content="Scores" FontSize="16.25" IsChecked="{Binding ShowScores}"/>
                                     </StackPanel>
                                 </Flyout>
                             </Button.Flyout>
@@ -67,73 +67,44 @@
                     </StackPanel>
 
                     <DataGrid Grid.Row="4" ItemsSource="{Binding StudentList}" SelectedItem="{Binding SelectedStudent}"
-                            AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CanUserReorderColumns="True" CanUserSortColumns="True"
+                            AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" CanUserReorderColumns="True" CanUserSortColumns="True"
                             CanUserResizeColumns="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                             ScrollViewer.VerticalScrollBarVisibility="Auto" RowBackground="{DynamicResource SurfaceBrush}" >
-                                <DataGrid.Styles>
-                                    <Style Selector="DataGridRow:nth-child(odd)">
-                                        <Setter Property="Background" Value="{DynamicResource nth-child}"/> 
-                                    </Style>
-
-                                    <Style Selector="DataGridRow:pointerover, DataGridRow:selected">
-                                        <Setter Property="Background" Value="Transparent"/>
-                                    </Style>
-
-                                    <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
-                                        <Setter Property="Fill" Value="{DynamicResource pointerover}"/>
-                                        <Setter Property="Opacity" Value="1"/>
-                                    </Style>
-
-                                    <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle, 
-                                                    DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
-                                        <Setter Property="Fill" Value="{DynamicResource selected:pointerover}"/>
-                                        <Setter Property="Opacity" Value="1"/> 
-                                    </Style>
-
-                                    <Style Selector="DataGridCell:selected, DataGridCell:pointerover, DataGridCell:selected:pointerover">
-                                        <Setter Property="Background" Value="Transparent"/>
-                                    </Style>
-                                </DataGrid.Styles>
+ 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="First" Binding="{Binding FirstName}" Width="Auto" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowFirstName}"/>
-                            <DataGridTextColumn Header="Middle" Binding="{Binding MiddleName}" Width="Auto" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowMiddleName}"/>
-                            <DataGridTextColumn Header="Last" Binding="{Binding LastName}" Width="Auto" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowLastName}"/>
-                            <DataGridTextColumn Header="ID" Binding="{Binding StudentID}" Width="Auto" MinWidth="100" MaxWidth="250" IsVisible="{Binding ShowID}"/>
-                            
-                            <DataGridTemplateColumn Header="Score Status" Width="*" MinWidth="140" MaxWidth="250" IsVisible="{Binding ShowScores}" SortMemberPath="TotalPointsEarned">
+                            <DataGridTextColumn Header="First" FontSize="16.25" Binding="{Binding FirstName}" Width="Auto" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowFirstName}"/>
+                            <DataGridTextColumn Header="Middle" FontSize="16.25" Binding="{Binding MiddleName}" Width="Auto" MinWidth="110" MaxWidth="300" IsVisible="{Binding ShowMiddleName}"/>
+                            <DataGridTextColumn Header="Last" FontSize="16.25" Binding="{Binding LastName}" Width="Auto" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowLastName}"/>
+                            <DataGridTextColumn Header="ID" FontSize="16.25" Binding="{Binding StudentID}" Width="Auto" MinWidth="100" MaxWidth="250" IsVisible="{Binding ShowID}"/>
+                            <DataGridTemplateColumn Header="Score Status"  Width="*" MinWidth="150" MaxWidth="250" IsVisible="{Binding ShowScores}" SortMemberPath="TotalPointsEarned">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate x:DataType="models:GradeReport">
                                         <StackPanel Orientation="Horizontal" Spacing="10" Margin="10,0,0,0" VerticalAlignment="Center">
-                                            
                                             <Ellipse Width="14" Height="14" Fill="{Binding StatusHexColor}" ToolTip.Tip="{Binding StatusTooltip}"/>
-                                            
-                                            <TextBlock Text="{Binding DisplayScore}" VerticalAlignment="Center" FontWeight="SemiBold"/>
-                                            
+                                            <TextBlock Text="{Binding DisplayScore}" FontSize="16.25" VerticalAlignment="Center" FontWeight="SemiBold"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                        
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Button Grid.Row="5" Content="Export Grades &amp; Reports" Command="{Binding ExportReportsCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" FontSize="18" FontWeight="Bold" Padding="0,15" Margin="0,15,0,0"/>
-
+                    <Button Grid.Row="5" Content="Export Files" FontSize="20.31" Command="{Binding ExportReportsCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="Transparent" BorderBrush="{DynamicResource TextMainBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="2" FontWeight="Bold" Padding="0,15" Margin="0,15,0,0"/>
                 </Grid>
 
             </Border>
 
             <Border Grid.Column="1" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,4,0" Padding="30" Background="{DynamicResource SurfaceBrush}">
                 <Panel>
-                    <TextBlock Text="Select a student from the list to review their answers." IsVisible="{Binding CurrentVisibleQuestion, Converter={x:Static ObjectConverters.IsNull}}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="{DynamicResource BorderBrush}"/>
+                    <TextBlock Text="Select a student from the list to review their answers." FontSize="20.31" IsVisible="{Binding CurrentVisibleQuestion, Converter={x:Static ObjectConverters.IsNull}}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource BorderBrush}"/>
                     <Grid RowDefinitions="*, 4, 150, Auto" IsVisible="{Binding CurrentVisibleQuestion, Converter={x:Static ObjectConverters.IsNotNull}}">
                         
                         <!-- ROW 0: The Scrollable Question Area -->
                         <ScrollViewer Grid.Row="0" Margin="0,0,0,10">
                             <StackPanel Spacing="20">
                                 <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Top">
-                                    <TextBlock Text="{Binding CurrentVisibleQuestion.QuestionNumber, StringFormat='{}{0})'}" FontSize="20" FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding CurrentVisibleQuestion.Prompt}" FontSize="20" TextWrapping="Wrap" MaxWidth="500"/>
+                                    <TextBlock Text="{Binding CurrentVisibleQuestion.QuestionNumber, StringFormat='{}{0})'}" FontSize="16.25" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding CurrentVisibleQuestion.Prompt}" FontSize="16.25" TextWrapping="Wrap" MaxWidth="500"/>
                                 </StackPanel>
                                 <Image Source="{Binding CurrentVisibleQuestion.ImageBitmap}" IsVisible="{Binding CurrentVisibleQuestion.ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" MaxHeight="300" HorizontalAlignment="Left" Margin="30,0,0,0"/>
 
@@ -143,9 +114,9 @@
                                             <StackPanel Orientation="Vertical" Spacing="5" Margin="0,5">
                                                 <StackPanel Orientation="Horizontal" Spacing="15">
                                                     <Border Width="30" Height="30" CornerRadius="{Binding BoxCornerRadius}" Background="{Binding BoxBackgroundColor}" BorderBrush="{Binding BoxBorderColor}" BorderThickness="2" VerticalAlignment="Center">
-                                                        <TextBlock Text="{Binding InnerSymbol}" Foreground="{DynamicResource PrimaryForegroundBrush}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding InnerSymbol}" Foreground="{DynamicResource PrimaryForegroundBrush}" FontSize="16.25" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                     </Border>
-                                                    <TextBlock Text="{Binding Text}" FontSize="18" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                                    <TextBlock Text="{Binding Text}" FontSize="16.25" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                                 </StackPanel>
                                                 <Image Source="{Binding ImageBitmap}" IsVisible="{Binding ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" MaxHeight="150" HorizontalAlignment="Left" Margin="70,0,0,0"/>
                                             </StackPanel>
@@ -155,7 +126,7 @@
 
                                 <Border IsVisible="{Binding CurrentVisibleQuestion.IsEssay}" 
                                         Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="15" Margin="30,20,0,0">
-                                    <TextBlock Text="{Binding CurrentVisibleQuestion.EssayResponse}" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding CurrentVisibleQuestion.EssayResponse}" FontSize="16.25" TextWrapping="Wrap"/>
                                 </Border>
                             </StackPanel>
                         </ScrollViewer>
@@ -165,7 +136,7 @@
 
                         <!-- ROW 2: The Remarks Box -->
                         <Border Grid.Row="2" Margin="0,10,0,15" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="5" Background="{DynamicResource SurfaceBrush}">
-                            <TextBox Text="{Binding CurrentVisibleQuestion.Remarks, Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap" Watermark="Add private grading remarks for this specific question here..." BorderThickness="0" Background="Transparent" Padding="10"/>
+                            <TextBox Text="{Binding CurrentVisibleQuestion.Remarks, Mode=TwoWay}" FontSize="16.25" AcceptsReturn="True" TextWrapping="Wrap" Watermark="Add private grading remarks for this specific question here..." BorderThickness="0" Background="Transparent" Padding="10"/>
                         </Border>
 
                         <!-- ROW 3: The Control Bar (Shifted to Row 3) -->
@@ -173,20 +144,20 @@
                             
                             <Button Grid.Column="0" Command="{Binding PrevQuestionCommand}" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" Padding="20,10" Foreground="{DynamicResource TextMainBrush}">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="{DynamicResource IconBack}" FontSize="16" FontWeight="Bold"/>
-                                    <TextBlock Text="Prev" FontSize="16" FontWeight="Bold"/>
+                                    <TextBlock Text="{DynamicResource IconBack}" FontSize="16.25" FontWeight="Bold"/>
+                                    <TextBlock Text="Prev" FontSize="16.25" FontWeight="Bold"/>
                                 </StackPanel>
                             </Button>
                             
                             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-                                <TextBox Text="{Binding CurrentVisibleQuestion.PointsInputText}" Width="60" FontSize="20" FontWeight="Bold" TextAlignment="Center" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"/>
-                                <TextBlock Text="{Binding CurrentVisibleQuestion.MaxPoints, StringFormat='{}/ {0} pts'}" FontSize="20" VerticalAlignment="Center" Foreground="{DynamicResource TextMainBrush}"/>
+                                <TextBox Text="{Binding CurrentVisibleQuestion.PointsInputText}" Width="60" FontSize="20.31" FontWeight="Bold" TextAlignment="Center" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"/>
+                                <TextBlock Text="{Binding CurrentVisibleQuestion.MaxPoints, StringFormat='{}/ {0} pts'}" FontSize="20.31" VerticalAlignment="Center" Foreground="{DynamicResource TextMainBrush}"/>
                             </StackPanel>
 
                             <Button Grid.Column="2" Command="{Binding NextQuestionCommand}" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" Padding="20,10" Foreground="{DynamicResource TextMainBrush}">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="Next" FontSize="16" FontWeight="Bold"/>
-                                    <TextBlock Text="{DynamicResource IconNext}" FontSize="16" FontWeight="Bold"/>
+                                    <TextBlock Text="Next" FontSize="16.25" FontWeight="Bold"/>
+                                    <TextBlock Text="{DynamicResource IconNext}" FontSize="16.25" FontWeight="Bold"/>
                                 </StackPanel>
                             </Button>
                         </Grid>
@@ -202,13 +173,13 @@
                     <WrapPanel Grid.Row="0" Margin="0,0,0,20" Orientation="Horizontal" HorizontalAlignment="Center">
                         
                         <StackPanel Orientation="Horizontal" Margin="0,0,30,10">
-                            <TextBlock Text="{Binding CurrentTotalScore}" FontSize="24" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding CurrentMaxScore, StringFormat='{} / {0}'}" FontSize="24" Foreground="{DynamicResource BorderBrush}"/>
+                            <TextBlock Text="{Binding CurrentTotalScore}" FontSize="25.39" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding CurrentMaxScore, StringFormat='{} / {0}'}" FontSize="25.39" />
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                            <TextBlock Text="{DynamicResource IconTimer}" FontSize="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <TextBlock Text="{Binding CurrentTimeTakenDisplay}" FontSize="20" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource IconTimer}" FontSize="20.31" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="{Binding CurrentTimeTakenDisplay}" FontSize="20.31" VerticalAlignment="Center"/>
                         </StackPanel>
                         
                     </WrapPanel>
@@ -216,14 +187,14 @@
                     <Border Grid.Row="1" Background="{DynamicResource SurfaceVariantBrush}" BorderBrush="{DynamicResource DangerBrush}" BorderThickness="2" CornerRadius="4" Padding="10" Margin="0,0,0,15" IsVisible="{Binding CurrentIncidentLog.Count}">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,5">
-                                <TextBlock Text="{DynamicResource IconWarning}"/>
-                                <TextBlock Text="Anti-Cheat Incident Report" Foreground="{DynamicResource DangerBrush}" FontWeight="Bold"/>
+                                <TextBlock Text="{DynamicResource IconWarning}" FontSize="16.25" Foreground="{DynamicResource DangerBrush}"/>
+                                <TextBlock Text="Anti-Cheat Incident Report" FontSize="16.25" Foreground="{DynamicResource DangerBrush}" FontWeight="Bold"/>
                             </StackPanel>
                             <ScrollViewer MaxHeight="120" HorizontalScrollBarVisibility="Disabled">
                                 <ItemsControl ItemsSource="{Binding CurrentIncidentLog}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="x:String">
-                                            <TextBlock Text="{Binding}" Foreground="{DynamicResource DangerBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,2"/>
+                                            <TextBlock Text="{Binding}" Foreground="{DynamicResource DangerBrush}" FontSize="16.25" TextWrapping="Wrap" Margin="0,2"/>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
@@ -233,7 +204,7 @@
 
                     <ScrollViewer Grid.Row="2" Margin="0,10">
                         <StackPanel>
-                            <TextBlock Text="Question Navigation" FontWeight="Bold" FontSize="18" Margin="0,0,0,15" Foreground="{DynamicResource BorderBrush}"/>
+                            <TextBlock Text="Question Navigation" FontWeight="Bold" FontSize="20.31" Margin="0,0,0,15" />
                             
                             <ItemsControl ItemsSource="{Binding CurrentReviewSections}">
                                 <ItemsControl.ItemTemplate>
@@ -241,7 +212,7 @@
                                         
                                         <StackPanel Margin="0,0,0,20">
 
-                                            <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BorderBrush}" Margin="0,0,0,5" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16.25"  Margin="0,0,0,5" TextWrapping="Wrap"/>
 
                                             <ItemsControl ItemsSource="{Binding Questions}">
                                                 <ItemsControl.ItemsPanel>
@@ -256,8 +227,8 @@
                                                                 CommandParameter="{Binding}"
                                                                 Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Foreground="{DynamicResource TextMainBrush}" Width="75" Height="50" Margin="5" Padding="5">
                                                             <Grid ColumnDefinitions="Auto, *">
-                                                                <TextBlock Grid.Column="0" Text="{Binding GridIcon}" Foreground="{Binding GridIconColor}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
-                                                                <TextBlock Grid.Column="1" Text="{Binding QuestionNumber}" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                                                <TextBlock Grid.Column="0" Text="{Binding GridIcon}" FontSize="20.31" Foreground="{Binding GridIconColor}" FontWeight="Bold" VerticalAlignment="Center"/>
+                                                                <TextBlock Grid.Column="1" Text="{Binding QuestionNumber}" FontSize="16.25" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                                             </Grid>
                                                         </Button>
                                                     </DataTemplate>
@@ -274,7 +245,7 @@
                     <Button Grid.Row="3" Content="Finish Checking" Command="{Binding FinishCheckingCommand}" 
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
                             Background="{DynamicResource SuccessBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}" BorderThickness="2" 
-                            FontSize="18" FontWeight="Bold" Padding="0,15" Margin="0,20,0,0"/>
+                            FontSize="20.31" FontWeight="Bold" Padding="0,15" Margin="0,20,0,0"/>
 
                 </Grid>
             </Border>
@@ -287,12 +258,12 @@
                 CornerRadius="8" IsVisible="{Binding IsNotificationVisible}" 
                 BoxShadow="{DynamicResource ElevationHigh}" ZIndex="100">
             <Grid ColumnDefinitions="Auto, *, Auto">
-                <TextBlock Grid.Column="0" Text="{Binding NotificationIcon}" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <TextBlock Grid.Column="0" Text="{Binding NotificationIcon}" FontSize="20.31" VerticalAlignment="Center" Margin="0,0,12,0"/>
                 
-                <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" Foreground="{DynamicResource PrimaryForegroundBrush}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="500"/>
+                <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" FontSize="16.25" Foreground="{DynamicResource PrimaryForegroundBrush}" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="500"/>
                 
                 <Button Grid.Column="2" Content="{DynamicResource IconClose}" Command="{Binding CloseToastCommand}" 
-                        Background="Transparent" Foreground="{DynamicResource PrimaryForegroundBrush}" FontSize="18" FontWeight="Bold" 
+                        Background="Transparent" Foreground="{DynamicResource PrimaryForegroundBrush}" FontSize="20.31" FontWeight="Bold" 
                         Margin="15,0,0,0" Padding="8,4" Cursor="Hand">
                     <Button.Styles>
                         <Style Selector="Button:pointerover /template/ ContentPresenter">

@@ -55,12 +55,12 @@
                                 <Button.Flyout>
                                     <Flyout>
                                         <StackPanel Spacing="10" MinWidth="150">
-                                            <TextBlock Text="Show/Hide Columns" FontWeight="Bold" Margin="0,0,0,5"/>
-                                            <CheckBox Content="Date Created" IsChecked="{Binding ShowDate}"/>
-                                            <CheckBox Content="Exam Title" IsChecked="{Binding ShowTitle}"/>
-                                            <CheckBox Content="Decryption Key" IsChecked="{Binding ShowKey}"/>
-                                            <CheckBox Content="File Status" IsChecked="{Binding ShowStatus}"/>
-                                            <CheckBox Content="File Path" IsChecked="{Binding ShowLocation}"/>
+                                            <TextBlock Text="Show/Hide Columns" FontSize="16.25" FontWeight="Bold" Margin="0,0,0,5"/>
+                                            <CheckBox Content="Date Created" FontSize="16.25" IsChecked="{Binding ShowDate}"/>
+                                            <CheckBox Content="Exam Title" FontSize="16.25" IsChecked="{Binding ShowTitle}"/>
+                                            <CheckBox Content="Decryption Key" FontSize="16.25" IsChecked="{Binding ShowKey}"/>
+                                            <CheckBox Content="File Status" FontSize="16.25" IsChecked="{Binding ShowStatus}"/>
+                                            <CheckBox Content="File Path" FontSize="16.25" IsChecked="{Binding ShowLocation}"/>
                                         </StackPanel>
                                     </Flyout>
                                 </Button.Flyout>
