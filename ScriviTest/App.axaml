@@ -10,104 +10,176 @@
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+        
+        <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+
+
+        <Style Selector="DataGridColumnHeader">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="12,12"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+        </Style>
+        <Style Selector="DataGridColumnHeader:pointerover /template/ Grid#PART_ColumnHeaderRoot">
+            <Setter Property="Background" Value="{DynamicResource SurfaceVariantBrush}"/>
+        </Style>
+        <Style Selector="DataGridColumnHeader:pressed /template/ Grid#PART_ColumnHeaderRoot">
+            <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
+        </Style>
+
+        <Style Selector="DataGridRow:nth-child(odd)">
+            <Setter Property="Background" Value="{DynamicResource nth-child}"/> 
+        </Style>
+        <Style Selector="DataGridRow:pointerover, DataGridRow:selected">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="{DynamicResource pointerover}"/>
+            <Setter Property="Opacity" Value="1"/>
+        </Style>
+        <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle, 
+                         DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="{DynamicResource selected:pointerover}"/>
+            <Setter Property="Opacity" Value="1"/> 
+        </Style>
+        <Style Selector="DataGridCell:selected, DataGridCell:pointerover, DataGridCell:selected:pointerover">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+
+        <Style Selector="ToggleSwitch:checked /template/ Border#SwitchKnobBounds">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+        </Style>
+        <Style Selector="ToggleSwitch:unchecked /template/ Border#SwitchKnobBounds">
+            <Setter Property="Background" Value="{DynamicResource SurfaceVariantBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        </Style>
+        <Style Selector="ToggleSwitch:unchecked:pointerover /template/ Border#SwitchKnobBounds">
+            <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
+        </Style>
+
+
+        <Style Selector="FlyoutPresenter">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource TextMainBrush}"/>
+        </Style>
+        <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+        </Style>
+        <Style Selector="CheckBox:unchecked /template/ Border#NormalRectangle">
+            <Setter Property="Background" Value="{DynamicResource SurfaceVariantBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        </Style>
     </Application.Styles>
 
     <Application.Resources>
 
         <ResourceDictionary>
-        <ResourceDictionary.ThemeDictionaries>
-            
-            <!-- ====== LIGHT MODE BRUSHES ====== -->
-            <ResourceDictionary x:Key="Light">
-                <!-- SURFACES -->
-                <SolidColorBrush x:Key="AppBackground">#F5F5F5</SolidColorBrush> <!-- Base window color -->
-                <SolidColorBrush x:Key="SurfaceBrush">#FFFFFF</SolidColorBrush>  <!-- Main panels, cards, headers -->
-                <SolidColorBrush x:Key="SurfaceVariantBrush">#FAFAFA</SolidColorBrush> <!-- Disabled states, alternate rows -->
-                
-                <!-- TEXT AND LINES -->
-                <SolidColorBrush x:Key="TextMainBrush">#1A1A1A</SolidColorBrush>   <!-- Standard readable text -->
-                <SolidColorBrush x:Key="TextMutedBrush">#666666</SolidColorBrush>   <!-- Subtitles, placeholders -->
-                <SolidColorBrush x:Key="BorderBrush">#CCCCCC</SolidColorBrush>      <!-- Universal divider/outline -->
+            <ResourceDictionary.ThemeDictionaries>
+                <!-- ====== LIGHT MODE BRUSHES ====== -->
+                <ResourceDictionary x:Key="Light">
+                    <!-- SURFACES -->
+                    <SolidColorBrush x:Key="AppBackground">#F5F5F5</SolidColorBrush> <!-- Base window color -->
+                    <SolidColorBrush x:Key="SurfaceBrush">#ECECEC</SolidColorBrush>  <!-- Main panels, cards, headers -->
+                    <SolidColorBrush x:Key="SurfaceVariantBrush">#E4E4E4</SolidColorBrush> <!-- Disabled states, alternate rows -->
+                    
+                    <!-- TEXT AND LINES -->
+                    <SolidColorBrush x:Key="TextMainBrush">#1A1A1A</SolidColorBrush>   <!-- Standard readable text -->
+                    <SolidColorBrush x:Key="TextMutedBrush">#666666</SolidColorBrush>   <!-- Subtitles, placeholders -->
+                    <SolidColorBrush x:Key="BorderBrush">#1e88e5</SolidColorBrush>      <!-- Universal divider/outline -->
+                    <SolidColorBrush x:Key="TableBorderBrush">#1A1A1A</SolidColorBrush>
 
-                <!-- BRAND & ACTIONS (Buttons) -->
-                <SolidColorBrush x:Key="PrimaryBrush">#1e88e5</SolidColorBrush>     <!-- Main brand color (Blue) -->
-                <SolidColorBrush x:Key="PrimaryForegroundBrush">#FFFFFF</SolidColorBrush>   <!-- Text ON primary buttons -->
+                    <!-- BRAND & ACTIONS (Buttons) -->
+                    <SolidColorBrush x:Key="PrimaryBrush">#1e88e5</SolidColorBrush>     <!-- Main brand color (Blue) -->
+                    <SolidColorBrush x:Key="PrimaryForegroundBrush">#FFFFFF</SolidColorBrush>   <!-- Text ON primary buttons -->
+                    <SolidColorBrush x:Key="SecondaryBrush">#1A1A1A</SolidColorBrush>
+                    <SolidColorBrush x:Key="SecondaryForegroundBrush">#1A1A1A</SolidColorBrush>
 
-                <!-- STATUS & FEEDBACK (Alerts) -->
-                <SolidColorBrush x:Key="SuccessBrush">#43a047</SolidColorBrush> <!-- Saving, correct answers (Green) -->
-                <SolidColorBrush x:Key="WarningBrush">#FFD518</SolidColorBrush> <!-- Focus lost, warnings (Orange) -->
-                <SolidColorBrush x:Key="DangerBrush">#D32F2F</SolidColorBrush> <!-- Errors, deleting (Red) -->
-                <SolidColorBrush x:Key="InfoBrush">#E3F2FD</SolidColorBrush> <!-- Highlights, image backdrops (Light Blue) -->
+                    <!-- STATUS & FEEDBACK (Alerts) -->
+                    <SolidColorBrush x:Key="SuccessBrush">#43a047</SolidColorBrush> <!-- Saving, correct answers (Green) -->
+                    <SolidColorBrush x:Key="WarningBrush">#FFD518</SolidColorBrush> <!-- Focus lost, warnings (Orange) -->
+                    <SolidColorBrush x:Key="DangerBrush">#D32F2F</SolidColorBrush> <!-- Errors, deleting (Red) -->
+                    <SolidColorBrush x:Key="InfoBrush">#E3F2FD</SolidColorBrush> <!-- Highlights, image backdrops (Light Blue) -->
 
-                <!--  OVERLAYS (Modals) -->
-                <SolidColorBrush x:Key="OverlayBrush">#AA000000</SolidColorBrush> <!-- 66% Black for dialog backdrops -->
+                    <!--  OVERLAYS (Modals) -->
+                    <SolidColorBrush x:Key="OverlayBrush">#AA000000</SolidColorBrush> <!-- 66% Black for dialog backdrops -->
 
-                <!-- ELEVATIONS (SHADOWS) -->
-                <BoxShadows x:Key="ElevationLow">0 2 10 0 Gray</BoxShadows> <!-- Nav bars, sticky headers -->
-                <BoxShadows x:Key="ElevationMid">0 4 15 0 LightGray</BoxShadows> <!-- Main content cards -->
-                <BoxShadows x:Key="ElevationHigh">0 10 30 0 Black</BoxShadows> <!-- Popups, Modals, Toasts -->
+                    <!-- ELEVATIONS (SHADOWS) -->
+                    <BoxShadows x:Key="ElevationLow">0 2 10 0 Gray</BoxShadows> <!-- Nav bars, sticky headers -->
+                    <BoxShadows x:Key="ElevationMid">0 4 15 0 LightGray</BoxShadows> <!-- Main content cards -->
+                    <BoxShadows x:Key="ElevationHigh">0 10 15 0 Black</BoxShadows> <!-- Popups, Modals, Toasts -->
 
-                <!-- TABLES -->
-                <SolidColorBrush x:Key="nth-child">#F0F0F0</SolidColorBrush>
-                <SolidColorBrush x:Key="pointerover">#e8e8e8</SolidColorBrush>
-                <SolidColorBrush x:Key="selected:pointerover">#dddddd</SolidColorBrush> 
-            </ResourceDictionary>
+                    <!-- TABLES -->
+                    <SolidColorBrush x:Key="nth-child">#F0F0F0</SolidColorBrush>
+                    <SolidColorBrush x:Key="pointerover">#e8e8e8</SolidColorBrush>
+                    <SolidColorBrush x:Key="selected:pointerover">#dddddd</SolidColorBrush> 
+                </ResourceDictionary>
 
-            <!-- ====== DARK MODE BRUSHES ====== -->
-            <ResourceDictionary x:Key="Dark">
-                <!-- 1. SURFACES -->
-                <SolidColorBrush x:Key="AppBackground">#0A0F1C</SolidColorBrush>
-                <SolidColorBrush x:Key="SurfaceBrush">#151A28</SolidColorBrush>
-                <SolidColorBrush x:Key="SurfaceVariantBrush">#1E2536</SolidColorBrush>
-                
-                <!-- 2. INK -->
-                <SolidColorBrush x:Key="TextMainBrush">#FFFFFF</SolidColorBrush>
-                <SolidColorBrush x:Key="TextMutedBrush">#8A94A6</SolidColorBrush>
-                <SolidColorBrush x:Key="BorderBrush">#2A3245</SolidColorBrush>
+                <!-- ====== DARK MODE BRUSHES ====== -->
+                <ResourceDictionary x:Key="Dark">
+                    <!-- 1. SURFACES -->
+                    <SolidColorBrush x:Key="AppBackground">#0A0F1C</SolidColorBrush>
+                    <SolidColorBrush x:Key="SurfaceBrush">#151A28</SolidColorBrush>
+                    <SolidColorBrush x:Key="SurfaceVariantBrush">#1E2536</SolidColorBrush>
+                    
+                    <!-- 2. INK -->
+                    <SolidColorBrush x:Key="TextMainBrush">#FFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="TextMutedBrush">#8A94A6</SolidColorBrush>
+                    <SolidColorBrush x:Key="BorderBrush">#1e88e5</SolidColorBrush>
+                    <SolidColorBrush x:Key="TableBorderBrush">#FFFFFF</SolidColorBrush>
 
-                <!-- 3. BRAND -->
-                <SolidColorBrush x:Key="PrimaryBrush">#2B6BFF</SolidColorBrush>      
-                <SolidColorBrush x:Key="PrimaryForegroundBrush">#FFFFFF</SolidColorBrush>
+                    <!-- 3. BRAND -->
+                    <SolidColorBrush x:Key="PrimaryBrush">#2B6BFF</SolidColorBrush>      
+                    <SolidColorBrush x:Key="PrimaryForegroundBrush">#FFFFFF</SolidColorBrush>
 
-                <!-- 4. STATUS -->
-                <SolidColorBrush x:Key="SuccessBrush">#377b3c</SolidColorBrush>
-                <SolidColorBrush x:Key="WarningBrush">#ff9900</SolidColorBrush>
-                <SolidColorBrush x:Key="DangerBrush">#D32F2F</SolidColorBrush>
-                <SolidColorBrush x:Key="InfoBrush">#64B5F6</SolidColorBrush>
+                    <!-- 4. STATUS -->
+                    <SolidColorBrush x:Key="SuccessBrush">#377b3c</SolidColorBrush>
+                    <SolidColorBrush x:Key="WarningBrush">#ff9900</SolidColorBrush>
+                    <SolidColorBrush x:Key="DangerBrush">#D32F2F</SolidColorBrush>
+                    <SolidColorBrush x:Key="InfoBrush">#64B5F6</SolidColorBrush>
 
-                <!-- 5. OVERLAYS -->
-                <SolidColorBrush x:Key="OverlayBrush">#D9000000</SolidColorBrush>    
+                    <!-- 5. OVERLAYS -->
+                    <SolidColorBrush x:Key="OverlayBrush">#D9000000</SolidColorBrush>    
 
-                <!-- 6. ELEVATIONS  -->
-                <BoxShadows x:Key="ElevationLow">0 2 5 0 #05080F</BoxShadows>
-                <BoxShadows x:Key="ElevationMid">0 4 15 0 #05080F</BoxShadows>
-                <BoxShadows x:Key="ElevationHigh">0 10 30 0 #05080F</BoxShadows>   
+                    <!-- 6. ELEVATIONS  -->
+                    <BoxShadows x:Key="ElevationLow">0 2 5 0 #05080F</BoxShadows>
+                    <BoxShadows x:Key="ElevationMid">0 4 15 0 #05080F</BoxShadows>
+                    <BoxShadows x:Key="ElevationHigh">0 10 30 0 #05080F</BoxShadows>   
 
-                <!-- Subtle hover and list states building up from the SurfaceBrush (#1E1E1E) -->
-                <SolidColorBrush x:Key="nth-child">#222222</SolidColorBrush>
-                <SolidColorBrush x:Key="pointerover">#2A2A2A</SolidColorBrush>
-                <SolidColorBrush x:Key="selected:pointerover">#333333</SolidColorBrush>   
-            </ResourceDictionary> 
-            
-            
-        </ResourceDictionary.ThemeDictionaries>   
+                    <!-- Subtle hover and list states building up from the SurfaceBrush (#1E1E1E) -->
+                    <SolidColorBrush x:Key="nth-child">#111624</SolidColorBrush>
+                    <SolidColorBrush x:Key="pointerover">#1E2638</SolidColorBrush>
+                    <SolidColorBrush x:Key="selected:pointerover">#28334E</SolidColorBrush>   
+                </ResourceDictionary> 
+            </ResourceDictionary.ThemeDictionaries>   
 
-        <!-- CENTRALIZED ICONS (Strings) -->
-        <x:String x:Key="IconBack">←</x:String>
-        <x:String x:Key="IconNext">→</x:String>
-        <x:String x:Key="IconClose">✕</x:String>
-        <x:String x:Key="IconWarning">⚠️</x:String>
-        <x:String x:Key="IconDelete">🗑️</x:String>
-        <x:String x:Key="IconSettings">⚙️</x:String>
-        <x:String x:Key="IconImage">🖼️</x:String>
-        <x:String x:Key="IconTimer">⏱️</x:String>
-        <x:String x:Key="IconImport">📥</x:String>
-        <x:String x:Key="IconSave">💾</x:String>
-        <x:String x:Key="IconFlag">⚑</x:String>
-        <x:String x:Key="IconDoc">📄</x:String>
-        <x:String x:Key="IconKey">🔑</x:String>
+            <!-- CENTRALIZED ICONS (Strings) -->
+            <x:String x:Key="IconBack">←</x:String>
+            <x:String x:Key="IconNext">→</x:String>
+            <x:String x:Key="IconClose">✕</x:String>
+            <x:String x:Key="IconWarning">⚠️</x:String>
+            <x:String x:Key="IconDelete">🗑️</x:String>
+            <x:String x:Key="IconSettings">⚙️</x:String>
+            <x:String x:Key="IconImage">🖼️</x:String>
+            <x:String x:Key="IconTimer">⏱️</x:String>
+            <x:String x:Key="IconImport">📥</x:String>
+            <x:String x:Key="IconSave">💾</x:String>
+            <x:String x:Key="IconFlag">⚑</x:String>
+            <x:String x:Key="IconDoc">📄</x:String>
+            <x:String x:Key="IconKey">🔑</x:String>
 
-        
         </ResourceDictionary>
     </Application.Resources>
 </Application>
