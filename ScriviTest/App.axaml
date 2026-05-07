@@ -109,7 +109,7 @@
 
                     <!-- STATUS & FEEDBACK (Alerts) -->
                     <SolidColorBrush x:Key="SuccessBrush">#43a047</SolidColorBrush> <!-- Saving, correct answers (Green) -->
-                    <SolidColorBrush x:Key="WarningBrush">#FFD518</SolidColorBrush> <!-- Focus lost, warnings (Orange) -->
+                    <SolidColorBrush x:Key="WarningBrush">#FFA500</SolidColorBrush> <!-- Focus lost, warnings (Orange) -->
                     <SolidColorBrush x:Key="DangerBrush">#D32F2F</SolidColorBrush> <!-- Errors, deleting (Red) -->
                     <SolidColorBrush x:Key="InfoBrush">#E3F2FD</SolidColorBrush> <!-- Highlights, image backdrops (Light Blue) -->
 

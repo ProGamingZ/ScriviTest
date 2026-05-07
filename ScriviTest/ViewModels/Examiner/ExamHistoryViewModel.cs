@@ -2,12 +2,15 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScriviTest.Models;
 using System;
+using Avalonia;
+using Avalonia.Media;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 
 namespace ScriviTest.ViewModels.Examiner;
 
@@ -15,13 +18,15 @@ public partial class HistoryRecordWrapper : ObservableObject
 {
     public HistoryRecord Record { get; }
     [ObservableProperty] private string _fileStatus = "Untested";
-    [ObservableProperty] private string _statusHexColor = "Gray";
+    [ObservableProperty] private IBrush? _statusHexColor = Brushes.Gray;
     public string DisplayKey => Record.FilePath.EndsWith(".xamk", StringComparison.OrdinalIgnoreCase) ? "NONE" : Record.ExamKey;
     public HistoryRecordWrapper(HistoryRecord record)
     {
         Record = record;
     }
+
 }
+
 
 public partial class ExamHistoryViewModel : ViewModelBase
 {
@@ -64,9 +69,26 @@ public partial class ExamHistoryViewModel : ViewModelBase
         LoadAndScanHistory();
     }
 
-    // ==========================================
+
+    // RESOURCE FETCH HELPERS
+    private IBrush GetBrush(string resourceKey)
+    {
+        var app = Application.Current;
+    
+        if (app != null && app.TryGetResource(resourceKey, app.ActualThemeVariant, out var res) && res is IBrush brush)
+        {
+            return brush;
+        }
+        return Brushes.Gray; // Fallback
+    }
+    private string GetIcon(string resourceKey, string fallbackIcon)
+    {
+        if (Application.Current != null && Application.Current.TryGetResource(resourceKey, out var res) && res is string iconStr)
+            return iconStr;
+        return fallbackIcon; 
+    }
+
     // AUTO-SCAN & LOAD ENGINE
-    // ==========================================
     private void LoadAndScanHistory()
     {
         Services.AppPaths.InitializeFolders();
@@ -138,10 +160,7 @@ public partial class ExamHistoryViewModel : ViewModelBase
         CheckLocations(); 
     }
 
-    // ==========================================
     // GLOBAL BUTTON COMMANDS
-    // ==========================================
-
     [RelayCommand]
     private void CheckLocations()
     {
@@ -151,15 +170,15 @@ public partial class ExamHistoryViewModel : ViewModelBase
             if (File.Exists(wrapper.Record.FilePath))
             {
                 wrapper.FileStatus = "Found ✓";
-                wrapper.StatusHexColor = "#4CAF50"; 
+                wrapper.StatusHexColor = GetBrush("SuccessBrush"); 
             }
             else
             {
                 wrapper.FileStatus = "Missing ✕";
-                wrapper.StatusHexColor = "#F44336"; 
+                wrapper.StatusHexColor = GetBrush("DangerBrush"); 
             }
         }
-        ShowToast("All file locations verified.", "🔍", "#1976D2");
+        ShowToast("All file locations verified.", "IconDoc", "PrimaryBrush");
     }
 
     public event EventHandler<HistoryRecordWrapper>? OpenFilePickerRequested;
@@ -170,7 +189,7 @@ public partial class ExamHistoryViewModel : ViewModelBase
         var target = ActiveSelection;
         if (target == null)
         {
-            ShowToast("Please select a file to relink.", "⚠️", "#F57C00");
+            ShowToast("Please select a file to relink.", "IconWarning", "WarningBrush");
             return;
         }
 
@@ -181,9 +200,9 @@ public partial class ExamHistoryViewModel : ViewModelBase
     {
         wrapper.Record.FilePath = newFilePath;
         wrapper.FileStatus = "Found ✓";
-        wrapper.StatusHexColor = "#4CAF50";
+        wrapper.StatusHexColor = GetBrush("SuccessBrush");
         SaveHistoryToFile();
-        ShowToast("File relinked successfully!", "🔗", "#388E3C");
+        ShowToast("File relinked successfully!", "IconDoc", "SuccessBrush");
     }
 
     [RelayCommand]
@@ -192,7 +211,7 @@ public partial class ExamHistoryViewModel : ViewModelBase
         var target = ActiveSelection;
         if (target == null)
         {
-            ShowToast("Please select a file to delete.", "⚠️", "#F57C00");
+            ShowToast("Please select a file to delete.", "IconWarning", "WarningBrush");
             return;
         }
 
@@ -206,7 +225,7 @@ public partial class ExamHistoryViewModel : ViewModelBase
         {
             // The file is already missing. Just wipe the ghost record quietly.
             ExecuteDelete(target);
-            ShowToast("Missing log removed from history.", "🧹", "#607D8B");
+            ShowToast("Missing log removed from history.", "IconDelete", "BorderBrush");
         }
     }
 
@@ -228,13 +247,13 @@ public partial class ExamHistoryViewModel : ViewModelBase
             }
             catch (Exception ex)
             {
-                ShowToast($"Error deleting file: {ex.Message}", "🛑", "#D32F2F");
+                ShowToast($"Error deleting file: {ex.Message}", "IconWarning", "DangerBrush");
                 IsDeleteWarningVisible = false;
                 return;
             }
 
             ExecuteDelete(target);
-            ShowToast("File permanently deleted.", "🗑️", "#D32F2F");
+            ShowToast("File permanently deleted.", "IconDelete", "DangerBrush");
         }
         IsDeleteWarningVisible = false;
     }
@@ -260,20 +279,19 @@ public partial class ExamHistoryViewModel : ViewModelBase
     [RelayCommand]
     private void GoBack() => _navigateAction(new ExaminerHubViewModel(_navigateAction));
 
-    // ==========================================
+   
     // TOAST NOTIFICATION ENGINE
-    // ==========================================
     private int _currentToastId;
     [ObservableProperty] private bool _isNotificationVisible;
     [ObservableProperty] private string _notificationMessage = string.Empty;
     [ObservableProperty] private string _notificationIcon = "ℹ️";
-    [ObservableProperty] private string _notificationColor = "#323232";
+    [ObservableProperty] private IBrush _notificationColor = Brushes.Gray;
 
-    public async void ShowToast(string message, string icon = "ℹ️", string hexColor = "#323232")
+    public async void ShowToast(string message, string iconKey, string colorKey)
     {
         NotificationMessage = message;
-        NotificationIcon = icon;
-        NotificationColor = hexColor;
+        NotificationIcon = GetIcon(iconKey, "ℹ️");
+        NotificationColor = GetBrush(colorKey);
         IsNotificationVisible = true;
 
         int toastId = ++_currentToastId;

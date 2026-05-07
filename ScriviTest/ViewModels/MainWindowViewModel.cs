@@ -54,18 +54,19 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void Navigate(ViewModelBase viewModel)
     {
+        
         // Route: Home Screen (Strict, Fixed Window)
         if (viewModel is HomeViewModel)
         {
             CanResize = false;
             IsTopmost = false;
-            CurrentWindowState = WindowState.Normal;
             WindowWidth = 800;
             WindowHeight = 450;
             MinWidth = 800;  
             MinHeight = 450;
+            CurrentWindowState = WindowState.Normal;
         }
-        // NEW Route: Examinee Test Execution (Strict Fullscreen Lockdown)
+        // Route: Examinee Test Execution (Strict Fullscreen Lockdown)
         else if (viewModel is ExamineeTestViewModel)
         {
             CanResize = false;

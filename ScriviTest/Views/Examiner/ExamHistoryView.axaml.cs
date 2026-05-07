@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Threading;
 using ScriviTest.ViewModels.Examiner;
 using System.Linq;
 
@@ -9,6 +11,17 @@ public partial class ExamHistoryView : UserControl
     public ExamHistoryView()
     {
         InitializeComponent();
+    }
+    private void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        // Force both DataGrids to re-measure after layout has settled
+         Dispatcher.UIThread.Post(() =>
+        {
+            QuestionnaireGrid.InvalidateMeasure();
+            QuestionnaireGrid.InvalidateArrange();
+            AnswerKeyGrid.InvalidateMeasure();
+            AnswerKeyGrid.InvalidateArrange();
+        }, DispatcherPriority.Loaded);
     }
 
     protected override void OnDataContextChanged(System.EventArgs e)
