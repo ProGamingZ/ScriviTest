@@ -38,7 +38,7 @@ public partial class ExamineeQuestionWrapper : ObservableObject
 
     private IBrush GetBrush(string resourceKey)
     {
-        if (Application.Current!.TryFindResource(resourceKey, Application.Current.ActualThemeVariant, out var resource) && resource is IBrush brush)
+        if (Application.Current!.TryFindResource(resourceKey, Application.Current?.ActualThemeVariant, out var resource) && resource is IBrush brush)
             return brush;
         return Brushes.Transparent; // fallback
     } 
@@ -82,7 +82,6 @@ public partial class ExamineeSectionWrapper : ObservableObject
 
 public partial class ExamineeTestViewModel : ViewModelBase
 {
-    
     private readonly Action<ViewModelBase> _navigateAction;
     private readonly Services.CryptographyService _cryptoService;
     private readonly string _examKey;
@@ -110,13 +109,64 @@ public partial class ExamineeTestViewModel : ViewModelBase
 
     // ---  Pagination & Grid State ---
     [ObservableProperty] private ObservableCollection<ExamineeQuestionWrapper> _allQuestions = new();
-    [ObservableProperty] private ObservableCollection<ExamineeSectionWrapper> _navigationSections = new(); // <-- ADD THIS
+    [ObservableProperty] private ObservableCollection<ExamineeSectionWrapper> _navigationSections = new(); 
     [ObservableProperty] private ExamineeQuestionWrapper? _currentQuestion;
     private int _currentIndex = 0;
 
     // ---  Lightbox State ---
     [ObservableProperty] private bool _isLightboxOpen = false;
     [ObservableProperty] private Avalonia.Media.Imaging.Bitmap? _lightboxImage;
+
+
+    // DESIGN-TIME CONSTRUCTOR (FOR UI PREVIEW ONLY)=====================================
+    public ExamineeTestViewModel()
+    {
+        // 1. Satisfy ALL readonly fields to prevent C# compiler errors!
+        _navigateAction = (vm) => { };
+        _cryptoService = new Services.CryptographyService();
+        _examKey = "PREVIEW";
+        _firstName = "Jane"; _middleName = "A"; _lastName = "Doe"; _suffix = ""; _studentID = "000000";
+        _targetSaveDirectory = "";
+        
+        // THE MISSING PIECE: Satisfying the readonly hardware timer limit
+        _totalTimeLimit = TimeSpan.FromMinutes(60); 
+
+        // 2. Setup Dummy UI States
+        ImageDirectory = "";
+        TimeRemainingDisplay = "59:59";
+        IsFocusWarningVisible = false;
+        IsLightboxOpen = false;
+
+        ExamData = new StudentExamDto { Title = "UI Preview Exam", Teacher = "Dr. Designer", TimeLimitMinutes = 60 };
+
+        // 3. Create a Fake Multiple Choice Question
+        var dummyMC = new StudentQuestionDto { Prompt = "What is the capital of France?", Points = 5 };
+        dummyMC.Choices.Add(new StudentChoiceDto { Text = "London" });
+        dummyMC.Choices.Add(new StudentChoiceDto { Text = "Paris", IsSelected = true }); 
+        dummyMC.Choices.Add(new StudentChoiceDto { Text = "Berlin" });
+
+        // 4. Create a Fake Essay Question
+        var dummyEssay = new StudentQuestionDto { Prompt = "Explain Avalonia UI in your own words.", Points = 15 };
+        
+        // 5. Wrap them for the UI
+        var q1 = new ExamineeQuestionWrapper(dummyMC, 1);
+        var q2 = new ExamineeQuestionWrapper(dummyEssay, 2);
+        
+        AllQuestions.Add(q1);
+        AllQuestions.Add(q2);
+
+        var section = new ExamineeSectionWrapper("Section 1: General Knowledge");
+        section.Questions.Add(q1);
+        section.Questions.Add(q2);
+        NavigationSections.Add(section);
+
+        // 6. Set the active question
+        CurrentQuestion = q1;
+        CurrentQuestion.IsActive = true;
+        CurrentQuestion.RefreshState();
+    }
+    // ===================================================================================
+
 
     public ExamineeTestViewModel(Action<ViewModelBase> navigateAction, StudentExamDto decryptedExam, string tempDirectory, string examKey, string firstName, string middleName, string lastName, string suffix, string studentID, string saveLocation)
     {

@@ -104,8 +104,6 @@
                     <!-- BRAND & ACTIONS (Buttons) -->
                     <SolidColorBrush x:Key="PrimaryBrush">#1e88e5</SolidColorBrush>     <!-- Main brand color (Blue) -->
                     <SolidColorBrush x:Key="PrimaryForegroundBrush">#FFFFFF</SolidColorBrush>   <!-- Text ON primary buttons -->
-                    <SolidColorBrush x:Key="SecondaryBrush">#1A1A1A</SolidColorBrush>
-                    <SolidColorBrush x:Key="SecondaryForegroundBrush">#1A1A1A</SolidColorBrush>
 
                     <!-- STATUS & FEEDBACK (Alerts) -->
                     <SolidColorBrush x:Key="SuccessBrush">#43a047</SolidColorBrush> <!-- Saving, correct answers (Green) -->
