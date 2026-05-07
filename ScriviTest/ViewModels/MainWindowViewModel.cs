@@ -54,8 +54,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void Navigate(ViewModelBase viewModel)
     {
-        CurrentPage = viewModel;
-
         // Route: Home Screen (Strict, Fixed Window)
         if (viewModel is HomeViewModel)
         {
@@ -64,7 +62,7 @@ public partial class MainWindowViewModel : ViewModelBase
             CurrentWindowState = WindowState.Normal;
             WindowWidth = 800;
             WindowHeight = 450;
-            MinWidth = 800;  // Lock minimums to match
+            MinWidth = 800;  
             MinHeight = 450;
         }
         // NEW Route: Examinee Test Execution (Strict Fullscreen Lockdown)
@@ -73,7 +71,6 @@ public partial class MainWindowViewModel : ViewModelBase
             CanResize = false;
             IsTopmost = true; 
             CurrentWindowState = WindowState.FullScreen; 
-            // MinWidth/Height don't matter in FullScreen, the OS takes over
         }
         // Route: ALL OTHER HUBS (Responsive, Resizable, 1024x768 Minimum)
         else 
@@ -81,13 +78,9 @@ public partial class MainWindowViewModel : ViewModelBase
             CanResize = true;
             IsTopmost = false;
             CurrentWindowState = WindowState.Maximized; 
-            
-            // Set the absolute minimum shrink size
             MinWidth = 1024;
             MinHeight = 768;
-            // Optional: Set a starting size just in case they Un-Maximize it
-            WindowWidth = 1280;
-            WindowHeight = 720;
         }
+        CurrentPage = viewModel;
     }
 }
