@@ -11,8 +11,8 @@
         <Border ZIndex="200" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,40" Background="{Binding NotificationColor}" CornerRadius="25" Padding="15,8" BoxShadow="{DynamicResource ElevationHigh}" IsVisible="{Binding IsNotificationVisible}">
             <Grid ColumnDefinitions="Auto, *, Auto">
                 
-                <TextBlock Grid.Column="0" Text="{Binding NotificationIcon}" FontSize="18" VerticalAlignment="Center" Margin="10,0,12,0"/>
-                <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" Foreground="{DynamicResource PrimaryForegroundBrush}" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,25,0"/>
+                <TextBlock Grid.Column="0" Text="{Binding NotificationIcon}" FontSize="16.25" Foreground="{DynamicResource PrimaryForegroundBrush}" VerticalAlignment="Center" Margin="10,0,12,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" Foreground="{DynamicResource PrimaryForegroundBrush}" FontSize="16.25" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,25,0"/>
                 
                 <Button Grid.Column="2" Content="{DynamicResource IconClose}" Command="{Binding CloseToastCommand}" 
                     Background="Transparent" Foreground="{DynamicResource PrimaryForegroundBrush}" BorderThickness="0" 

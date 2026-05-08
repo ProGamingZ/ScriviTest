@@ -1,12 +1,15 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScriviTest.Models;
+using Avalonia;
+using Avalonia.Media;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ScriviTest.Services;
+using Avalonia.Controls;
 namespace ScriviTest.ViewModels.Examiner;
 
 public partial class ExamCreationViewModel : ViewModelBase
@@ -167,7 +170,7 @@ public partial class ExamCreationViewModel : ViewModelBase
             // 1. Block imported exams
             if (IsImportedExam)
             {
-                ShowToast("Export is only for new exams. Click 'Overwrite' instead.", "⚠️", "#D32F2F"); 
+                ShowToast("Export is only for new exams. Click 'Overwrite' instead.", "IconWarning", "DangerBrush"); 
                 return;
             }
 
@@ -181,7 +184,7 @@ public partial class ExamCreationViewModel : ViewModelBase
             // 3. NEW GUARDRAIL: Block the export if the file name already exists!
             if (File.Exists(xamnPath) || File.Exists(xamkPath))
             {
-                ShowToast($"An exam named '{safeTitle}' already exists! Please change the Exam Title.", "🛑", "#D32F2F");
+                ShowToast($"An exam named '{safeTitle}' already exists! Please change the Exam Title.", "IconWarning", "DangerBrush");
                 return;
             }
 
@@ -210,14 +213,14 @@ public partial class ExamCreationViewModel : ViewModelBase
             
             exportService.SaveToHistoryLog(examToExport.Title, GeneratedExamKey, xamnPath);
 
-            ShowToast($"SUCCESS! Exam Key: {GeneratedExamKey}", "✅", "#2E7D32"); 
+            ShowToast($"SUCCESS! Exam Key: {GeneratedExamKey}", "IconKey", "SuccessBrush"); 
         }
         
         [RelayCommand]
         private void OverwriteExam(){
         if (!IsImportedExam)
         {
-            ShowToast("Overwrite is only for imported exams. Click 'Export' instead.", "⚠️", "#D32F2F"); 
+            ShowToast("Overwrite is only for imported exams. Click 'Export' instead.", "IconWarning", "DangerBrush"); 
             return;
         }
 
@@ -263,11 +266,11 @@ public partial class ExamCreationViewModel : ViewModelBase
             _activeXamnPath = newXamnPath;
             _activeXamkPath = newXamkPath;
 
-            ShowToast("Successfully overwritten and saved!", "💾", "#1976D2"); 
+            ShowToast("Successfully overwritten and saved!", "IconSave", "PrimaryBrush"); 
         }
         catch (Exception ex)
         {
-            ShowToast($"Overwrite Failed: {ex.Message}", "❌", "#D32F2F");
+            ShowToast($"Overwrite Failed: {ex.Message}", "IconWarning", "DangerBrush");
         }
     }
     
@@ -495,18 +498,32 @@ public partial class ExamCreationViewModel : ViewModelBase
     #endregion
 
     #region Toast Notification System
+        private IBrush? GetBrush(string resourceKey)
+        {
+            var app = Application.Current;
+            if (app != null && app.TryGetResource(resourceKey, app.ActualThemeVariant, out var res) && res is IBrush brush)
+                return brush;
+            return Brushes.Gray; // Fallback
+        }
+
+        private string GetIcon(string resourceKey, string fallbackIcon)
+        {
+            if (Application.Current != null && Application.Current.TryGetResource(resourceKey, out var res) && res is string iconStr)
+                return iconStr;
+            return fallbackIcon; 
+        }
         private int _currentToastId = 0;
         [ObservableProperty] private bool _isNotificationVisible = false;
         [ObservableProperty] private string _notificationMessage = string.Empty;
         [ObservableProperty] private string _notificationIcon = string.Empty;
-        [ObservableProperty] private string _notificationColor = "#323232";
+        [ObservableProperty] private IBrush? _notificationColor;
         
         [RelayCommand] private void CloseToast() => IsNotificationVisible = false;
-        private async void ShowToast(string message, string icon, string colorHex)
+        private async void ShowToast(string message, string iconKey, string colorKey)
         {
             NotificationMessage = message;
-            NotificationIcon = icon;
-            NotificationColor = colorHex;
+            NotificationIcon = GetIcon(iconKey, "ℹ️");
+            NotificationColor = GetBrush(colorKey);
             IsNotificationVisible = true;
 
             int thisToastId = ++_currentToastId;
