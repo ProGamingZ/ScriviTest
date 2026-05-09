@@ -35,18 +35,18 @@
 
                         <TextBlock Text="Student Exam File (.xamn)" FontSize="16.25" FontWeight="Bold" Margin="0,10,0,0"/>
                         <Grid ColumnDefinitions="*, Auto">
-                            <TextBox Grid.Column="0" Text="{Binding ImportXamnPath}" FontSize="16.25" IsReadOnly="True" Watermark="Browse for .xamn..."/>
+                            <TextBox Grid.Column="0" Text="{Binding ImportXamnPath}" FontSize="16.25" IsReadOnly="True" PlaceholderText="Browse for .xamn..."/>
                             <Button Grid.Column="1" Content="Browse" FontSize="16.25" Command="{Binding BrowseImportXamnCommand}" Margin="10,0,0,0"/>
                         </Grid>
 
                         <TextBlock Text="Answer Key File (.xamk)" FontSize="16.25" FontWeight="Bold" Margin="0,5,0,0"/>
                         <Grid ColumnDefinitions="*, Auto">
-                            <TextBox Grid.Column="0" Text="{Binding ImportXamkPath}" FontSize="16.25" IsReadOnly="True" Watermark="Browse for .xamk..."/>
+                            <TextBox Grid.Column="0" Text="{Binding ImportXamkPath}" FontSize="16.25" IsReadOnly="True" PlaceholderText="Browse for .xamk..."/>
                             <Button Grid.Column="1" Content="Browse" FontSize="16.25" Command="{Binding BrowseImportXamkCommand}" Margin="10,0,0,0"/>
                         </Grid>
 
                         <TextBlock Text="Decryption Key" FontSize="16.25" FontWeight="Bold" Margin="0,5,0,0"/>
-                        <TextBox Text="{Binding ImportDecryptionKey}" FontSize="16.25" MaxLength="6" Watermark="6-Character Key" FontWeight="Bold" HorizontalContentAlignment="Center"/>
+                        <TextBox Text="{Binding ImportDecryptionKey}" FontSize="16.25" MaxLength="6" PlaceholderText="6-Character Key" FontWeight="Bold" HorizontalContentAlignment="Center"/>
 
                         <TextBlock Text="{Binding ImportErrorMessage}" FontSize="16.25" Foreground="{DynamicResource DangerBrush}" FontWeight="SemiBold" IsVisible="{Binding ImportErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" TextWrapping="Wrap"/>
 
@@ -92,10 +92,10 @@
                     <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="8" Padding="25" BoxShadow="{DynamicResource ElevationMid}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1,8,1,3">
                         <StackPanel Spacing="15">
                             <Grid ColumnDefinitions="*, Auto">
-                                <TextBox Grid.Column="0" FontSize="16.25" FontWeight="Bold" Text="{Binding ExamTitle}" Watermark="Untitled Exam" BorderThickness="0,0,0,1" Background="Transparent" Padding="0,5" Foreground="{DynamicResource TextMainBrush}" />
+                                <TextBox Grid.Column="0" FontSize="16.25" FontWeight="Bold" Text="{Binding ExamTitle}" PlaceholderText="Untitled Exam" BorderThickness="0,0,0,1" Background="Transparent" Padding="0,5" Foreground="{DynamicResource TextMainBrush}" />
                                 <TextBlock Grid.Column="1" Text="{Binding TotalExamPoints, StringFormat='Total Points: {0}'}" Padding="5,0,0,5" FontSize="16.25" FontWeight="Bold" Foreground="{DynamicResource TextMainBrush}" VerticalAlignment="Center"/>
                             </Grid>
-                            <TextBox Text="{Binding ExamDescription}" TextWrapping="Wrap" MinHeight="60" Watermark="Exam Instructions or Description" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource TextMainBrush}" FontSize="13"/>
+                            <TextBox Text="{Binding ExamDescription}" TextWrapping="Wrap" MinHeight="60" PlaceholderText="Exam Instructions or Description" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource TextMainBrush}" FontSize="13"/>
 
                             <WrapPanel Margin="0,20,0,0" Orientation="Horizontal">
                                 <StackPanel Width="230" Margin="0,0,15,15">
@@ -131,8 +131,8 @@
                         </StackPanel>
                     </Border>
 
-                    <ItemsControl ItemsSource="{Binding Sections}">
-                        <ItemsControl.ItemTemplate>
+                    <ItemsRepeater ItemsSource="{Binding Sections}">
+                        <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="models:TestSection">
                                 
                                 <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="8" Padding="25" BoxShadow="{DynamicResource ElevationMid}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,8,1,3" Margin="0,0,0,80">
@@ -140,7 +140,7 @@
                                         
                                         <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             
-                                            <TextBox Text="{Binding Title}" FontSize="16.25" FontWeight="SemiBold" Watermark="Section Title" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource TextMainBrush}" MinWidth="250" Margin="0,0,20,10"/>
+                                            <TextBox Text="{Binding Title}" FontSize="16.25" FontWeight="SemiBold" PlaceholderText="Section Title" BorderThickness="0,0,0,1" Background="Transparent" Foreground="{DynamicResource TextMainBrush}" MinWidth="250" Margin="0,0,20,10"/>
                                             
                                             <TextBlock Text="{Binding SectionTotalPoints, StringFormat='Section Points: {0}'}" FontSize="16.25"
                                                     VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,20,10"/>
@@ -153,15 +153,15 @@
                                                     Background="Transparent" Foreground="{DynamicResource DangerBrush}" FontSize="16.25" ToolTip.Tip="Delete Entire Section" Margin="0,0,0,10"/>
                                         </WrapPanel>
                                         
-                                        <ItemsControl ItemsSource="{Binding Questions}">
-                                            <ItemsControl.ItemTemplate>
+                                        <ItemsRepeater ItemsSource="{Binding Questions}">
+                                            <ItemsRepeater.ItemTemplate>
                                                 <DataTemplate x:DataType="models:Question">
                                                     <Border Background="{DynamicResource SurfaceVariantBrush}" CornerRadius="6" Padding="15" BorderThickness="1" Margin="0,0,0,15">
                                                         <Grid RowDefinitions="Auto, Auto">
                                                             
                                                             <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto, Auto">
                                                                 <TextBlock Grid.Column="0" Text="{Binding Type}" FontSize="16.25" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource TextMainBrush}" />
-                                                                <TextBox Grid.Column="1" Text="{Binding Prompt}" FontSize="16.25" Watermark="Type your question here..." Background="Transparent" BorderThickness="0,0,0,1" Foreground="{DynamicResource TextMainBrush}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="40"/>
+                                                                <TextBox Grid.Column="1" Text="{Binding Prompt}" FontSize="16.25" PlaceholderText="Type your question here..." Background="Transparent" BorderThickness="0,0,0,1" Foreground="{DynamicResource TextMainBrush}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="40"/>
                                                                 <Button Grid.Column="2" Content="{Binding ExpandCollapseIcon}" FontSize="16.25" Command="{Binding ToggleExpandCommand}" Width="30" Height="30" CornerRadius="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Margin="10,0,0,0" Foreground="{DynamicResource TextMainBrush}" FontWeight="Bold"/>
                                                                 <Button Grid.Column="3" Content="{DynamicResource IconDelete}" FontSize="16.25" Command="{Binding #RootView.DataContext.RemoveQuestionCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="{DynamicResource DangerBrush}" Margin="10,0,0,0" ToolTip.Tip="Delete Question"/>
                                                             </Grid>
@@ -169,14 +169,14 @@
                                                             <StackPanel Grid.Row="1" IsVisible="{Binding IsExpanded}" Margin="0,15,0,0" Spacing="10">
                                                                 
                                                                 <StackPanel IsVisible="{Binding IsMultipleChoice}" Spacing="10">
-                                                                    <ItemsControl ItemsSource="{Binding Choices}">
-                                                                        <ItemsControl.ItemTemplate>
+                                                                    <ItemsRepeater ItemsSource="{Binding Choices}">
+                                                                        <ItemsRepeater.ItemTemplate>
                                                                             <DataTemplate x:DataType="models:Choice">
                                                                                 <Grid ColumnDefinitions="Auto, *, Auto, Auto" Margin="0,0,0,10">
-                                                                                    <RadioButton Grid.Column="0" IsChecked="{Binding IsCorrect}" GroupName="{Binding $parent[ItemsControl].DataContext.GroupId}" Margin="0,0,10,0"/>
+                                                                                    <RadioButton Grid.Column="0" IsChecked="{Binding IsCorrect}" GroupName="{Binding $parent[ItemsRepeater].DataContext.GroupId}" Margin="0,0,10,0"/>
                                                                                     
                                                                                     <StackPanel Grid.Column="1" Spacing="5">
-                                                                                        <TextBox Text="{Binding Text}" FontSize="13" Watermark="Option text..." Foreground="{DynamicResource TextMainBrush}" AcceptsReturn="True" TextWrapping="Wrap"/>
+                                                                                        <TextBox Text="{Binding Text}" FontSize="13" PlaceholderText="Option text..." Foreground="{DynamicResource TextMainBrush}" AcceptsReturn="True" TextWrapping="Wrap"/>
                                                                                         
                                                                                         <Border IsVisible="{Binding HasImage}" CornerRadius="4" Padding="5" HorizontalAlignment="Left">
                                                                                             <StackPanel Orientation="Horizontal" Spacing="5">
@@ -189,11 +189,11 @@
                                                                                     
                                                                                     <Button Grid.Column="2" Content="{DynamicResource IconImage}" FontSize="16.25" Command="{Binding #RootView.DataContext.AttachChoiceImageCommand}" CommandParameter="{Binding}" Background="Transparent" ToolTip.Tip="Attach image to choice" Margin="5,0"/>
                                                                                     
-                                                                                    <Button Grid.Column="3" Content="{DynamicResource IconClose}" FontSize="16.25" Command="{Binding $parent[ItemsControl].DataContext.RemoveChoiceCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="{DynamicResource DangerBrush}" Margin="5,0,0,0"/>
+                                                                                    <Button Grid.Column="3" Content="{DynamicResource IconClose}" FontSize="16.25" Command="{Binding $parent[ItemsRepeater].DataContext.RemoveChoiceCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="{DynamicResource DangerBrush}" Margin="5,0,0,0"/>
                                                                                 </Grid>
                                                                             </DataTemplate>
-                                                                        </ItemsControl.ItemTemplate>
-                                                                    </ItemsControl>
+                                                                        </ItemsRepeater.ItemTemplate>
+                                                                    </ItemsRepeater>
                                                                     <Button Content="+ Add Option" FontSize="16.25" Command="{Binding AddChoiceCommand}" Background="Transparent" Foreground="{DynamicResource PrimaryBrush}" BorderBrush="{DynamicResource BorderBrush}" HorizontalAlignment="Left"/>
                                                                 </StackPanel>
 
@@ -203,14 +203,14 @@
                                                                 </StackPanel>
 
                                                                 <StackPanel IsVisible="{Binding IsMultipleAnswer}" Spacing="10">
-                                                                    <ItemsControl ItemsSource="{Binding Choices}">
-                                                                        <ItemsControl.ItemTemplate>
+                                                                    <ItemsRepeater ItemsSource="{Binding Choices}">
+                                                                        <ItemsRepeater.ItemTemplate>
                                                                             <DataTemplate x:DataType="models:Choice">
                                                                                 <Grid ColumnDefinitions="Auto, *, Auto, Auto" Margin="0,0,0,10">
                                                                                     <CheckBox Grid.Column="0" IsChecked="{Binding IsCorrect}"  Margin="0,0,10,0"/>
                                                                                     
                                                                                     <StackPanel Grid.Column="1" Spacing="5">
-                                                                                        <TextBox Text="{Binding Text}" FontSize="13" Watermark="Option text..." Foreground="{DynamicResource TextMainBrush}" AcceptsReturn="True" TextWrapping="Wrap"/>
+                                                                                        <TextBox Text="{Binding Text}" FontSize="13" PlaceholderText="Option text..." Foreground="{DynamicResource TextMainBrush}" AcceptsReturn="True" TextWrapping="Wrap"/>
                                                                                         
                                                                                         <Border IsVisible="{Binding HasImage}" Background="{DynamicResource InfoBrush}" CornerRadius="4" Padding="5" HorizontalAlignment="Left">
                                                                                             <StackPanel Orientation="Horizontal" Spacing="5">
@@ -223,11 +223,11 @@
                                                                                     
                                                                                     <Button Grid.Column="2" Content="{DynamicResource IconImage}" FontSize="16.25" Command="{Binding #RootView.DataContext.AttachChoiceImageCommand}" CommandParameter="{Binding}"  Background="Transparent" ToolTip.Tip="Attach image to choice" Margin="5,0"/>
                                                                                     
-                                                                                    <Button Grid.Column="3" Content="{DynamicResource IconClose}" FontSize="16.25" Command="{Binding $parent[ItemsControl].DataContext.RemoveChoiceCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="{DynamicResource DangerBrush}" Margin="5,0,0,0"/>
+                                                                                    <Button Grid.Column="3" Content="{DynamicResource IconClose}" FontSize="16.25" Command="{Binding $parent[ItemsRepeater].DataContext.RemoveChoiceCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="{DynamicResource DangerBrush}" Margin="5,0,0,0"/>
                                                                                 </Grid>
                                                                             </DataTemplate>
-                                                                        </ItemsControl.ItemTemplate>
-                                                                    </ItemsControl>
+                                                                        </ItemsRepeater.ItemTemplate>
+                                                                    </ItemsRepeater>
                                                                     <Grid ColumnDefinitions="Auto, *, Auto, Auto" Margin="0,10,0,0">
                                                                         <Button Grid.Column="0" Content="+ Add Checkbox" FontSize="16.25" Command="{Binding AddChoiceCommand}" Background="Transparent" Foreground="{DynamicResource PrimaryBrush}"/>
                                                                         <TextBlock Grid.Column="2" Text="Scoring Rubric:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="{DynamicResource TextMainBrush}"/>
@@ -239,7 +239,7 @@
                                                                 </StackPanel>
 
                                                                 <StackPanel IsVisible="{Binding IsEssay}" Spacing="10">
-                                                                    <TextBox MinHeight="100" Watermark="The examinee will type their essay response here..." IsEnabled="False" TextWrapping="Wrap" Background="{DynamicResource SurfaceVariantBrush}"/>
+                                                                    <TextBox MinHeight="100" PlaceholderText="The examinee will type their essay response here..." IsEnabled="False" TextWrapping="Wrap" Background="{DynamicResource SurfaceVariantBrush}"/>
                                                                     <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
                                                                         <TextBlock Text="Max Word Count:" VerticalAlignment="Center" Foreground="{DynamicResource TextMainBrush}"/>
                                                                         <NumericUpDown Value="{Binding MaxWordCount}" Minimum="50" Maximum="2000" Width="120" FormatString="0" ParsingNumberStyle="Integer" Foreground="{DynamicResource TextMainBrush}"/>
@@ -266,8 +266,8 @@
                                                         </Grid>
                                                     </Border>
                                                 </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                            </ItemsRepeater.ItemTemplate>
+                                        </ItemsRepeater>
 
                                         <Button Content="+ Add Question to Section" FontSize="16.25" HorizontalAlignment="Center" Margin="0,10,0,0" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" Foreground="{DynamicResource PrimaryBrush}" BorderThickness="2" Padding="30,10" FontWeight="Bold">
                                             <Button.Flyout>
@@ -284,8 +284,8 @@
                                 </Border>
 
                             </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
 
                 </StackPanel>
             </ScrollViewer>

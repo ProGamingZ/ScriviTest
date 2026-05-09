@@ -34,25 +34,25 @@
                         
                         <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
                             <TextBlock Text="First Name *" FontSize="13" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,0,5"/>
-                            <TextBox Text="{Binding FirstName}" FontSize="13" Watermark="First Name" Foreground="{DynamicResource TextMainBrush}"/>
+                            <TextBox Text="{Binding FirstName}" FontSize="13" PlaceholderText="First Name" Foreground="{DynamicResource TextMainBrush}"/>
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,0,0,10">
                             <TextBlock Text="Middle Name *" FontSize="13" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,0,5"/>
-                            <TextBox Text="{Binding MiddleName}" FontSize="13" Watermark="Middle Name" Foreground="{DynamicResource TextMainBrush}"/>
+                            <TextBox Text="{Binding MiddleName}" FontSize="13" PlaceholderText="Middle Name" Foreground="{DynamicResource TextMainBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,10,10">
                             <TextBlock Text="Last Name *" FontSize="13" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,0,5"/>
-                            <TextBox Text="{Binding LastName}" FontSize="13" Watermark="Last Name" Foreground="{DynamicResource TextMainBrush}"/>
+                            <TextBox Text="{Binding LastName}" FontSize="13" PlaceholderText="Last Name" Foreground="{DynamicResource TextMainBrush}"/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,0,0,10">
                             <TextBlock Text="Suffix (e.g., Jr.)" FontSize="13" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,0,5"/>
-                            <TextBox Text="{Binding Suffix}" FontSize="13" Watermark="Suffix" Foreground="{DynamicResource TextMainBrush}"/>
+                            <TextBox Text="{Binding Suffix}" FontSize="13" PlaceholderText="Suffix" Foreground="{DynamicResource TextMainBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
                             <TextBlock Text="Student ID *" FontSize="13" Foreground="{DynamicResource TextMainBrush}" Margin="0,0,0,5"/>
-                            <TextBox Text="{Binding StudentID}" FontSize="13" Watermark="Student Identification Number" Foreground="{DynamicResource TextMainBrush}"/>
+                            <TextBox Text="{Binding StudentID}" FontSize="13" PlaceholderText="Student Identification Number" Foreground="{DynamicResource TextMainBrush}"/>
                         </StackPanel>
                     </Grid>
 
@@ -60,11 +60,11 @@
 
                     <StackPanel Spacing="10">
                         <Grid ColumnDefinitions="*, Auto">
-                            <TextBox Grid.Column="0" Text="{Binding SelectedFileName}" FontSize="13" IsReadOnly="True" Watermark="Load Exam (Ask_FileName.xamn) file"/>
+                            <TextBox Grid.Column="0" Text="{Binding SelectedFileName}" FontSize="13" IsReadOnly="True" PlaceholderText="Load Exam (Ask_FileName.xamn) file"/>
                             <Button Grid.Column="1" Content="Browse..." FontSize="16.25" Command="{Binding BrowseForExamCommand}" Margin="10,0,0,0"/>
                         </Grid>
 
-                        <TextBox Text="{Binding ExamKey}" MaxLength="6" FontSize="16.25" FontWeight="Bold" HorizontalContentAlignment="Center" Watermark="6-Character Decryption Key" BorderThickness="1" Foreground="{DynamicResource TextMainBrush}"/>
+                        <TextBox Text="{Binding ExamKey}" MaxLength="6" FontSize="16.25" FontWeight="Bold" HorizontalContentAlignment="Center" PlaceholderText="6-Character Decryption Key" BorderThickness="1" Foreground="{DynamicResource TextMainBrush}"/>
                     </StackPanel>
 
                     <TextBlock Text="{Binding ErrorMessage}" FontSize="16.25" Foreground="{DynamicResource DangerBrush}" FontWeight="SemiBold" HorizontalAlignment="Center" IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
@@ -72,7 +72,7 @@
                     <StackPanel Margin="0,20,0,0">
                         <TextBlock Text="Save Location:" FontSize="16.25" FontWeight="Bold" Margin="0,0,0,5" Foreground="{DynamicResource PrimaryBrush}"/>
                         <Grid ColumnDefinitions="*, Auto">
-                            <TextBox Grid.Column="0" Text="{Binding SaveLocation}" FontSize="13" IsReadOnly="True" Watermark="Choose where to save your exam..."/>
+                            <TextBox Grid.Column="0" Text="{Binding SaveLocation}" FontSize="13" IsReadOnly="True" PlaceholderText="Choose where to save your exam..."/>
                             <Button Grid.Column="1" Content="Browse..." FontSize="16.25" Command="{Binding PromptSaveFolderCommand}" Margin="10,0,0,0"/>
                         </Grid>
                     </StackPanel>

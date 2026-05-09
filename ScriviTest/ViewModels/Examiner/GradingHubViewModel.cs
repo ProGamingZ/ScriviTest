@@ -132,7 +132,11 @@ public partial class GradingHubViewModel : ViewModelBase
                     string destPath = Path.Combine(_examinerTempImageDir, entry.Name);
                     entry.ExtractToFile(destPath, true);
                     
-                    _imageCache[entry.Name] = new Avalonia.Media.Imaging.Bitmap(destPath);
+                    using (var stream = File.OpenRead(destPath))
+                    {
+                        // Crush the reference images down to 600px wide
+                        _imageCache[entry.Name] = Avalonia.Media.Imaging.Bitmap.DecodeToWidth(stream, 600);
+                    }
                 }
             }
 
@@ -424,7 +428,7 @@ public partial class GradingHubViewModel : ViewModelBase
 
     #endregion
 
-    #region Active REview Panel & Navigation
+    #region Active Review Panel & Navigation
         private int _currentQuestionIndex = 0;
         [ObservableProperty] private string _currentTimeTakenDisplay = string.Empty;
         [ObservableProperty] private ObservableCollection<Models.ReviewSection> _currentReviewSections = new();
@@ -480,13 +484,13 @@ public partial class GradingHubViewModel : ViewModelBase
         {
             if (StudentList.Count == 0)
             {
-                ShowToast("No graded students to export.", "⚠️", "#F57C00");
+                ShowToast("No graded students to export.", "IconWarning", "WarningBrush");
                 return;
             }
 
             if (_loadedAnswerKey == null)
             {
-                ShowToast("Critical Error: Answer key is missing from memory.", "🛑", "#D32F2F");
+                ShowToast("Critical Error: Answer key is missing from memory.", "IconWarning", "DangerBrush");
                 return;
             }
 

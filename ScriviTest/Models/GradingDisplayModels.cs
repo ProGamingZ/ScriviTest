@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using Avalonia.Media;
 
 namespace ScriviTest.Models;
 
@@ -65,7 +66,7 @@ public class ReviewSection
     public System.Collections.ObjectModel.ObservableCollection<ReviewQuestion> Questions { get; set; } = new();
 }
 
-public class ReviewChoice
+public class ReviewChoice : ObservableObject
 {
     public string Text { get; set; } = string.Empty;
     public bool IsStudentSelected { get; set; }
@@ -84,14 +85,16 @@ public class ReviewChoice
         _ => ""
     };
 
-    public string BoxBackgroundColor => (IsStudentSelected, IsCorrectAnswer) switch
+    public IBrush BoxBackgroundColor => (IsStudentSelected, IsCorrectAnswer) switch
     {
-        (true, true) => "#4CAF50", // Green
-        (true, false) => "#F44336", // Red
-        (false, true) => "#2196F3", // Blue
-        _ => "Transparent"
+        (true, true)  => new SolidColorBrush(Color.Parse("#4CAF50")),
+        (true, false) => new SolidColorBrush(Color.Parse("#F44336")),
+        (false, true) => new SolidColorBrush(Color.Parse("#2196F3")),
+        _ => Brushes.Transparent
     };
 
     // If it's completely unselected/neutral, give it a gray border.
-    public string BoxBorderColor => (IsStudentSelected, IsCorrectAnswer) == (false, false) ? "Gray" : "Transparent";
+    public IBrush BoxBorderColor => (IsStudentSelected, IsCorrectAnswer) == (false, false) 
+    ? new SolidColorBrush(Color.Parse("#9E9E9E")) 
+    : Brushes.Transparent;
 }

@@ -31,17 +31,17 @@
                 <Grid RowDefinitions="Auto, Auto, Auto, Auto, *, Auto">
                     
                     <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
-                        <TextBox Grid.Column="0" Text="{Binding AnswerKeyFileName}" FontSize="16.25" Watermark="Load Answer Key (.xamk)" IsReadOnly="True" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        <TextBox Grid.Column="0" Text="{Binding AnswerKeyFileName}" FontSize="16.25" PlaceholderText="Answer Key" IsReadOnly="True" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}"/>
                         <Button Grid.Column="1" Content="Browse" FontSize="16.25" Command="{Binding BrowseForAnswerKeyCommand}" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1"  Margin="5,0,0,0" Background="{DynamicResource SurfaceBrush}"/>
                     </Grid>
 
                     <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
-                        <TextBox Grid.Column="0" Text="{Binding ExamKey}" FontSize="16.25" Watermark="Decryption Key" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        <TextBox Grid.Column="0" Text="{Binding ExamKey}" FontSize="16.25" PlaceholderText="Decryption Key" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}"/>
                         <Button Grid.Column="1" Content="Check" FontSize="16.25" Command="{Binding CheckAndUnlockCommand}" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Margin="5,0,0,0" Background="{DynamicResource SurfaceBrush}"/>
                     </Grid>
 
                     <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
-                        <TextBox Grid.Column="0" Text="{Binding StudentFilesSummary}" FontSize="16.25" Watermark="Load Student Submissions (.xans)"  IsReadOnly="True" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        <TextBox Grid.Column="0" Text="{Binding StudentFilesSummary}" FontSize="16.25" PlaceholderText="Student Files"  IsReadOnly="True" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}"/>
                         <Button Grid.Column="1" Content="Browse" FontSize="16.25" Command="{Binding BrowseForStudentFilesCommand}" BorderBrush="{DynamicResource TextMainBrush}" BorderThickness="1" Margin="5,0,0,0" Background="{DynamicResource SurfaceBrush}"/>
                     </Grid>
 
@@ -154,9 +154,9 @@
                                 
                                 <Image Source="{Binding CurrentVisibleQuestion.ImageBitmap}" IsVisible="{Binding CurrentVisibleQuestion.ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" MaxHeight="300" HorizontalAlignment="Left" Margin="30,0,0,0"/>
 
-                                <ItemsControl ItemsSource="{Binding CurrentVisibleQuestion.Choices}" IsVisible="{Binding CurrentVisibleQuestion.IsObjective}" Margin="30,20,0,0">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="models:ReviewChoice">
+                                <ItemsRepeater ItemsSource="{Binding CurrentVisibleQuestion.Choices}" IsVisible="{Binding CurrentVisibleQuestion.IsObjective}" Margin="30,20,0,0">
+                                    <ItemsRepeater.ItemTemplate>
+                                        <DataTemplate x:DataType="models:ReviewChoice" x:CompileBindings="False">
                                             <StackPanel Orientation="Vertical" Spacing="5" Margin="0,5">
                                                 
                                                 <Grid ColumnDefinitions="Auto, *">
@@ -170,8 +170,8 @@
                                                 <Image Source="{Binding ImageBitmap}" IsVisible="{Binding ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" MaxHeight="150" HorizontalAlignment="Left" Margin="70,0,0,0"/>
                                             </StackPanel>
                                         </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                    </ItemsRepeater.ItemTemplate>
+                                </ItemsRepeater>
 
                                 <Border IsVisible="{Binding CurrentVisibleQuestion.IsEssay}" 
                                         Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="15" Margin="30,20,0,0">
@@ -183,7 +183,7 @@
                         <GridSplitter Grid.Row="1" Background="{DynamicResource SurfaceVariantBrush}" ResizeDirection="Rows" HorizontalAlignment="Stretch" Height="4" CornerRadius="2" Cursor="SizeNorthSouth" ToolTip.Tip="Drag to resize Remarks box"/>
 
                         <Border Grid.Row="2" Margin="0,10,0,15" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="5" Background="{DynamicResource SurfaceBrush}">
-                            <TextBox Text="{Binding CurrentVisibleQuestion.Remarks, Mode=TwoWay}" FontSize="16.25" AcceptsReturn="True" TextWrapping="Wrap" Watermark="Add private grading remarks for this specific question here..." BorderThickness="0" Background="Transparent" Padding="10"/>
+                            <TextBox Text="{Binding CurrentVisibleQuestion.Remarks, Mode=TwoWay}" FontSize="16.25" AcceptsReturn="True" TextWrapping="Wrap" PlaceholderText="Add private grading remarks for this specific question here..." BorderThickness="0" Background="Transparent" Padding="10"/>
                         </Border>
 
                         <Grid Grid.Row="3" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,0">
@@ -273,13 +273,13 @@
                                     <TextBlock Grid.Column="1" Text="Anti-Cheat Incident Report" FontSize="16.25" Foreground="{DynamicResource DangerBrush}" TextWrapping="Wrap" FontWeight="Bold" VerticalAlignment="Top"/>
                                 </Grid>
                                 <ScrollViewer MaxHeight="120" HorizontalScrollBarVisibility="Disabled">
-                                    <ItemsControl ItemsSource="{Binding CurrentIncidentLog}">
-                                        <ItemsControl.ItemTemplate>
+                                    <ItemsRepeater ItemsSource="{Binding CurrentIncidentLog}">
+                                        <ItemsRepeater.ItemTemplate>
                                             <DataTemplate x:DataType="x:String">
                                                 <TextBlock Text="{Binding}" Foreground="{DynamicResource DangerBrush}" FontSize="16.25" TextWrapping="Wrap" Margin="0,2"/>
                                             </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
+                                        </ItemsRepeater.ItemTemplate>
+                                    </ItemsRepeater>
                                 </ScrollViewer>
                             </StackPanel>
                         </Border>
@@ -288,22 +288,20 @@
                             <StackPanel>
                                 <TextBlock Text="Question Navigation" FontWeight="Bold" FontSize="20.31" Margin="0,0,0,15" />
                                 
-                                <ItemsControl ItemsSource="{Binding CurrentReviewSections}">
-                                    <ItemsControl.ItemTemplate>
+                                <ItemsRepeater ItemsSource="{Binding CurrentReviewSections}">
+                                    <ItemsRepeater.ItemTemplate>
                                         <DataTemplate x:DataType="models:ReviewSection">
                                             
                                             <StackPanel Margin="0,0,0,20">
 
                                                 <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16.25" Margin="0,0,0,5" TextWrapping="Wrap"/>
 
-                                                <ItemsControl ItemsSource="{Binding Questions}">
-                                                    <ItemsControl.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
-                                                        </ItemsPanelTemplate>
-                                                    </ItemsControl.ItemsPanel>
+                                                <ItemsRepeater ItemsSource="{Binding Questions}">
+                                                    <ItemsRepeater.Layout>
+                                                            <WrapLayout Orientation="Horizontal" />
+                                                    </ItemsRepeater.Layout>
 
-                                                    <ItemsControl.ItemTemplate>
+                                                    <ItemsRepeater.ItemTemplate>
                                                         <DataTemplate x:DataType="models:ReviewQuestion">
                                                             <Button Command="{Binding #RootView.DataContext.JumpToQuestionCommand}" 
                                                                     CommandParameter="{Binding}"
@@ -314,13 +312,13 @@
                                                                 </Grid>
                                                             </Button>
                                                         </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
+                                                    </ItemsRepeater.ItemTemplate>
+                                                </ItemsRepeater>
 
                                             </StackPanel>
                                         </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                    </ItemsRepeater.ItemTemplate>
+                                </ItemsRepeater>
                             </StackPanel>
                         </ScrollViewer>
 

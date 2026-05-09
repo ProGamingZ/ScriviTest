@@ -208,7 +208,13 @@ public partial class ExamineeTestViewModel : ViewModelBase
                 if (!string.IsNullOrEmpty(q.AttachedImageFileName))
                 {
                     string fullPath = Path.Combine(ImageDirectory, q.AttachedImageFileName);
-                    if (File.Exists(fullPath)) q.ImageBitmap = new Avalonia.Media.Imaging.Bitmap(fullPath);
+                    if (File.Exists(fullPath))
+                    {
+                        using (var stream = File.OpenRead(fullPath))
+                        {
+                            q.ImageBitmap = Avalonia.Media.Imaging.Bitmap.DecodeToWidth(stream, 600);
+                        }
+                    }
                 }
 
                 foreach (var c in q.Choices)
@@ -216,7 +222,13 @@ public partial class ExamineeTestViewModel : ViewModelBase
                     if (!string.IsNullOrEmpty(c.AttachedImageFileName))
                     {
                         string fullPath = Path.Combine(ImageDirectory, c.AttachedImageFileName);
-                        if (File.Exists(fullPath)) c.ImageBitmap = new Avalonia.Media.Imaging.Bitmap(fullPath);
+                        if (File.Exists(fullPath))
+                        {
+                            using (var stream = File.OpenRead(fullPath))
+                            {
+                                c.ImageBitmap = Avalonia.Media.Imaging.Bitmap.DecodeToWidth(stream, 400);
+                            }
+                        }
                     }
                 }
 
@@ -363,17 +375,24 @@ public partial class ExamineeTestViewModel : ViewModelBase
 
     // --- LIGHTBOX COMMANDS ---
     [RelayCommand]
-    private void OpenLightbox(Avalonia.Media.Imaging.Bitmap bmp)
+    private void OpenLightbox(string fileName)
     {
-        if (bmp == null) return;
-        LightboxImage = bmp;
-        IsLightboxOpen = true;
+        if (string.IsNullOrEmpty(fileName)) return;
+
+        string fullPath = Path.Combine(ImageDirectory, fileName);
+        if (File.Exists(fullPath))
+        {
+            LightboxImage?.Dispose(); 
+            LightboxImage = new Avalonia.Media.Imaging.Bitmap(fullPath);
+            IsLightboxOpen = true;
+        }
     }
 
     [RelayCommand]
     private void CloseLightbox()
     {
         IsLightboxOpen = false;
+        LightboxImage?.Dispose();
         LightboxImage = null;
     }
 
