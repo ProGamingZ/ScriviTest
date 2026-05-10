@@ -250,9 +250,9 @@
                                                                     <Grid ColumnDefinitions="Auto, *, Auto, Auto" Margin="0,10,0,0">
                                                                         <Button Grid.Column="0" Content="+ Add Checkbox" FontSize="16.25" Command="{Binding AddChoiceCommand}" Background="Transparent" Foreground="{DynamicResource PrimaryBrush}"/>
                                                                         <TextBlock Grid.Column="2" Text="Scoring Rubric:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="{DynamicResource TextMainBrush}"/>
-                                                                        <ComboBox Grid.Column="3" SelectedIndex="{Binding MultipleAnswerRubric}" Width="200">
+                                                                        <ComboBox Grid.Column="3" SelectedIndex="{Binding MultipleAnswerRubric}" Width="150">
                                                                             <ComboBoxItem>All-or-Nothing</ComboBoxItem>
-                                                                            <ComboBoxItem>Partial Credit (-1 penalty)</ComboBoxItem>
+                                                                            <ComboBoxItem>Partial Credit</ComboBoxItem>
                                                                         </ComboBox>
                                                                     </Grid>
                                                                 </StackPanel>
@@ -267,7 +267,7 @@
                                                                 
                                                                 <Grid ColumnDefinitions="*, Auto" Margin="0,15,0,0">
                                                                     <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
-                                                                        <Button Content="Attach Image" FontSize="16.25" Command="{Binding #RootView.DataContext.AttachImageCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="{DynamicResource PrimaryBrush}" BorderThickness="1" BorderBrush="{DynamicResource PrimaryBrush}"/>
+                                                                        <Button Content="Attach Image" FontSize="16.25" ToolTip.Tip="Attach image to question"  Command="{Binding #RootView.DataContext.AttachImageCommand}" CommandParameter="{Binding}" Background="Transparent" Foreground="{DynamicResource PrimaryBrush}" BorderThickness="1" BorderBrush="{DynamicResource PrimaryBrush}"/>
                                                                         <Border IsVisible="{Binding HasImage}" CornerRadius="4" Padding="10,5">
                                                                             <StackPanel Orientation="Horizontal" Spacing="5">
                                                                                 <TextBlock Text="{DynamicResource IconImage}" VerticalAlignment="Center"/>

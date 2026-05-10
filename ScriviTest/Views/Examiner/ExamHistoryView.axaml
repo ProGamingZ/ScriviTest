@@ -6,8 +6,6 @@
              x:DataType="vm:ExamHistoryViewModel"
              Background="{DynamicResource AppBackground}">
 
-
-
     <Grid>
         <!-- MASTER LAYOUT GRID -->
         <Grid RowDefinitions="Auto, *">

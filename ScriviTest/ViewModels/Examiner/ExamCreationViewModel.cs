@@ -23,6 +23,12 @@ public partial class ExamCreationViewModel : ViewModelBase
             HelpTour.StartTour(
                 new TourStep 
                 { 
+                    Title = "Tool tips", 
+                    TargetIcon = "⚙️", 
+                    Description = "     Hovering your mouse cursor on some buttons will show you their tool tip, which provide info about what the button do." 
+                },
+                new TourStep 
+                { 
                     Title = "Time Limit (Minutes)", 
                     TargetIcon = "⏱️", 
                     Description = "     Minimum is 1 minute, maximum is 1440 minutes (24 hours); inputs outside this range will automatically snap to the nearest value (min/max). You can also leave it blank to default to 60 minutes." 
@@ -35,15 +41,21 @@ public partial class ExamCreationViewModel : ViewModelBase
                 },
                 new TourStep 
                 { 
-                    Title = "Images", 
-                    TargetIcon = "🖼️", 
-                    Description = "    You can attach an image to a question by clicking [Attach Image] and attach image to choices by clicking the 🖼️ icon (only 1 image per question or choice). " 
-                },
-                new TourStep 
-                { 
                     Title = "Total Points", 
                     TargetIcon = "⚙️", 
                     Description = "     The total points for the exam are automatically calculated as you add sections and questions and assigning points to them. The minimum point value for a question is 1, and the maximum is 100; inputs outside this range will automatically snap to the nearest value (min/max)." 
+                },
+                new TourStep 
+                { 
+                    Title = "Multiple Answer Scoring Rubric", 
+                    TargetIcon = "⚙️", 
+                    Description = "-All or Nothing: Students must select all correct answers and no incorrect ones to receive full credit. Otherwise, they receive 0.\n-Partial Credit: Points are awarded based on the number of correct choices selected, minus any incorrect choices. The minimum score is 0." 
+                },
+                new TourStep 
+                { 
+                    Title = "Auto Checker", 
+                    TargetIcon = "⚙️", 
+                    Description = "     The Auto Checker evaluates student responses to Multiple Choice, Multiple Answer, and True/False questions based on the correct answers you set while creating the exam. It provides an automatic score for these question types when the exam is scored." 
                 }
             );
         }

@@ -34,7 +34,7 @@
 
                 <Grid Grid.Row="2" ColumnDefinitions="Auto, *, Auto">
                     
-                    <Button Grid.Column="0" Content="Prev" Command="{Binding PrevStepCommand}" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Foreground="{DynamicResource TextMainBrush}" Padding="15,8" IsVisible="{Binding CanGoPrev}" Cursor="Hand"/>
+                    <Button Grid.Column="0" Content="Prev" Command="{Binding PrevStepCommand}" Background="{DynamicResource PrimaryBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}" BorderThickness="1" Padding="15,8" IsVisible="{Binding CanGoPrev}" Cursor="Hand"/>
                     
                     <TextBlock Grid.Column="1" Text="{Binding ProgressText}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" FontSize="14" FontWeight="SemiBold"/>
                     
