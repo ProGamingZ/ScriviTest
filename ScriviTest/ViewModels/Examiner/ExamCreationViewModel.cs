@@ -20,31 +20,30 @@ public partial class ExamCreationViewModel : ViewModelBase
         [RelayCommand]
         private void OpenHelpTour()
         {
-            // Define the specific Dos and Don'ts for the Exam Creation Screen
             HelpTour.StartTour(
                 new TourStep 
                 { 
-                    Title = "Exam Settings", 
-                    TargetIcon = "⚙️", // Feel free to replace these emojis with your DynamicResource icon codes if preferred!
-                    Description = "DO: Double-check your Anti-Cheat strictness and Time Limit before exporting. \n\nDON'T: Forget to assign a Target Section/Audience, or the roster might not match up during grading!" 
+                    Title = "Time Limit (Minutes)", 
+                    TargetIcon = "⏱️", 
+                    Description = "     Minimum is 1 minute, maximum is 1440 minutes (24 hours); inputs outside this range will automatically snap to the nearest value (min/max). You can also leave it blank to default to 60 minutes." 
                 },
                 new TourStep 
                 { 
-                    Title = "Adding Questions", 
-                    TargetIcon = "+", 
-                    Description = "DO: Use the 'Add Section' button at the bottom to group your questions (e.g., 'Math', 'Science'). \n\nDON'T: Put all 100 questions in a single section without shuffling, as students can easily copy off each other." 
+                    Title = "Anti-Cheat Strictness", 
+                    TargetIcon = "⚠️", 
+                    Description = "     Exams run in fullscreen; losing focus for over 3 seconds triggers a strike. If the strike limit is reached, the exam auto-submits. \n-Strict (1 Strike): Immediate submission on the first violation. \n-Lenient (3 Strikes): Warnings provided; auto-submits on the third violation. \n-Log Only (999 Strikes): No auto-submission; violations are only warned and logged." 
                 },
                 new TourStep 
                 { 
-                    Title = "Images & Media", 
+                    Title = "Images", 
                     TargetIcon = "🖼️", 
-                    Description = "DO: Keep image file sizes small for faster student loading times. \n\nDON'T: Rename or delete the original image files from your computer before you hit 'Export', or the app won't be able to package them into the exam." 
+                    Description = "    You can attach an image to a question by clicking [Attach Image] and attach image to choices by clicking the 🖼️ icon (only 1 image per question or choice). " 
                 },
                 new TourStep 
                 { 
-                    Title = "Saving & Exporting", 
-                    TargetIcon = "💾", 
-                    Description = "DO: Use 'Export' to generate the secure .xamn and .xamk files for the first time. \n\nDO: Use 'Overwrite' if you are just fixing a typo on an exam you already exported!" 
+                    Title = "Total Points", 
+                    TargetIcon = "⚙️", 
+                    Description = "     The total points for the exam are automatically calculated as you add sections and questions and assigning points to them. The minimum point value for a question is 1, and the maximum is 100; inputs outside this range will automatically snap to the nearest value (min/max)." 
                 }
             );
         }

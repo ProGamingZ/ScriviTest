@@ -13,7 +13,7 @@
                 Padding="30" 
                 HorizontalAlignment="Center" 
                 VerticalAlignment="Center" 
-                MaxWidth="550" 
+                MaxWidth="650" 
                 BoxShadow="{DynamicResource ElevationHigh}">
             
             <Grid RowDefinitions="Auto, *, Auto">
@@ -29,7 +29,7 @@
                         <TextBlock Text="{Binding CurrentStep.TargetIcon}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextMainBrush}"/>
                     </Border>
                     
-                    <TextBlock Text="{Binding CurrentStep.Description}" FontSize="16.25" TextWrapping="Wrap" TextAlignment="Center" Foreground="{DynamicResource TextMainBrush}" LineHeight="24"/>
+                    <TextBlock Text="{Binding CurrentStep.Description}" FontSize="16.25" TextWrapping="Wrap" TextAlignment="Start" Foreground="{DynamicResource TextMainBrush}" LineHeight="24"/>
                 </StackPanel>
 
                 <Grid Grid.Row="2" ColumnDefinitions="Auto, *, Auto">
