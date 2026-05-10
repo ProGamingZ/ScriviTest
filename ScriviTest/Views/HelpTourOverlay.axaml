@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScriviTest.ViewModels"
+             x:Class="ScriviTest.Views.Components.HelpTourOverlay"
+             x:DataType="vm:HelpTourViewModel">
+
+    <Border Background="{DynamicResource OverlayBrush}" 
+            IsVisible="{Binding IsOpen}" 
+            ZIndex="1000"> 
+        
+        <Border Background="{DynamicResource SurfaceBrush}" 
+                CornerRadius="12" 
+                Padding="30" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                MaxWidth="550" 
+                BoxShadow="{DynamicResource ElevationHigh}">
+            
+            <Grid RowDefinitions="Auto, *, Auto">
+                
+                <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
+                    <TextBlock Grid.Column="0" Text="{Binding CurrentStep.Title}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Content="{DynamicResource IconClose}" Command="{Binding CloseTourCommand}" Background="Transparent" Foreground="{DynamicResource TextMainBrush}" FontSize="20" Padding="5" Cursor="Hand"/>
+                </Grid>
+
+                <StackPanel Grid.Row="1" Spacing="20" Margin="0,0,0,30">
+                    
+                    <Border Background="{DynamicResource SurfaceVariantBrush}" Width="80" Height="80" CornerRadius="40" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding CurrentStep.TargetIcon}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextMainBrush}"/>
+                    </Border>
+                    
+                    <TextBlock Text="{Binding CurrentStep.Description}" FontSize="16.25" TextWrapping="Wrap" TextAlignment="Center" Foreground="{DynamicResource TextMainBrush}" LineHeight="24"/>
+                </StackPanel>
+
+                <Grid Grid.Row="2" ColumnDefinitions="Auto, *, Auto">
+                    
+                    <Button Grid.Column="0" Content="Prev" Command="{Binding PrevStepCommand}" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Foreground="{DynamicResource TextMainBrush}" Padding="15,8" IsVisible="{Binding CanGoPrev}" Cursor="Hand"/>
+                    
+                    <TextBlock Grid.Column="1" Text="{Binding ProgressText}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" FontSize="14" FontWeight="SemiBold"/>
+                    
+                    <Button Grid.Column="2" Content="Next" Command="{Binding NextStepCommand}" Background="{DynamicResource PrimaryBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}" Padding="15,8" FontWeight="Bold" IsVisible="{Binding CanGoNext}" Cursor="Hand"/>
+                    
+                    <Button Grid.Column="2" Content="Finish" Command="{Binding CloseTourCommand}" Background="{DynamicResource SuccessBrush}" Foreground="{DynamicResource PrimaryForegroundBrush}" Padding="15,8" FontWeight="Bold" IsVisible="{Binding !CanGoNext}" Cursor="Hand"/>
+                </Grid>
+
+            </Grid>
+        </Border>
+    </Border>
+</UserControl>

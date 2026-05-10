@@ -14,6 +14,42 @@ namespace ScriviTest.ViewModels.Examiner;
 
 public partial class ExamCreationViewModel : ViewModelBase
 {
+    #region UI Tour
+        public HelpTourViewModel HelpTour { get; } = new();
+
+        [RelayCommand]
+        private void OpenHelpTour()
+        {
+            // Define the specific Dos and Don'ts for the Exam Creation Screen
+            HelpTour.StartTour(
+                new TourStep 
+                { 
+                    Title = "Exam Settings", 
+                    TargetIcon = "⚙️", // Feel free to replace these emojis with your DynamicResource icon codes if preferred!
+                    Description = "DO: Double-check your Anti-Cheat strictness and Time Limit before exporting. \n\nDON'T: Forget to assign a Target Section/Audience, or the roster might not match up during grading!" 
+                },
+                new TourStep 
+                { 
+                    Title = "Adding Questions", 
+                    TargetIcon = "+", 
+                    Description = "DO: Use the 'Add Section' button at the bottom to group your questions (e.g., 'Math', 'Science'). \n\nDON'T: Put all 100 questions in a single section without shuffling, as students can easily copy off each other." 
+                },
+                new TourStep 
+                { 
+                    Title = "Images & Media", 
+                    TargetIcon = "🖼️", 
+                    Description = "DO: Keep image file sizes small for faster student loading times. \n\nDON'T: Rename or delete the original image files from your computer before you hit 'Export', or the app won't be able to package them into the exam." 
+                },
+                new TourStep 
+                { 
+                    Title = "Saving & Exporting", 
+                    TargetIcon = "💾", 
+                    Description = "DO: Use 'Export' to generate the secure .xamn and .xamk files for the first time. \n\nDO: Use 'Overwrite' if you are just fixing a typo on an exam you already exported!" 
+                }
+            );
+        }
+    #endregion
+
     #region Dependencies and Constructor
         private readonly Action<ViewModelBase> _navigateAction;
         private readonly Services.FileManagementService _fileService;
