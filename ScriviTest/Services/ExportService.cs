@@ -82,7 +82,11 @@ public class ExportService
                     {
                         var choice = question.Choices[i];
                         
-                        keyQuestion.Choices.Add(new DTOs.AnswerKeyChoiceDto { Text = choice.Text });
+                        keyQuestion.Choices.Add(new DTOs.AnswerKeyChoiceDto 
+                        { 
+                            Text = choice.Text,
+                            AttachedImageFileName = choice.AttachedImageFileName
+                        });
                         studentQuestion.Choices.Add(new DTOs.StudentChoiceDto 
                         { 
                             Text = choice.Text,

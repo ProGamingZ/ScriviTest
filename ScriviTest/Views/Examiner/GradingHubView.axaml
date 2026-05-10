@@ -72,11 +72,11 @@
                             ScrollViewer.VerticalScrollBarVisibility="Auto" RowBackground="{DynamicResource SurfaceBrush}" >
  
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="First" FontSize="16.25" Binding="{Binding FirstName}" Width="Auto" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowFirstName}"/>
-                            <DataGridTextColumn Header="Middle" FontSize="16.25" Binding="{Binding MiddleName}" Width="Auto" MinWidth="110" MaxWidth="300" IsVisible="{Binding ShowMiddleName}"/>
-                            <DataGridTextColumn Header="Last" FontSize="16.25" Binding="{Binding LastName}" Width="Auto" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowLastName}"/>
-                            <DataGridTextColumn Header="ID" FontSize="16.25" Binding="{Binding StudentID}" Width="Auto" MinWidth="100" MaxWidth="250" IsVisible="{Binding ShowID}"/>
-                            <DataGridTemplateColumn Header="Score Status"  Width="*" MinWidth="150" MaxWidth="250" IsVisible="{Binding ShowScores}" SortMemberPath="TotalPointsEarned">
+                            <DataGridTextColumn Header="First" FontSize="16.25" Binding="{Binding FirstName}" Width="120" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowFirstName}"/>
+                            <DataGridTextColumn Header="Middle" FontSize="16.25" Binding="{Binding MiddleName}" Width="120" MinWidth="110" MaxWidth="300" IsVisible="{Binding ShowMiddleName}"/>
+                            <DataGridTextColumn Header="Last" FontSize="16.25" Binding="{Binding LastName}" Width="120" MinWidth="100" MaxWidth="300" IsVisible="{Binding ShowLastName}"/>
+                            <DataGridTextColumn Header="ID" FontSize="16.25" Binding="{Binding StudentID}" Width="120" MinWidth="100" MaxWidth="250"  IsVisible="{Binding ShowID}"/>
+                            <DataGridTemplateColumn Header="Score Status"  Width="150" MinWidth="150" MaxWidth="250" IsVisible="{Binding ShowScores}" SortMemberPath="TotalPointsEarned">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate x:DataType="models:GradeReport">
                                         <StackPanel Orientation="Horizontal" Spacing="10" Margin="10,0,0,0" VerticalAlignment="Center">
@@ -167,7 +167,9 @@
                                                     <TextBlock Grid.Column="1" Text="{Binding Text}" FontSize="16.25" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                                 </Grid>
                                                 
-                                                <Image Source="{Binding ImageBitmap}" IsVisible="{Binding ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" MaxHeight="150" HorizontalAlignment="Left" Margin="70,0,0,0"/>
+                                               <Border IsVisible="{Binding ImageBitmap, Converter={x:Static ObjectConverters.IsNotNull}}" HorizontalAlignment="Left">
+                                                    <Image Source="{Binding ImageBitmap}" MaxHeight="150"/>
+                                                </Border>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ItemsRepeater.ItemTemplate>

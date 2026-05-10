@@ -100,19 +100,19 @@ public partial class ExamCreationViewModel : ViewModelBase
         
         [RelayCommand]
         private void RemoveQuestion(Question targetQuestion)
-    {
-        if (targetQuestion == null) return;
-
-        // Search through all sections to find which one owns this question, then delete it
-        foreach (var section in Sections)
         {
-            if (section.Questions.Contains(targetQuestion))
+            if (targetQuestion == null) return;
+
+            // Search through all sections to find which one owns this question, then delete it
+            foreach (var section in Sections)
             {
-                section.Questions.Remove(targetQuestion);
-                break;
+                if (section.Questions.Contains(targetQuestion))
+                {
+                    section.Questions.Remove(targetQuestion);
+                    break;
+                }
             }
         }
-    }
     #endregion
 
     #region Media & Image Management

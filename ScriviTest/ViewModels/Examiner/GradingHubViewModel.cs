@@ -1,3 +1,6 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -18,7 +21,7 @@ public partial class GradingHubViewModel : ViewModelBase
         private readonly Services.FileManagementService _fileService;
         private readonly Services.CryptographyService _cryptoService;
         private readonly string _examinerTempImageDir = Path.Combine(Path.GetTempPath(), "ScriviTest", "ExaminerKeyMedia");
-        private readonly Dictionary<string, Avalonia.Media.Imaging.Bitmap> _imageCache = new();
+        private readonly Dictionary<string, Avalonia.Media.Imaging.Bitmap> _imageCache = new(StringComparer.OrdinalIgnoreCase);
 
         public GradingHubViewModel(Action<ViewModelBase> navigateAction)
         {
@@ -41,21 +44,36 @@ public partial class GradingHubViewModel : ViewModelBase
         [ObservableProperty] private bool _isNotificationVisible;
         [ObservableProperty] private string _notificationMessage = string.Empty;
         [ObservableProperty] private string _notificationIcon = "ℹ️";
-        [ObservableProperty] private string _notificationColor = "#323232";
+        [ObservableProperty] private IBrush _notificationColor = Brushes.Gray;
 
-        public async void ShowToast(string message, string icon = "ℹ️", string hexColor = "#323232")
+        private IBrush GetBrush(string resourceKey)
+        {
+            var app = Application.Current;
+        
+            if (app != null && app.TryGetResource(resourceKey, app.ActualThemeVariant, out var res) && res is IBrush brush)
+            {
+                return brush;
+            }
+            return Brushes.Gray; // Fallback
+        }
+        private string GetIcon(string resourceKey, string fallbackIcon)
+        {
+            if (Application.Current != null && Application.Current.TryGetResource(resourceKey, out var res) && res is string iconStr)
+                return iconStr;
+            return fallbackIcon; 
+        }
+        public async void ShowToast(string message, string iconKey, string colorKey)
         {
             NotificationMessage = message;
-            NotificationIcon = icon;
-            NotificationColor = hexColor;
+            NotificationIcon = GetIcon(iconKey, "ℹ️");
+            NotificationColor = GetBrush(colorKey);
             IsNotificationVisible = true;
 
-            // Auto-hide after 3.5 seconds
             int toastId = ++_currentToastId;
             await Task.Delay(3500);
             if (_currentToastId == toastId) IsNotificationVisible = false;
         }
-
+        
         [RelayCommand]
         private void CloseToast() => IsNotificationVisible = false;
     #endregion
@@ -109,7 +127,7 @@ public partial class GradingHubViewModel : ViewModelBase
             }
             catch (Exception ex)
             {
-                ShowToast($"Unlocking Failed: {ex.Message}", "🛑", "#D32F2F");
+                ShowToast($"Unlocking Failed: {ex.Message}", "IconWarning", "DangerBrush");
             }
         }
 
@@ -353,10 +371,22 @@ public partial class GradingHubViewModel : ViewModelBase
                 // Link Choice Image from RAM Cache
                 string cImgName = (string)keyQ.Choices[c].AttachedImageFileName;
             
-                // Link Choice Image from RAM Cache 
-                if (!string.IsNullOrEmpty(cImgName) && _imageCache.TryGetValue(cImgName, out var cachedCImg))
+                // string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                // string logFile = Path.Combine(desktopPath, "Scrivi_ImageDebug.txt");
+
+                // File.AppendAllText(logFile, $"[DEBUG] Choice {c}: Looking for Image '{cImgName}'\n");
+
+                if (!string.IsNullOrEmpty(cImgName))
                 {
-                    reviewChoice.ImageBitmap = cachedCImg;
+                    if (_imageCache.TryGetValue(cImgName, out var cachedCImg))
+                    {
+                        reviewChoice.ImageBitmap = cachedCImg;
+                        // File.AppendAllText(logFile, $"[DEBUG] SUCCESS: '{cImgName}' attached!\n\n");
+                    }
+                    // else
+                    // {
+                    //     File.AppendAllText(logFile, $"[DEBUG] CRITICAL FAIL: '{cImgName}' is in the JSON, but missing from the _imageCache zip extraction!\n\n");
+                    // }
                 }
 
                 reviewQ.Choices.Add(reviewChoice);
@@ -408,7 +438,7 @@ public partial class GradingHubViewModel : ViewModelBase
             }
             catch (Exception ex)
             {
-                ShowToast($"Failed to save grades: {ex.Message}", "🛑", "#D32F2F");
+                ShowToast($"Failed to save grades: {ex.Message}", "IconWarning", "DangerBrush");
                 return;
             }
             // 3. Update the Left Panel DataGrid
@@ -539,11 +569,11 @@ public partial class GradingHubViewModel : ViewModelBase
                     File.WriteAllText(htmlFilePath, htmlContent);
                 }
 
-                ShowToast($"SUCCESS! Saved to {sessionFolderName}", "✅", "#388E3C");
+                ShowToast($"SUCCESS! Saved to {sessionFolderName}", "IconSave", "SucessBrush");
             }
             catch (Exception ex)
             {
-                ShowToast($"Export failed: {ex.Message}", "🛑", "#D32F2F");
+                ShowToast($"Export failed: {ex.Message}", "IconWarning", "DangerBrush");
             }
         }
     #endregion
