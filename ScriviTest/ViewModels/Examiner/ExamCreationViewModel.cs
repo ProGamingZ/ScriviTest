@@ -399,7 +399,7 @@ public partial class ExamCreationViewModel : ViewModelBase
         _activeDecryptionKey = ImportDecryptionKey.ToUpper();
         GeneratedExamKey = _activeDecryptionKey;
 
-        ShowToast("Exam loaded successfully! You may now edit and overwrite.", "📥", "#1976D2");
+        ShowToast("Exam loaded successfully! You may now edit and overwrite.", "IconImport", "PrimaryBrush");
         }
 
             private DTOs.StudentExamDto ExtractStudentExam(string tempFolder)

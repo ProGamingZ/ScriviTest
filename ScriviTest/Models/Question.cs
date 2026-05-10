@@ -24,28 +24,8 @@ public partial class Question : ObservableObject
     public bool IsEssay => Type == QuestionType.Essay;
 
     // --- True/False Answer Tracking ---
-    private bool _isTrueFalseAnswerTrue = true;
-
-    public bool IsTrueFalseAnswerTrue
-    {
-        get => _isTrueFalseAnswerTrue;
-        set
-        {
-            if (SetProperty(ref _isTrueFalseAnswerTrue, value))
-            {
-                OnPropertyChanged(nameof(IsTrueFalseAnswerFalse));
-            }
-        }
-    }
-
-    public bool IsTrueFalseAnswerFalse
-    {
-        get => !_isTrueFalseAnswerTrue;
-        set
-        {
-            if (value) IsTrueFalseAnswerTrue = false;
-        }
-    }
+    [ObservableProperty] private bool _isTrueFalseAnswerTrue = false;
+    [ObservableProperty] private bool _isTrueFalseAnswerFalse = false;
 
     [ObservableProperty]
     private int? _points = 1;
@@ -104,5 +84,18 @@ public partial class Question : ObservableObject
         {
             Choices.Remove(choiceToRemove);
         }
+    }
+    [RelayCommand]
+    private void ClearAnswer()
+    {
+        // Clear Multiple Choice
+        foreach (var choice in Choices)
+        {
+            choice.IsCorrect = false;
+        }
+        
+        // Clear True/False
+        IsTrueFalseAnswerTrue = false;
+        IsTrueFalseAnswerFalse = false;
     }
 }

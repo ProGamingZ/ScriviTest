@@ -10,6 +10,7 @@
 
     <Grid>
         <components:HelpTourOverlay  ZIndex="201" DataContext="{Binding HelpTour}" />
+        
         <Border ZIndex="200" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,40" Background="{Binding NotificationColor}" CornerRadius="25" Padding="15,8" BoxShadow="{DynamicResource ElevationHigh}" IsVisible="{Binding IsNotificationVisible}">
             <Grid ColumnDefinitions="Auto, *, Auto">
                 
@@ -22,7 +23,6 @@
             </Grid>
         </Border>
         
-
         <Grid RowDefinitions="Auto, *, Auto">
             
             <Border ZIndex="100" Background="{DynamicResource OverlayBrush}" IsVisible="{Binding IsImportPopupVisible}" Grid.RowSpan="3">
@@ -207,12 +207,18 @@
                                                                             </DataTemplate>
                                                                         </ItemsRepeater.ItemTemplate>
                                                                     </ItemsRepeater>
-                                                                    <Button Content="+ Add Option" FontSize="16.25" Command="{Binding AddChoiceCommand}" Background="Transparent" Foreground="{DynamicResource PrimaryBrush}" BorderBrush="{DynamicResource BorderBrush}" HorizontalAlignment="Left"/>
+
+                                                                    <StackPanel Orientation="Horizontal" Spacing="15" HorizontalAlignment="Left">
+                                                                        <Button Content="+ Add Option" FontSize="16.25" Command="{Binding AddChoiceCommand}" Background="Transparent" Foreground="{DynamicResource PrimaryBrush}" BorderBrush="{DynamicResource BorderBrush}"/>
+                                                                        
+                                                                        <Button Content="Clear Answer" FontSize="16.25" Command="{Binding ClearAnswerCommand}" Background="Transparent" Foreground="{DynamicResource DangerBrush}" BorderThickness="0"/>
+                                                                    </StackPanel>
                                                                 </StackPanel>
 
                                                                 <StackPanel IsVisible="{Binding IsTrueFalse}" Spacing="10">
                                                                     <RadioButton Content="True" GroupName="{Binding GroupId}" IsChecked="{Binding IsTrueFalseAnswerTrue}" Foreground="{DynamicResource TextMainBrush}"/>
                                                                     <RadioButton Content="False" GroupName="{Binding GroupId}" IsChecked="{Binding IsTrueFalseAnswerFalse}" Foreground="{DynamicResource TextMainBrush}"/>
+                                                                    <Button Content="Clear Answer" FontSize="14" Command="{Binding ClearAnswerCommand}" Background="Transparent" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Left" Padding="0,5"/>
                                                                 </StackPanel>
 
                                                                 <StackPanel IsVisible="{Binding IsMultipleAnswer}" Spacing="10">

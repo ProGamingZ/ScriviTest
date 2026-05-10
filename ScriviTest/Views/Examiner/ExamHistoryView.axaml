@@ -81,7 +81,7 @@
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Date" SortMemberPath="Record.ExportDate" FontSize="16.25" Binding="{Binding Record.ExportDate}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowDate}" MinWidth="200" MaxWidth="200"/>
                                     <DataGridTextColumn Header="Exam Title" SortMemberPath="Record.ExamTitle" FontSize="16.25" Binding="{Binding Record.ExamTitle}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowTitle}" MinWidth="150" MaxWidth="1500"  Width="Auto"/>
-                                    <DataGridTextColumn Header="Key" SortMemberPath="DisplayKey" FontSize="16.25" Binding="{Binding DisplayKey}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowKey}" MinWidth="95"  MaxWidth="95"/>
+                                    <DataGridTextColumn Header="Key" SortMemberPath="DisplayKey" FontSize="16.25" Binding="{Binding DisplayKey}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowKey}" MinWidth="110"  MaxWidth="110"/>
                                     <DataGridTemplateColumn Header="Status" SortMemberPath="FileStatus" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowStatus}" MinWidth="110" MaxWidth="110">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate x:DataType="vm:HistoryRecordWrapper">

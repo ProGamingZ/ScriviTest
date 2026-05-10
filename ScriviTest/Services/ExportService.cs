@@ -71,9 +71,13 @@ public class ExportService
                     studentQuestion.Choices.Add(new DTOs.StudentChoiceDto { Text = "False" });
 
                     if (question.IsTrueFalseAnswerTrue)
-                        keyQuestion.CorrectChoiceIndices.Add(0); // 0 is True
-                    else
-                        keyQuestion.CorrectChoiceIndices.Add(1); // 1 is False
+                    {
+                        keyQuestion.CorrectChoiceIndices.Add(0); 
+                    }
+                    else if (question.IsTrueFalseAnswerFalse)
+                    {
+                        keyQuestion.CorrectChoiceIndices.Add(1); 
+                    }
                 }
                 else if (question.Type != Models.QuestionType.Essay)
                 {

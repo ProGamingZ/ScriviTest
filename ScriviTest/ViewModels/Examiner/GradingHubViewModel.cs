@@ -213,39 +213,44 @@ public partial class GradingHubViewModel : ViewModelBase
                     // If not graded yet, run Auto-Grader
                     if (!studentQ.AwardedPoints.HasValue)
                     {
-                        double autoGrade = 0;
-                        if (keyQ.Type == "Essay") 
+                        bool hasAnswerKey = keyQ.CorrectChoiceIndices.Count > 0;
+                        if (keyQ.Type == "Essay" || (!hasAnswerKey && keyQ.Type != "Essay")) 
                         {
                             report.RequiresManualReview = true;
                         }
-                        else if (keyQ.Type == "MultipleChoice" || keyQ.Type == "TrueFalse")
+                        else
                         {
-                            if (studentQ.SelectedChoiceIndices.Count == 1 && keyQ.CorrectChoiceIndices.Contains(studentQ.SelectedChoiceIndices[0]))
-                                autoGrade = keyQ.Points;
-                        }
-                        else if (keyQ.Type == "MultipleAnswer")
-                        {
-                            var studentAns = new HashSet<int>(studentQ.SelectedChoiceIndices);
-                            var keyAns = new HashSet<int>(keyQ.CorrectChoiceIndices);
-                            if (keyQ.MultipleAnswerRubric == "AllOrNothing") 
-                            { 
-                                if (studentAns.SetEquals(keyAns)) autoGrade = keyQ.Points; 
-                            }
-                            else
+                            double autoGrade = 0;
+                            if (keyQ.Type == "MultipleChoice" || keyQ.Type == "TrueFalse")
                             {
-                                double pointsPerCorrect = keyAns.Count > 0 ? (double)keyQ.Points / keyAns.Count : 0;
-                                foreach (int ans in studentAns) 
-                                { 
-                                    if (keyAns.Contains(ans)) autoGrade += pointsPerCorrect; 
-                                    else autoGrade -= 1; 
-                                }
-                                if (autoGrade < 0) autoGrade = 0; 
+                                if (studentQ.SelectedChoiceIndices.Count == 1 && keyQ.CorrectChoiceIndices.Contains(studentQ.SelectedChoiceIndices[0]))
+                                    autoGrade = keyQ.Points;
                             }
+                            else if (keyQ.Type == "MultipleAnswer")
+                            {
+                                var studentAns = new HashSet<int>(studentQ.SelectedChoiceIndices);
+                                var keyAns = new HashSet<int>(keyQ.CorrectChoiceIndices);
+                                if (keyQ.MultipleAnswerRubric == "AllOrNothing") 
+                                { 
+                                    if (studentAns.SetEquals(keyAns)) autoGrade = keyQ.Points; 
+                                }
+                                else
+                                {
+                                    double pointsPerCorrect = keyAns.Count > 0 ? (double)keyQ.Points / keyAns.Count : 0;
+                                    foreach (int ans in studentAns) 
+                                    { 
+                                        if (keyAns.Contains(ans)) autoGrade += pointsPerCorrect; 
+                                        else autoGrade -= 1; 
+                                    }
+                                    if (autoGrade < 0) autoGrade = 0; 
+                                }
+                            }
+                            studentQ.AwardedPoints = autoGrade; // save auto-grade into DTO!
                         }
-                        studentQ.AwardedPoints = autoGrade; // save auto-grade into DTO!
+
                     }
 
-                    report.TotalPointsEarned += studentQ.AwardedPoints.Value;
+                    report.TotalPointsEarned += studentQ.AwardedPoints ?? 0;
                 }
             }
             
@@ -358,6 +363,7 @@ public partial class GradingHubViewModel : ViewModelBase
             }
             
             // Build Choices
+            bool hasKey = keyQ.CorrectChoiceIndices.Count > 0;
             for (int c = 0; c < keyQ.Choices.Count; c++)
             {
                 var reviewChoice = new Models.ReviewChoice
@@ -365,7 +371,8 @@ public partial class GradingHubViewModel : ViewModelBase
                     Text = keyQ.Choices[c].Text,
                     IsCorrectAnswer = keyQ.CorrectChoiceIndices.Contains(c),
                     IsStudentSelected = studentQ.SelectedChoiceIndices.Contains(c),
-                    IsSingleSelection = isSingleSelection
+                    IsSingleSelection = isSingleSelection,
+                    HasAnswerKey = hasKey
                 };
 
                 // Link Choice Image from RAM Cache

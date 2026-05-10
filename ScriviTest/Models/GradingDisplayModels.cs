@@ -76,12 +76,13 @@ public class ReviewChoice : ObservableObject
     
     public Avalonia.CornerRadius BoxCornerRadius => IsSingleSelection ? new Avalonia.CornerRadius(15) : new Avalonia.CornerRadius(4);
 
-    // Inner symbol (Clean text characters, not emojis!)
-    public string InnerSymbol => (IsStudentSelected, IsCorrectAnswer) switch
+    public bool HasAnswerKey { get; set; } = true;
+    public string InnerSymbol => (HasAnswerKey, IsStudentSelected, IsCorrectAnswer) switch
     {
-        (true, true) => "✓",
-        (true, false) => "✕",
-        (false, true) => "?",
+        (false, true, _) => "●",
+        (true, true, true) => "✓",
+        (true, true, false) => "✕",
+        (true, false, true) => "?",
         _ => ""
     };
 
