@@ -6,6 +6,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <NuGetAuditMode>direct</NuGetAuditMode>
+    <ApplicationIcon>Assets\ScriviTest.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

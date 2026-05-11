@@ -11,6 +11,10 @@
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
         
+        <Style Selector="Window">
+            <Setter Property="Icon" Value="avares://ScriviTest/Assets/ScriviTest.ico"/>
+        </Style>
+
         <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
             <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
             <Setter Property="BorderThickness" Value="2"/>

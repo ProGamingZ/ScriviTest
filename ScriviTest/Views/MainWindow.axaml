@@ -6,7 +6,6 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ScriviTest.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
         Title="ScriviTest"
         
         MaxWidth="{Binding MaxWidth}"
@@ -22,5 +21,4 @@
         WindowStartupLocation="CenterScreen">
 
     <TransitioningContentControl Content="{Binding CurrentPage}" />
-
 </Window>
