@@ -66,7 +66,7 @@ public partial class ExamCreationViewModel : ViewModelBase
                 new TourStep 
                 { 
                     Title = "Overwrite", 
-                    TargetIcon = "⚙️", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
                     Description = "     If you imported an existing exam to edit, use the Overwrite button to save your changes. This will update the existing exam package with the new content, while keeping the same exam key. (Note: You can only overwrite exams that were imported; new exams must be exported with a new name.)" 
                  }
 
