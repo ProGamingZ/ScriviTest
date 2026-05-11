@@ -11,7 +11,7 @@
         <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="15" BoxShadow="{DynamicResource ElevationLow}">
             <Button Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource TextMainBrush}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="{DynamicResource IconBack}" FontSize="16.25"/>
+                    <TextBlock Classes="icon" Text="{DynamicResource IconBack}" FontSize="16.25"/>
                     <TextBlock Text="BACK" FontSize="16.25"/>
                 </StackPanel>
             </Button>

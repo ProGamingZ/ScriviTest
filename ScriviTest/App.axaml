@@ -16,6 +16,12 @@
             <Setter Property="BorderThickness" Value="2"/>
         </Style>
 
+        <Style Selector="TextBlock.icon">
+            <Setter Property="FontFamily" Value="{DynamicResource FluentIcons}"/>
+        </Style>
+        <Style Selector="Button.icon">
+            <Setter Property="FontFamily" Value="{DynamicResource FluentIcons}"/>
+        </Style>
 
         <Style Selector="DataGridColumnHeader">
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
@@ -85,8 +91,8 @@
     </Application.Styles>
 
     <Application.Resources>
-
         <ResourceDictionary>
+            <FontFamily x:Key="FluentIcons">avares://ScriviTest/Assets/Fonts/FluentSystemIcons-Regular.ttf#FluentSystemIcons-Regular</FontFamily>
             <ResourceDictionary.ThemeDictionaries>
                 <!-- ====== LIGHT MODE BRUSHES ====== -->
                 <ResourceDictionary x:Key="Light">
@@ -164,20 +170,20 @@
             </ResourceDictionary.ThemeDictionaries>   
 
             <!-- CENTRALIZED ICONS (Strings) -->
-            <x:String x:Key="IconBack">←</x:String>
-            <x:String x:Key="IconNext">→</x:String>
-            <x:String x:Key="IconClose">✕</x:String>
-            <x:String x:Key="IconWarning">⚠️</x:String>
-            <x:String x:Key="IconDelete">🗑️</x:String>
-            <x:String x:Key="IconSettings">⚙️</x:String>
-            <x:String x:Key="IconImage">🖼️</x:String>
-            <x:String x:Key="IconTimer">⏱️</x:String>
-            <x:String x:Key="IconImport">📥</x:String>
-            <x:String x:Key="IconSave">💾</x:String>
-            <x:String x:Key="IconFlag">⚑</x:String>
-            <x:String x:Key="IconDoc">📄</x:String>
-            <x:String x:Key="IconKey">🔑</x:String>
-
+            <x:String x:Key="IconBack">&#61788;</x:String>
+            <x:String x:Key="IconNext">&#61826;</x:String>
+            <x:String x:Key="IconFlag">&#62476;</x:String>
+            <x:String x:Key="IconWarning">&#63593;</x:String>
+            <x:String x:Key="IconDelete">&#62284;</x:String>
+            <x:String x:Key="IconSettings">&#63145;</x:String>
+            <x:String x:Key="IconImage">&#62600;</x:String>
+            <x:String x:Key="IconTimer">&#60808;</x:String>
+            <x:String x:Key="IconImport">&#61785;</x:String>
+            <x:String x:Key="IconSave">&#63103;</x:String>
+            <x:String x:Key="IconDoc">&#62328;</x:String>
+            <x:String x:Key="IconKey">&#62646;</x:String>
+            <x:String x:Key="IconClose">&#62313;</x:String>
+    
         </ResourceDictionary>
     </Application.Resources>
 </Application>

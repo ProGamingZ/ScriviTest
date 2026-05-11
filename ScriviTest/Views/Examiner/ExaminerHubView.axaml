@@ -11,7 +11,7 @@
                 
                 <Button Grid.Column="0" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource TextMainBrush}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <TextBlock Text="{DynamicResource IconBack}" FontSize="20.31" FontWeight="Bold"/>
+                        <TextBlock Classes="icon" Text="{DynamicResource IconBack}" FontSize="20.31" FontWeight="Bold"/>
                         <TextBlock Text="BACK" VerticalAlignment="Center" FontSize="16.25" FontWeight="Bold"/>
                     </StackPanel>
                 </Button>

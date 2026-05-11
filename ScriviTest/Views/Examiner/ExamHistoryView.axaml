@@ -1,4 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:components="using:ScriviTest.Views.Components"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:ScriviTest.ViewModels.Examiner"
              xmlns:models="using:ScriviTest.Models"
@@ -8,17 +9,25 @@
 
     <Grid>
         <!-- MASTER LAYOUT GRID -->
+        <components:HelpTourOverlay  ZIndex="201" DataContext="{Binding HelpTour}" />
         <Grid RowDefinitions="Auto, *">
             
             <!-- HEADER -->
             <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="15" BoxShadow="{DynamicResource ElevationLow}" ZIndex="10">
                 <Grid>
-                    <Button Grid.Column="0" Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource TextMainBrush}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="{DynamicResource IconBack}" FontSize="20.31" FontWeight="Bold"/>
-                            <TextBlock Text="BACK" VerticalAlignment="Center" FontSize="16.25" FontWeight="Bold"/>
-                        </StackPanel>
-                    </Button>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                        <Button Command="{Binding GoBackCommand}" Background="Transparent" Foreground="{DynamicResource TextMainBrush}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Classes="icon" Text="{DynamicResource IconBack}" FontSize="20.31" FontWeight="Bold"/>
+                                <TextBlock Text="BACK" VerticalAlignment="Center" FontSize="16.25" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding OpenHelpTourCommand}" Background="Transparent" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1" Foreground="{DynamicResource PrimaryBrush}" Padding="10,5" CornerRadius="4">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="Help &amp; Tips" VerticalAlignment="Center" FontSize="16.25" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                     <TextBlock Grid.Column="1" Text="EXAM HISTORY" FontSize="31.74" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
                 </Grid>
             </Border>
@@ -46,7 +55,7 @@
                         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
                             <Button FontSize="20.31" Background="Transparent" BorderBrush="{DynamicResource TableBorderBrush}" Padding="10,5">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="{DynamicResource IconSettings}"/>
+                                    <TextBlock Classes="icon" Text="{DynamicResource IconSettings}"/>
                                     <TextBlock Text="Toggle Columns" Foreground="{DynamicResource TextMainBrush}"/>
                                 </StackPanel>
                                 
@@ -71,16 +80,16 @@
                     <Border Grid.Row="0" Padding="20">
                         <Grid RowDefinitions="Auto, *">
                             <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,10">
-                                <TextBlock Text="{DynamicResource IconDoc}" FontSize="20.31"/>
+                                <TextBlock Classes="icon" Text="{DynamicResource IconDoc}" FontSize="20.31"/>
                                 <TextBlock Text="Exported Questionnaires (.xamn)" FontSize="20.31" FontWeight="Bold" Foreground="{DynamicResource TextMainBrush}"/>
                             </StackPanel>
                             
                             <DataGrid x:Name="QuestionnaireGrid" Grid.Row="1" ItemsSource="{Binding QuestionnaireList}" SelectedItem="{Binding SelectedQuestionnaire}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderBrush="{DynamicResource TableBorderBrush}" BorderThickness="1" RowBackground="{DynamicResource SurfaceBrush}" CanUserSortColumns="True" CanUserReorderColumns="True" CanUserResizeColumns="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Date" SortMemberPath="Record.ExportDate" FontSize="16.25" Binding="{Binding Record.ExportDate}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowDate}" MinWidth="200" MaxWidth="200"/>
-                                    <DataGridTextColumn Header="Exam Title" SortMemberPath="Record.ExamTitle" FontSize="16.25" Binding="{Binding Record.ExamTitle}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowTitle}" MinWidth="150" MaxWidth="1500"  Width="Auto"/>
-                                    <DataGridTextColumn Header="Key" SortMemberPath="DisplayKey" FontSize="16.25" Binding="{Binding DisplayKey}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowKey}" MinWidth="110"  MaxWidth="110"/>
-                                    <DataGridTemplateColumn Header="Status" SortMemberPath="FileStatus" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowStatus}" MinWidth="110" MaxWidth="110">
+                                    <DataGridTextColumn Header="Date" SortMemberPath="Record.ExportDate" FontSize="16.25" Binding="{Binding Record.ExportDate}" IsVisible="{Binding ShowDate}" MinWidth="200" MaxWidth="200"/>
+                                    <DataGridTextColumn Header="Exam Title" SortMemberPath="Record.ExamTitle" FontSize="16.25" Binding="{Binding Record.ExamTitle}" IsVisible="{Binding ShowTitle}" MinWidth="150" MaxWidth="1500"  Width="Auto"/>
+                                    <DataGridTextColumn Header="Key" SortMemberPath="DisplayKey" FontSize="16.25" Binding="{Binding DisplayKey}" IsVisible="{Binding ShowKey}" MinWidth="110"  MaxWidth="110"/>
+                                    <DataGridTemplateColumn Header="Status" SortMemberPath="FileStatus" IsVisible="{Binding ShowStatus}" MinWidth="110" MaxWidth="110">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate x:DataType="vm:HistoryRecordWrapper">
                                                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="10,0">
@@ -90,7 +99,7 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn Header="Location" SortMemberPath="Record.FilePath" FontSize="16.25" Binding="{Binding Record.FilePath}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowLocation}" MinWidth="200" MaxWidth="2000" Width="Auto"/>
+                                    <DataGridTextColumn Header="Location" SortMemberPath="Record.FilePath" FontSize="16.25" Binding="{Binding Record.FilePath}" IsVisible="{Binding ShowLocation}" MinWidth="200" MaxWidth="2000" Width="Auto"/>
                                 </DataGrid.Columns>
                             </DataGrid>
 
@@ -103,7 +112,7 @@
                     <Border Grid.Row="2" Padding="20">
                         <Grid RowDefinitions="Auto, *">
                             <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,10">
-                                <TextBlock Text="{DynamicResource IconKey}" FontSize="20.31"/>
+                                <TextBlock Classes="icon" Text="{DynamicResource IconKey}" FontSize="20.31"/>
                                 <TextBlock Text="Exported Answer Keys (.xamk)" FontSize="20.31" FontWeight="Bold" Foreground="{DynamicResource TextMainBrush}"/>
                             </StackPanel>
                             
@@ -112,10 +121,10 @@
                                       RowBackground="{DynamicResource SurfaceBrush}" 
                                       CanUserSortColumns="True" CanUserReorderColumns="True" CanUserResizeColumns="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" >
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Date" SortMemberPath="Record.ExportDate" FontSize="16.25" Binding="{Binding Record.ExportDate}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowDate}" MinWidth="120"  MaxWidth="120"/>
-                                    <DataGridTextColumn Header="Exam Title" SortMemberPath="Record.ExamTitle" FontSize="16.25" Binding="{Binding Record.ExamTitle}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowTitle}" MinWidth="150" MaxWidth="1500"  Width="Auto"/>
-                                    <DataGridTextColumn Header="Key" SortMemberPath="DisplayKey" FontSize="16.25" Binding="{Binding DisplayKey}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowKey}" MinWidth="85"  MaxWidth="85"/>
-                                    <DataGridTemplateColumn Header="Status" SortMemberPath="FileStatus" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowStatus}" MinWidth="110"  MaxWidth="110">
+                                    <DataGridTextColumn Header="Date" SortMemberPath="Record.ExportDate" FontSize="16.25" Binding="{Binding Record.ExportDate}" IsVisible="{Binding ShowDate}" MinWidth="120"  MaxWidth="120"/>
+                                    <DataGridTextColumn Header="Exam Title" SortMemberPath="Record.ExamTitle" FontSize="16.25" Binding="{Binding Record.ExamTitle}" IsVisible="{Binding ShowTitle}" MinWidth="150" MaxWidth="1500"  Width="Auto"/>
+                                    <DataGridTextColumn Header="Key" SortMemberPath="DisplayKey" FontSize="16.25" Binding="{Binding DisplayKey}" IsVisible="{Binding ShowKey}" MinWidth="85"  MaxWidth="85"/>
+                                    <DataGridTemplateColumn Header="Status" SortMemberPath="FileStatus" IsVisible="{Binding ShowStatus}" MinWidth="110"  MaxWidth="110">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate x:DataType="vm:HistoryRecordWrapper">
                                                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="10,0">
@@ -125,7 +134,7 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn Header="Location" SortMemberPath="Record.FilePath" FontSize="16.25" Binding="{Binding Record.FilePath}" IsVisible="{Binding #QuestionnaireGrid.DataContext.ShowLocation}" MinWidth="200" MaxWidth="2000" Width="Auto"/>
+                                    <DataGridTextColumn Header="Location" SortMemberPath="Record.FilePath" FontSize="16.25" Binding="{Binding Record.FilePath}" IsVisible="{Binding ShowLocation}" MinWidth="200" MaxWidth="2000" Width="Auto"/>
                                 </DataGrid.Columns>
                             </DataGrid>
 
@@ -141,7 +150,7 @@
             <Border Background="{DynamicResource SurfaceBrush}" Width="400" Padding="30" CornerRadius="8" HorizontalAlignment="Center" VerticalAlignment="Center" BoxShadow="{DynamicResource ElevationHigh}">
                 <StackPanel Spacing="15">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
-                        <TextBlock Text="{DynamicResource IconWarning}" FontSize="20.31" Foreground="{DynamicResource DangerBrush}"/>
+                        <TextBlock Classes="icon" Text="{DynamicResource IconWarning}" FontSize="20.31" Foreground="{DynamicResource DangerBrush}"/>
                         <TextBlock Text="Permanent Delete Warning" FontSize="20.31" FontWeight="Bold" Foreground="{DynamicResource DangerBrush}"/>
                     </StackPanel>
                     <TextBlock Text="{Binding DeleteWarningMessage}" TextWrapping="Wrap" FontSize="16" TextAlignment="Center" Margin="0,10"/>
@@ -160,9 +169,9 @@
                 Background="{Binding NotificationColor}" CornerRadius="8" IsVisible="{Binding IsNotificationVisible}" 
                 BoxShadow="{DynamicResource ElevationHigh}" ZIndex="100">
             <Grid ColumnDefinitions="Auto, *, Auto">
-                <TextBlock Grid.Column="0" Text="{Binding NotificationIcon}" Foreground="{DynamicResource PrimaryForegroundBrush}" FontSize="20.31" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <TextBlock Classes="icon" Grid.Column="0" Text="{Binding NotificationIcon}" Foreground="{DynamicResource PrimaryForegroundBrush}" FontWeight="Bold" FontSize="20.31" VerticalAlignment="Center" Margin="0,0,12,0"/>
                 <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" FontSize="20.31" Foreground="{DynamicResource PrimaryForegroundBrush}" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="500"/>
-                <Button Grid.Column="2" Content="{DynamicResource IconClose}" FontSize="20.31" Command="{Binding CloseToastCommand}" Background="Transparent" Foreground="{DynamicResource TextMainBrush}"  FontWeight="Bold" Margin="15,0,0,0" Padding="8,4" Cursor="Hand"/>
+                <Button Classes="icon" Grid.Column="2" Content="{DynamicResource IconClose}" FontSize="20.31" Command="{Binding CloseToastCommand}" Background="Transparent" Foreground="{DynamicResource TextMainBrush}"  FontWeight="Bold" Margin="15,0,0,0" Padding="8,4" Cursor="Hand"/>
             </Grid>
         </Border>
 
