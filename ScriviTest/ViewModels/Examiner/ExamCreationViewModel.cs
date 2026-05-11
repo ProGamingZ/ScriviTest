@@ -24,39 +24,52 @@ public partial class ExamCreationViewModel : ViewModelBase
                 new TourStep 
                 { 
                     Title = "Tool tips", 
-                    TargetIcon = "⚙️", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
                     Description = "     Hovering your mouse cursor on some buttons will show you their tool tip, which provide info about what the button do." 
                 },
                 new TourStep 
                 { 
                     Title = "Time Limit (Minutes)", 
-                    TargetIcon = "⏱️", 
+                    TargetIcon = GetIcon("IconTimer","ℹ️"), 
                     Description = "     Minimum is 1 minute, maximum is 1440 minutes (24 hours); inputs outside this range will automatically snap to the nearest value (min/max). You can also leave it blank to default to 60 minutes." 
                 },
                 new TourStep 
                 { 
                     Title = "Anti-Cheat Strictness", 
-                    TargetIcon = "⚠️", 
+                    TargetIcon = GetIcon("IconWarning","ℹ️"), 
                     Description = "     Exams run in fullscreen; losing focus for over 3 seconds triggers a strike. If the strike limit is reached, the exam auto-submits. \n-Strict (1 Strike): Immediate submission on the first violation. \n-Lenient (3 Strikes): Warnings provided; auto-submits on the third violation. \n-Log Only (999 Strikes): No auto-submission; violations are only warned and logged." 
                 },
                 new TourStep 
                 { 
                     Title = "Total Points", 
-                    TargetIcon = "⚙️", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
                     Description = "     The total points for the exam are automatically calculated as you add sections and questions and assigning points to them. The minimum point value for a question is 1, and the maximum is 100; inputs outside this range will automatically snap to the nearest value (min/max)." 
                 },
                 new TourStep 
                 { 
                     Title = "Multiple Answer Scoring Rubric", 
-                    TargetIcon = "⚙️", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
                     Description = "-All or Nothing: Students must select all correct answers and no incorrect ones to receive full credit. Otherwise, they receive 0.\n-Partial Credit: Points are awarded based on the number of correct choices selected, minus any incorrect choices. The minimum score is 0." 
                 },
                 new TourStep 
                 { 
                     Title = "Auto Checker", 
-                    TargetIcon = "⚙️", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
                     Description = "     The Auto Checker evaluates student responses to Multiple Choice, Multiple Answer, and True/False questions based on the correct answers you set while creating the exam. It provides an automatic score for these question types when the exam is scored." 
-                }
+                },
+                new TourStep 
+                { 
+                    Title = "Export", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
+                    Description = "     Once you've finished creating your exam, click the Export button to save and encrypt your exam package. An xamk (answer key) and xamn (questionnaire) file will be generated along with the unique exam key, you can also view these in 'Exam History' window." 
+                },
+                new TourStep 
+                { 
+                    Title = "Overwrite", 
+                    TargetIcon = "⚙️", 
+                    Description = "     If you imported an existing exam to edit, use the Overwrite button to save your changes. This will update the existing exam package with the new content, while keeping the same exam key. (Note: You can only overwrite exams that were imported; new exams must be exported with a new name.)" 
+                 }
+
             );
         }
     #endregion

@@ -30,6 +30,47 @@ public partial class HistoryRecordWrapper : ObservableObject
 
 public partial class ExamHistoryViewModel : ViewModelBase
 {
+    #region UI Tour
+        public HelpTourViewModel HelpTour { get; } = new();
+
+        [RelayCommand]
+        private void OpenHelpTour()
+        {
+            HelpTour.StartTour(
+                new TourStep 
+                { 
+                    Title = "Check Locations", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"),
+                    Description = "     This button when clicked verifies the location of all files listed in your history. It updates their status to 'Found ✓' or 'Missing ✕' accordingly. It automatically checks files when you enter Exam History window." 
+                },
+                new TourStep 
+                { 
+                    Title = "Relink Missing File", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
+                    Description = "     If a file is missing (status: 'Missing ✕'), select it and click this button to open a file picker. Choose the correct .xamn or .xamk file on your storages to relink it. This updates the history record with the new path and status." 
+                },
+                new TourStep 
+                { 
+                    Title = "Delete Selected File", 
+                    TargetIcon = GetIcon("IconWarning","ℹ️"), 
+                    Description = "     Select a file and click this button to delete it. If the file is present on your storage, you will receive a warning prompt to confirm permanent deletion. If the file is already missing, it will simply remove the log entry from history without any prompt." 
+                },
+                new TourStep 
+                { 
+                    Title = "Table Columns Reordering", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
+                    Description = "     You can reorder the columns in both tables by dragging and dropping the column headers. " 
+                },
+                new TourStep 
+                { 
+                    Title = "Table Columns Resizing", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
+                    Description = "     You can resize the 'Exam Title' and 'Location' columns in both tables up to a point by dragging the edges of the column headers." 
+                }
+            );
+        }
+    #endregion
+
     private readonly Action<ViewModelBase> _navigateAction;
 
     // 1. THE TWO STACKED TABLES
