@@ -349,7 +349,7 @@
                     CornerRadius="8" IsVisible="{Binding IsNotificationVisible}" 
                     BoxShadow="{DynamicResource ElevationHigh}" ZIndex="100">
                 <Grid ColumnDefinitions="Auto, *, Auto">
-                    <TextBlock Classes="icon" Grid.Column="0" Text="{Binding NotificationIcon}" FontSize="20.31" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <TextBlock Classes="icon" Grid.Column="0" Text="{Binding NotificationIcon}" Foreground="{DynamicResource PrimaryForegroundBrush}" FontWeight="Bold" FontSize="20.31" VerticalAlignment="Center" Margin="0,0,12,0"/>
                     
                     <TextBlock Grid.Column="1" Text="{Binding NotificationMessage}" FontSize="16.25" Foreground="{DynamicResource PrimaryForegroundBrush}" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="500"/>
                     

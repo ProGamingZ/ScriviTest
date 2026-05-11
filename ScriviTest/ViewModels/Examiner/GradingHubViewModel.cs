@@ -15,7 +15,48 @@ namespace ScriviTest.ViewModels.Examiner;
 
 public partial class GradingHubViewModel : ViewModelBase
 {
-     
+    #region UI Tour
+        public HelpTourViewModel HelpTour { get; } = new();
+
+        [RelayCommand]
+        private void OpenHelpTour()
+        {
+            HelpTour.StartTour(
+                new TourStep 
+                { 
+                    Title = "Start Scoring", 
+                    TargetIcon = GetIcon("IconSettings", "ℹ️"), 
+                    Description = "     Begin by loading the Answer Key and Student Submissions using the buttons on the top-left. After entering the Exam Key, click 'Check' to decrypt and auto-grade the exams(If you've set the answers during exam creation). Then select a student from the left panel to review their answers and finalize scores." 
+                },
+                new TourStep 
+                { 
+                    Title = "Table Columns Reordering", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
+                    Description = "     You can reorder the columns in both tables by dragging and dropping the column headers. " 
+                },
+                new TourStep 
+                { 
+                    Title = "Table Columns Resizing", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
+                    Description = "     You can resize the columns up to a point by dragging the edges of the column headers." 
+                },
+                new TourStep
+                {
+                    Title = "Student Roster Sorting", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
+                    Description = "     Click on the column headers in the left panel to sort the student roster by that column. Clicking the same header multiple times toggles between ascending, descending."
+                },
+                new TourStep
+                {
+                    Title = "Export Files", 
+                    TargetIcon = GetIcon("IconSettings","ℹ️"), 
+                    Description = "     After grading, click the Export button to save a Master CSV summary of all students and their scores, along with individual reports (opens in website but can be opened by common text editors like Microsoft Word) for each student of their answers, awarded points, correct answers for each question, and remarks (It doesn't include images)."
+                }
+
+            );
+        }
+    #endregion
+
     #region Dependencies & Constructors
         private readonly Action<ViewModelBase> _navigateAction;
         private readonly Services.FileManagementService _fileService;

@@ -444,6 +444,24 @@ public partial class ExamineeTestViewModel : ViewModelBase
             File.WriteAllText(xansPath, jsonContent);
             _cryptoService.EncryptFile(xansPath, _examKey);
 
+            LightboxImage?.Dispose();
+            LightboxImage = null;
+
+            foreach (var section in ExamData.Sections)
+            {
+                foreach (var question in section.Questions)
+                {
+                    question.ImageBitmap?.Dispose();
+                    question.ImageBitmap = null;
+
+                    foreach (var choice in question.Choices)
+                    {
+                        choice.ImageBitmap?.Dispose();
+                        choice.ImageBitmap = null;
+                    }
+                }
+            }
+
             if (Directory.Exists(ImageDirectory)) Directory.Delete(ImageDirectory, true);
 
             Console.WriteLine($"Successfully exported encrypted answers to: {xansPath}");
