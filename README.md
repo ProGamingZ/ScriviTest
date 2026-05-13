@@ -1,6 +1,5 @@
 ScriviTest 
 
-A secure, cross-platform desktop application designed for creating, distributing, and evaluating structured examinations.
 
 ScriviTest provides educators with a robust tool to design complex exams (Multiple Choice, True/False, Essay) while enforcing anti-cheat strictness and time limits. It features a custom encrypted file format (.xans) to securely package and export student submissions for grading.
 
