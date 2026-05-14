@@ -6,7 +6,7 @@ namespace ScriviTest.Services;
 public static class AppPaths
 {
     // 1. Ask the OS for the safe AppData (Windows) or Application Support (Mac) folder
-    private static readonly string BaseAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+    private static readonly string BaseAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
     
     // 2. Create a dedicated root folder for your app (e.g., AppData/Roaming/ScriviTest)
     public static string RootAppFolder => Path.Combine(BaseAppDataPath, "ScriviTest");
